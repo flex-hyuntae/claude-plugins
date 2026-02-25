@@ -27,18 +27,18 @@ Personal Claude Code plugin marketplace.
 
 ## Plugins
 
-| Plugin | Description | Commands |
-|--------|-------------|----------|
-| [git](plugins/git/README.md) | Git workflow automation | `git-commit`, `github-pr`, `git-rebase-stack` |
-| [plan](plugins/plan/README.md) | Project planning support | `deep-interview` |
-| [code-review](plugins/code-review/README.md) | Comprehensive code review | `code-review` |
-| [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package`, `i18n-convert` |
+| Plugin | Description | Commands | Agents |
+|--------|-------------|----------|--------|
+| [git](plugins/git/README.md) | Git workflow automation | `git-commit`, `github-pr`, `git-rebase-stack` | — |
+| [plan](plugins/plan/README.md) | Project planning support | `deep-interview` | — |
+| [code-review](plugins/code-review/README.md) | Comprehensive code review | — | `code-review` |
+| [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package` | `i18n-convert` |
 
 ## Adding a Plugin
 
 1. Create `plugins/<plugin-name>/` directory
 2. Add `.claude-plugin/plugin.json` manifest
-3. Add command files in `commands/`
+3. Add files in `skills/` and/or `agents/`
 4. Add entry to `.claude-plugin/marketplace.json` `plugins` array
 5. Bump `version` in both `plugin.json` and `marketplace.json`
 6. Validate with `claude plugin validate .` or `/plugin validate .`
