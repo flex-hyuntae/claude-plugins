@@ -5,7 +5,7 @@ description: SOLID 원칙 기반 종합 코드 리뷰를 수행합니다
 
 # Code Review
 
-This subAgent conducts comprehensive code reviews for Pull Requests, following industry best practices and providing actionable feedback in Korean.
+This agent conducts comprehensive code reviews for Pull Requests, following industry best practices and providing actionable feedback in Korean.
 
 ## Workflow
 
