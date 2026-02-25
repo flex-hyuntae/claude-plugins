@@ -1,5 +1,5 @@
 {
   "name": "git",
   "description": "Conventional commit 형식의 커밋 메시지 생성, GitHub PR 자동 생성, stacked PR rebase 정리",
-  "version": "2026.02"
+  "version": "2026.02.1"
 }

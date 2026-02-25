@@ -1,4 +1,9 @@
-# Pull Request Skill
+---
+name: github-pr
+description: Conventional Commit 형식의 PR 타이틀과 템플릿 기반 설명을 자동 생성합니다
+---
+
+# Pull Request
 
 This skill helps create well-formatted Pull Requests with conventional commit titles and organized descriptions based on the project's PR template.
 

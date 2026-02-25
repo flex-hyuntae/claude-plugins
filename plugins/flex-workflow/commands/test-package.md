@@ -1,4 +1,9 @@
-# Test Package Skill
+---
+name: test-package
+description: 모노레포 패키지의 로컬 테스트 환경을 portal 프로토콜로 설정합니다
+---
+
+# Test Package
 
 This skill helps set up local testing environments for monorepo packages by linking them to application repositories using the portal protocol.
 

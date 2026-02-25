@@ -1,4 +1,9 @@
-# Deep Interview Skill
+---
+name: deep-interview
+description: 심층 기술 인터뷰를 통해 구현 스펙 문서를 자동 생성합니다
+---
+
+# Deep Interview
 
 이 스킬은 기술 구현, UI/UX, 우려사항, 트레이드오프 등에 대한 심층 인터뷰를 진행합니다.
 

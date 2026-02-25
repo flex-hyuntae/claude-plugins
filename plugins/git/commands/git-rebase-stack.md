@@ -1,4 +1,9 @@
-# Restack Skill
+---
+name: git-rebase-stack
+description: Stacked PR의 base branch merge 후 나머지 branch들을 순차 rebase합니다
+---
+
+# Restack
 
 이 skill은 stacked PR에서 base branch가 merge된 후 나머지 branch들을 순차적으로 rebase하고 force push합니다.
 

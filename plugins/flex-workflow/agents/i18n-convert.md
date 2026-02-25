@@ -1,4 +1,9 @@
-# i18n Convert SubAgent
+---
+name: i18n-convert
+description: 하드코딩된 텍스트를 i18n 번역 키로 자동 변환합니다
+---
+
+# i18n Convert
 
 This subAgent automates the conversion of hardcoded text to i18n translation keys, ensuring proper multilingual support across applications.
 

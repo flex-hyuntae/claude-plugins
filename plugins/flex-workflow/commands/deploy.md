@@ -1,4 +1,9 @@
-# Deploy Skill
+---
+name: deploy
+description: QA/Prod 배포 PR을 커밋 요약과 함께 자동 생성합니다
+---
+
+# Deploy
 
 This skill creates deployment Pull Requests for QA and Production stages with organized commit summaries.
 
