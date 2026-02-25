@@ -1,6 +1,7 @@
 ---
 name: deep-interview
 description: 심층 기술 인터뷰를 통해 구현 스펙 문서를 자동 생성합니다
+disable-model-invocation: true
 ---
 
 # Deep Interview

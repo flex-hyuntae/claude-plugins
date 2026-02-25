@@ -1,6 +1,7 @@
 ---
 name: git-commit
 description: Conventional Commits 형식의 커밋 메시지를 생성합니다
+disable-model-invocation: true
 ---
 
 # Git Commit

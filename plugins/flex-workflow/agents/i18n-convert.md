@@ -1,6 +1,8 @@
 ---
 name: i18n-convert
-description: 하드코딩된 텍스트를 i18n 번역 키로 자동 변환합니다
+description: 하드코딩된 텍스트를 i18n 번역 키로 자동 변환합니다. 컴포넌트의 하드코딩된 텍스트를 식별하고 ko/en 번역 파일을 자동 업데이트합니다.
+tools: Read, Edit, Grep, Glob, Bash
+model: inherit
 ---
 
 # i18n Convert

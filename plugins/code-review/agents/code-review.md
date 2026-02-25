@@ -1,6 +1,8 @@
 ---
 name: code-review
-description: SOLID 원칙 기반 종합 코드 리뷰를 수행합니다
+description: SOLID 원칙 기반 종합 코드 리뷰를 수행합니다. PR URL을 받아 코드를 분석하고 GitHub에 S1/S2/S3 심각도별 한국어 리뷰 코멘트를 작성합니다.
+tools: Read, Grep, Glob, Bash
+model: inherit
 ---
 
 # Code Review

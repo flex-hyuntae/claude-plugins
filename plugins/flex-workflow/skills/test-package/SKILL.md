@@ -1,6 +1,7 @@
 ---
 name: test-package
 description: 모노레포 패키지의 로컬 테스트 환경을 portal 프로토콜로 설정합니다
+disable-model-invocation: true
 ---
 
 # Test Package

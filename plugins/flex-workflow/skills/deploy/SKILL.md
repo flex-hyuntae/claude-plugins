@@ -1,6 +1,8 @@
 ---
 name: deploy
 description: QA/Prod 배포 PR을 커밋 요약과 함께 자동 생성합니다
+disable-model-invocation: true
+argument-hint: "[qa|prod]"
 ---
 
 # Deploy
