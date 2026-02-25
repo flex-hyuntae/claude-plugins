@@ -1,4 +1,4 @@
-# flex-hyuntae-plugins
+# flex-hyuntae claude plugins
 
 Personal Claude Code plugin marketplace.
 
@@ -43,7 +43,3 @@ Personal Claude Code plugin marketplace.
 5. Bump `version` in both `plugin.json` and `marketplace.json`
 6. Validate with `claude plugin validate .` or `/plugin validate .`
 7. Commit and push
-
-## License
-
-MIT
