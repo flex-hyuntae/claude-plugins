@@ -262,6 +262,39 @@ goal.goal.success  // Don't repeat domain
 very.long.nested.key.structure.that.is.hard.to.read  // Too deep
 ```
 
+## Variable Interpolation
+
+**IMPORTANT: Use single braces `{variable}` only**
+
+This project uses single braces for variable interpolation. NEVER use double braces `{{variable}}`.
+
+### Correct Examples
+
+```json
+// ko/translation.json
+{
+  "people.manage_people.count": "총 {count}명",
+  "people.setting.max_length": "{max}자 이내로 입력하세요.",
+  "people.template.year_month": "{year}년 {month}개월"
+}
+
+// en/translation.json
+{
+  "people.manage_people.count": "Total {count}",
+  "people.setting.max_length": "Please enter up to {max} characters.",
+  "people.template.year_month": "{year} year {month} month"
+}
+```
+
+### Incorrect Examples
+
+```json
+{
+  "people.manage_people.count": "총 {{count}}명",
+  "people.setting.max_length": "{{max}}자 이내로 입력하세요."
+}
+```
+
 ## Translation Guidelines
 
 ### Korean (ko/translation.json)
