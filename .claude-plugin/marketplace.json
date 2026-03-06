@@ -36,6 +36,13 @@
       "description": "Flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환",
       "version": "2026.02.3",
       "keywords": ["deploy", "test-package", "i18n", "flex", "workflow"]
+    },
+    {
+      "name": "coding-conventions",
+      "source": "./plugins/coding-conventions",
+      "description": "코드 생성 시 참고할 코딩 컨벤션 및 아키텍처 패턴",
+      "version": "2026.03",
+      "keywords": ["conventions", "architecture", "ddd", "react", "component"]
     }
   ]
 }
