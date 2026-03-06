@@ -42,7 +42,38 @@ git diff origin/develop..HEAD --stat
 git diff origin/develop..HEAD
 ```
 
-### 3. Generate PR Title
+### 3. Completion Validation Gate
+
+PR 생성 전 필수 검증을 수행합니다. 하나라도 실패하면 PR 생성을 중단합니다.
+
+**패키지명 자동 감지:**
+
+변경된 파일 경로에서 패키지명을 추출합니다:
+
+```bash
+# 변경된 파일 목록에서 패키지 경로 추출
+git diff origin/develop..HEAD --name-only | grep -oP 'apps/[^/]+' | sort -u
+```
+
+- `apps/remotes-goal` → `@flex-apps/remotes-goal`
+- `apps/remotes-evaluation` → `@flex-apps/remotes-evaluation`
+- 패키지 감지 불가 시 사용자에게 경고 후 확인
+
+**검증 명령어:**
+
+```bash
+# 감지된 각 패키지에 대해 실행
+yarn turbo run type-check --filter=@flex-apps/{package-name}
+yarn turbo run lint --filter=@flex-apps/{package-name}
+yarn turbo run test --filter=@flex-apps/{package-name}
+```
+
+**결과 처리:**
+- 모두 통과: 다음 단계로 진행
+- 실패 항목 있음: 오류 내용 표시 후 PR 생성 중단, 수정 안내
+- 테스트가 없는 경우 (`test` 스크립트 미존재): 경고만 표시하고 진행
+
+### 4. Generate PR Title
 
 Use **Conventional Commit** format:
 
@@ -84,7 +115,7 @@ Identify scope from:
 - `feat: Added new feature for users` (no scope, not imperative, capitalized)
 - `refactor(remotes-user-profile): change the API endpoint from search to search-with-approval for better approval handling` (too long, too detailed)
 
-### 4. Analyze Changes for PR Description
+### 5. Analyze Changes for PR Description
 
 Read the pull request template:
 
@@ -125,7 +156,7 @@ Analyze changes to fill template sections:
 - Note any breaking changes or important considerations
 - Check for related issues or tickets
 
-### 5. Get Current User Information
+### 6. Get Current User Information
 
 ```bash
 # Get GitHub username for assignment
@@ -134,7 +165,40 @@ gh api user --jq '.login'
 
 Or use the mcp__github__get_me tool to get user information.
 
-### 6. Create Pull Request
+### 7. Learnings Summary
+
+PR 생성 직전, 현재 대화를 리뷰하여 학습 포인트를 **메시지로** 사용자에게 전달합니다. (PR 본문에 넣지 않음)
+
+**수집 대상:**
+
+1. **Claude가 다르게 접근한 부분**: 사용자가 Claude의 코드나 접근 방식을 수정/거부한 경우
+   - 예: "이 패턴 대신 X를 사용해" → Claude가 처음 제안한 것과 다른 접근
+   - 예: 사용자가 Edit으로 직접 수정한 코드와 Claude가 작성한 코드의 차이
+
+2. **사용자가 명시한 학습 포인트**: "이건 기억해", "이건 배운 점이야", "앞으로는 이렇게 해" 등 명시적 언급
+
+**출력 형식:**
+
+```
+## 학습 포인트 정리
+
+### Claude가 다르게 접근한 부분
+- [상황]: [Claude의 접근] → [사용자의 수정]
+- ...
+
+### 사용자가 명시한 포인트
+- [내용]
+- ...
+
+> CLAUDE.md에 반영할 내용이 있다면 알려주세요.
+```
+
+**규칙:**
+- 학습 포인트가 없으면 이 섹션을 건너뜀
+- 사용자에게 확인 후, CLAUDE.md에 반영할 내용이 있으면 제안
+- PR 본문에는 절대 포함하지 않음
+
+### 8. Create Pull Request
 
 Use the GitHub MCP tool:
 
@@ -157,7 +221,7 @@ Then assign to the user:
 gh pr edit <pr-number> --add-assignee @me
 ```
 
-### 7. Confirm with User
+### 9. Confirm with User
 
 After creating the PR:
 - Show the PR URL
@@ -165,7 +229,7 @@ After creating the PR:
 - Show the assignee
 - Confirm creation was successful
 
-### 8. Auto Code Review (Optional)
+### 10. Auto Code Review (Optional)
 
 After PR creation, you may optionally run a code review using the `code-review` plugin if installed:
 - `/code-review:code-review` with the newly created PR URL

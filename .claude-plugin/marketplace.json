@@ -13,15 +13,15 @@
       "name": "git",
       "source": "./plugins/git",
       "description": "Conventional commit 형식의 커밋 메시지 생성, GitHub PR 자동 생성, stacked PR rebase 정리",
-      "version": "2026.02.3",
+      "version": "2026.03",
       "keywords": ["git", "commit", "pull-request", "conventional-commit", "rebase", "stacked-pr"]
     },
     {
       "name": "plan",
       "source": "./plugins/plan",
-      "description": "심층 인터뷰를 통해 기술 스펙 문서를 자동 생성",
-      "version": "2026.02.4",
-      "keywords": ["interview", "spec", "requirements", "planning"]
+      "description": "심층 인터뷰를 통해 기술 스펙 문서를 자동 생성하고, Linear 티켓을 생성/리뷰",
+      "version": "2026.03",
+      "keywords": ["interview", "spec", "requirements", "planning", "linear", "tickets"]
     },
     {
       "name": "code-review",
