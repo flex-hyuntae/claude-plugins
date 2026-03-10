@@ -1,0 +1,7 @@
+{
+  "version": "2026.03",
+  "organization": "Flex Engineering",
+  "date": "March 2026",
+  "abstract": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙. React, TypeScript, 아키텍처 패턴 전반을 다루며, AI 에이전트의 코드 생성 품질 향상을 위해 최적화되었다.",
+  "categories": ["react", "typescript", "structure"]
+}

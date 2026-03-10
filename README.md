@@ -17,7 +17,7 @@ Personal Claude Code plugin marketplace.
 /plugin install plan@flex-hyuntae-plugins
 /plugin install code-review@flex-hyuntae-plugins
 /plugin install flex-workflow@flex-hyuntae-plugins
-/plugin install add-til@flex-hyuntae-plugins
+/plugin install best-practices@flex-hyuntae-plugins
 ```
 
 ### Update marketplace
@@ -33,8 +33,8 @@ Personal Claude Code plugin marketplace.
 | [git](plugins/git/README.md) | Git workflow automation | `git-commit`, `github-pr`, `git-rebase-stack` | — |
 | [plan](plugins/plan/README.md) | Project planning support | `deep-interview` | — |
 | [code-review](plugins/code-review/README.md) | Comprehensive code review | — | `code-review` |
-| [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package` | `i18n-convert` |
-| [add-til](plugins/add-til/README.md) | Notion TIL 데이터베이스에 배운 내용 기록 | `add-til` | — |
+| [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package`, `add-til` | `i18n-convert` |
+| [best-practices](plugins/best-practices/README.md) | 코딩 컨벤션과 성능 최적화 규칙 | `add-best-practice` | — |
 
 ## Adding a Plugin
 

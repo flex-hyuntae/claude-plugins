@@ -192,19 +192,19 @@ Review all code against these 15 categories:
 ### 2. React 코드 품질
 
 2-1. **공식문서 기반 리뷰**: React 공식문서 기준으로 모범 사례 준수 여부
-2-2. **Escape Hatches 패턴**: useEffect, useRef, useMemo, useCallback 올바른 사용법
+2-2. **Escape Hatches 패턴**: useEffect, useRef, useMemo, useCallback 올바른 사용법 → rules: `rerender-move-effect-to-event`, `rerender-useref-transient`, `rerender-simple-expression-memo`
 2-3. **컴포넌트 설계**: 컴포넌트가 너무 크지 않은지 (200줄 이내 권장), Props drilling 방지, 적절한 컴포넌트 합성(Composition)
-2-4. **성능 최적화**: 불필요한 리렌더링 방지, 의존성 배열 최적화, 조건부 렌더링 최적화
+2-4. **성능 최적화**: 불필요한 리렌더링 방지, 의존성 배열 최적화, 조건부 렌더링 최적화 → rules: `rerender-*`, `rendering-conditional-render`
 2-5. **상태 관리**: useState vs useReducer 적절한 선택, 상태 끌어올리기 적절성, 지역 vs 전역 상태
 2-6. **이벤트 처리**: 이벤트 핸들러 네이밍 (handle*/on* 패턴), 이벤트 전파 제어
-2-7. **컴포넌트 라이프사이클**: useEffect 의존성 배열 정확성, 정리(cleanup) 함수, 무한 루프 방지
+2-7. **컴포넌트 라이프사이클**: useEffect 의존성 배열 정확성, 정리(cleanup) 함수, 무한 루프 방지 → rules: `rerender-narrow-dependencies`
 
 ### 3. TypeScript 품질
 
-3-1. **타입 안전성**: any 사용 최소화, 적절한 타입 정의
+3-1. **타입 안전성**: any 사용 최소화, 적절한 타입 정의 → rules: `ts-no-any`, `ts-no-type-assertion`
 3-2. **인터페이스 vs 타입**: 적절한 선택과 일관성
 3-3. **제네릭 활용**: 코드 재사용성을 위한 제네릭 사용
-3-4. **타입 가드**: 런타임 타입 체크의 안전성
+3-4. **타입 가드**: 런타임 타입 체크의 안전성 → rules: `ts-no-type-assertion`
 3-5. **유틸리티 타입**: Pick, Omit, Partial 등 적절한 활용
 3-6. **enum vs union type**: 적절한 선택
 3-7. **readonly 키워드**: 불변성 보장을 위한 사용
@@ -226,7 +226,7 @@ Review all code against these 15 categories:
 5-5. **에러 처리**: QueryErrorResetBoundary, retry 정책
 5-6. **무한 쿼리**: useInfiniteQuery 적절한 사용
 5-7. **낙관적 업데이트**: optimistic updates 구현 품질
-5-8. **쿼리 무효화**: 적절한 invalidation 전략
+5-8. **쿼리 무효화**: 적절한 invalidation 전략 → rules: `struct-data-layer-cohesion`
 
 ### 6. 성능 최적화
 
@@ -235,7 +235,7 @@ Review all code against these 15 categories:
 6-3. **이미지 최적화**: lazy loading, 적절한 포맷 사용
 6-4. **가상화**: 긴 목록에 대한 가상 스크롤링 필요성
 6-5. **네트워크 요청**: 중복 요청 방지, 디바운싱/스로틀링
-6-6. **렌더링 최적화**: 조건부 렌더링 성능 개선
+6-6. **렌더링 최적화**: 조건부 렌더링 성능 개선 → rules: `rendering-conditional-render`, `rerender-*`
 
 ### 7. 접근성 (Accessibility)
 
@@ -283,18 +283,28 @@ Review all code against these 15 categories:
 13-2. **주석 품질**: 왜(why)를 설명하는 주석, 불필요한 주석 제거
 13-3. **README**: 컴포넌트 사용법, API 문서화
 
-### 14. CSS 및 스타일링
+### 14. CSS 및 스타일링 (vanilla-extract)
 
-14-1. **CSS-in-JS**: Styled Components, Emotion 등의 적절한 사용
-14-2. **스타일 일관성**: 디자인 시스템 토큰 활용
-14-3. **반응형**: 모바일 퍼스트, 브레이크포인트 적절성
-14-4. **성능**: 불필요한 스타일 재계산 방지
+14-1. **vanilla-extract 패턴**: style.css.ts 파일 분리, `style()`, `styleVariants()`, `recipe()` 적절한 사용
+14-2. **디자인 토큰**: 디자인 시스템 토큰(vars) 활용, 하드코딩된 색상/크기 값 사용 지양
+14-3. **타입 안전성**: 스타일 변수가 타입 안전하게 사용되는지, sprinkles 활용 적절성
+14-4. **성능**: 런타임 오버헤드 없는 정적 CSS 추출 확인, 동적 스타일은 CSS 변수나 `assignInlineVars` 활용
 
 ### 15. 국제화 (i18n)
 
 15-1. **다국어 지원**: 하드코딩된 텍스트 없이 번역 키 사용
 15-2. **번역 키 네이밍**: 일관성 있는 번역 키 구조
 15-3. **복수형 처리**: 언어별 복수형 규칙 고려
+
+## Best Practices Reference
+
+리뷰 시 다음 best-practices 규칙들을 참조하여 구체적인 패턴 위반을 확인한다:
+
+- **React 성능**: `best-practices/rules/react/` - async, rerender, rendering, js 관련 24개 규칙
+- **TypeScript 타입 안전성**: `best-practices/rules/typescript/` - type assertion 금지 등
+- **프로젝트 구조**: `best-practices/rules/structure/` - 컴포넌트 구조, DDD, 데이터 레이어 응집
+
+상세 규칙은 `best-practices/rules/` 아래의 개별 rule 파일 참조.
 
 ## Review Checklist
 
