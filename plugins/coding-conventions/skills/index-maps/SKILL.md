@@ -1,5 +1,6 @@
 ---
 name: index-maps
+description: 반복적인 key 기반 조회를 위해 배열을 Map으로 변환하여 O(n) find()를 O(1) get()으로 개선한다. 중첩 루프나 반복문 안에서 .find()로 다른 배열을 탐색하는 패턴, 또는 대량 데이터에서 ID 기반 매칭이 필요한 경우에 적용한다.
 title: 반복 조회를 위한 Index Map 구축
 impact: LOW-MEDIUM
 impactDescription: 100만 ops → 2천 ops

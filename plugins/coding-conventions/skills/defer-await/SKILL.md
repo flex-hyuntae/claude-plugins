@@ -1,5 +1,6 @@
 ---
 name: defer-await
+description: await를 실제 데이터가 사용되는 분기로 이동시켜, early-return 경로가 blocking되지 않도록 한다. async 함수에서 상단에 await를 두고 조건 분기에서 해당 결과를 사용하지 않는 패턴을 작성하거나 리뷰할 때 적용한다. early return, feature flag, 권한 검사, skip 조건이 있는 경우 특히 유효하다.
 title: 필요한 시점까지 await 지연
 impact: HIGH
 impactDescription: 사용하지 않는 code path의 blocking 방지

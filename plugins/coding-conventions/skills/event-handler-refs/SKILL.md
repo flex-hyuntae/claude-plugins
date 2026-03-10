@@ -1,5 +1,6 @@
 ---
 name: event-handler-refs
+description: 이벤트 핸들러를 ref에 저장하여 콜백이 변경될 때마다 effect가 재구독되는 것을 방지한다. useEffect 내에서 이벤트 리스너를 등록하면서 핸들러 함수가 의존성 배열에 포함되어 불필요한 cleanup/재구독이 발생하는 경우에 적용한다.
 title: Event handler를 ref에 저장
 impact: LOW
 impactDescription: 안정적인 subscription

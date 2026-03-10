@@ -1,5 +1,6 @@
 ---
 name: memo-extract
+description: 비용이 큰 연산을 별도의 메모이즈된 컴포넌트로 추출하여, 관련 없는 state 변경 시 해당 연산을 건너뛸 수 있게 한다. 컴포넌트 내부에 무거운 계산이나 렌더링이 있고, 해당 계산과 무관한 state 변경으로 인해 불필요하게 재실행되는 경우에 적용한다.
 title: Memoized component로 추출
 impact: MEDIUM
 impactDescription: early return 가능

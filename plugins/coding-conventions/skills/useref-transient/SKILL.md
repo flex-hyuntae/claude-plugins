@@ -1,5 +1,6 @@
 ---
 name: useref-transient
+description: 리렌더가 필요 없는 빈번히 변하는 값(마우스 위치, 타이머 ID, 일시적 플래그 등)에 useRef를 사용하여 불필요한 리렌더를 방지한다. 자주 변하는 값을 useState로 관리하고 있지만 해당 값이 UI 렌더링에 직접 사용되지 않는 경우에 적용한다.
 title: 일시적인 값에 useRef 사용
 impact: MEDIUM
 impactDescription: 빈번한 업데이트 시 불필요한 re-render 방지

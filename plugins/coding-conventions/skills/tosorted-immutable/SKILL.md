@@ -1,5 +1,6 @@
 ---
 name: tosorted-immutable
+description: .sort() 대신 .toSorted()를 사용하여 원본 배열의 불변성을 보장하고 React state 변이 버그를 방지한다. 배열을 정렬하는 코드를 작성하거나 리뷰할 때, 특히 React state나 props로 전달된 배열에 .sort()를 직접 호출하는 경우에 적용한다. .toReversed(), .toSpliced(), .with() 등 다른 불변 메서드도 동일하게 적용한다.
 title: 불변성을 위해 sort() 대신 toSorted() 사용
 impact: MEDIUM-HIGH
 impactDescription: React state의 mutation 버그 방지

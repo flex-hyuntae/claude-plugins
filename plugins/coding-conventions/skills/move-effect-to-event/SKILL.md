@@ -1,5 +1,6 @@
 ---
 name: move-effect-to-event
+description: 사용자 상호작용으로 발생하는 부수효과를 useEffect가 아닌 이벤트 핸들러에 직접 배치하여, 관련 없는 의존성 변경으로 인한 재실행을 방지한다. useEffect 안에 있는 로직이 실제로는 특정 사용자 액션(클릭, 제출 등)에만 반응해야 하는 경우에 적용한다.
 title: 상호작용 로직을 event handler에 배치
 impact: MEDIUM
 impactDescription: effect 재실행과 side effect 중복 방지

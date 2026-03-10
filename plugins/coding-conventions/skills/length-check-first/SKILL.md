@@ -1,5 +1,6 @@
 ---
 name: length-check-first
+description: 배열 비교 시 length를 먼저 확인하여 불필요한 O(n log n) 정렬이나 deep equality 검사를 건너뛴다. 두 배열의 동등성을 비교하기 전에 정렬하거나 직렬화하는 코드를 작성하거나 리뷰할 때 적용한다.
 title: array 비교 시 length 먼저 확인
 impact: MEDIUM-HIGH
 impactDescription: 길이가 다를 때 비용이 큰 연산 방지

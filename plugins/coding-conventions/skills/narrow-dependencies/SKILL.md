@@ -1,5 +1,6 @@
 ---
 name: narrow-dependencies
+description: useEffect의 의존성을 객체 전체 대신 필요한 primitive 값만 사용하여 불필요한 effect 재실행을 최소화한다. useEffect 의존성 배열에 객체나 배열이 포함되어 있고, 실제로는 그 안의 특정 속성만 사용하는 경우에 적용한다.
 title: Effect dependency를 좁게 지정
 impact: LOW
 impactDescription: effect 재실행 최소화

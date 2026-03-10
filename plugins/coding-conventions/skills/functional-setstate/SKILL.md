@@ -1,5 +1,6 @@
 ---
 name: functional-setstate
+description: setState에 함수형 업데이트를 사용하여 stale closure 문제를 방지하고 콜백을 안정적으로 유지한다. setState가 이전 state 값에 의존하거나, 콜백 안정성이 필요하거나, useCallback의 의존성 배열에서 state 변수를 제거하고 싶을 때 적용한다.
 title: 함수형 setState 업데이트 사용
 impact: MEDIUM
 impactDescription: stale closure 방지 및 불필요한 callback 재생성 제거

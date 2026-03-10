@@ -1,5 +1,6 @@
 ---
 name: derived-state-no-effect
+description: useEffect 대신 렌더링 중에 파생 state를 직접 계산하여 불필요한 리렌더와 state 동기화 문제를 방지한다. 다른 state나 props로부터 값을 계산해 별도 state에 저장하고 useEffect로 동기화하는 패턴을 발견했을 때 적용한다.
 title: render 중에 파생 state 계산
 impact: MEDIUM
 impactDescription: 불필요한 render와 state drift 방지

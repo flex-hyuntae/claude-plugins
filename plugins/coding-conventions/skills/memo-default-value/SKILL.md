@@ -1,5 +1,6 @@
 ---
 name: memo-default-value
+description: React.memo로 감싼 컴포넌트의 non-primitive 기본값(빈 배열, 빈 객체, 콜백 등)을 모듈 레벨 상수로 추출하여 메모이제이션이 깨지는 것을 방지한다. memo된 컴포넌트에 기본값으로 `[]`, `{}`, `() => {}` 등을 인라인으로 전달하는 코드를 발견했을 때 적용한다.
 title: Memoized component의 non-primitive default 값을 상수로 추출
 impact: MEDIUM
 impactDescription: 상수를 사용하여 memoization 복원

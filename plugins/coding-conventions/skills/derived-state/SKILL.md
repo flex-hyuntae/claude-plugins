@@ -1,5 +1,6 @@
 ---
 name: derived-state
+description: 연속적인 값 대신 파생된 boolean state를 구독하여 리렌더 빈도를 줄인다. 픽셀 단위 width 같은 빈번히 변하는 값 대신 boolean 조건(예: isMobile)만 필요한 경우에 적용한다.
 title: 파생 state 구독
 impact: MEDIUM
 impactDescription: re-render 빈도 감소

@@ -1,5 +1,6 @@
 ---
 name: suspense-boundaries
+description: async 데이터 패칭 컴포넌트를 Suspense boundary로 감싸서 주변 레이아웃이 즉시 렌더되고 데이터가 스트리밍되게 한다. React Server Component나 async 컴포넌트에서 JSX 반환 전에 데이터를 await하는 경우, 페이지 전체가 blocking되는 경우, 초기 paint 속도와 체감 성능을 최적화할 때 적용한다. 스트리밍, 점진적 렌더링, React use() hook 관련 논의에서도 트리거한다.
 title: 전략적 Suspense Boundary 배치
 impact: HIGH
 impactDescription: 초기 paint 속도 향상

@@ -1,5 +1,6 @@
 ---
 name: lazy-state-init
+description: useState에 함수를 전달하여 비용이 큰 초기값 계산을 최초 렌더에서만 실행한다. useState의 초기값으로 JSON.parse, 검색 인덱스 구축, 복잡한 계산 등 비용이 큰 연산을 직접 전달하는 코드를 발견했을 때 적용한다.
 title: 지연 state 초기화 사용
 impact: MEDIUM
 impactDescription: 매 render마다 낭비되는 연산

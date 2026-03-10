@@ -1,5 +1,6 @@
 ---
 name: conditional-render
+description: "&& 연산자 대신 삼항 연산자를 사용하여 falsy 값(0, NaN)이 UI에 렌더링되는 버그를 방지한다. React 컴포넌트에서 조건부 렌더링을 작성할 때, 특히 숫자나 빈 문자열이 조건으로 사용될 수 있는 경우에 적용한다."
 title: 명시적 조건부 rendering 사용
 impact: LOW
 impactDescription: 0이나 NaN이 rendering되는 것을 방지

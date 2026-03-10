@@ -1,5 +1,6 @@
 ---
 name: simple-expression-memo
+description: primitive 결과를 반환하는 단순 표현식(산술, 비교, 문자열 연결 등)은 useMemo로 감싸지 않는다. useMemo의 호출 비용이 표현식 자체 비용보다 큰 경우에 해당하며, useMemo가 단순 계산에 불필요하게 사용된 코드를 발견했을 때 적용한다.
 title: primitive 결과의 단순 표현식을 useMemo로 감싸지 않기
 impact: LOW-MEDIUM
 impactDescription: 매 render마다 낭비되는 연산
