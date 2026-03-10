@@ -19,12 +19,14 @@ TypeScript 타입 안전성을 보장하는 규칙.
 
 - `ts-no-type-assertion` - `as` type assertion, non-null assertion `!` 사용 금지
 - `ts-no-any` - `any` 타입 사용 금지, unknown 또는 구체적 타입으로 대체
+- `ts-enum-vs-union` - enum 대신 union type 사용, 번들 사이즈 및 tree-shaking 이점
 
 ## How to Use
 
 개별 rule 파일에서 상세 설명과 코드 예시를 확인:
 ```
 rules/typescript/ts-no-type-assertion.md
+rules/typescript/ts-enum-vs-union.md
 ```
 
 각 rule 파일에는 Incorrect/Correct 코드 예시와 설명이 포함되어 있다.

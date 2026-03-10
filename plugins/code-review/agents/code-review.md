@@ -54,7 +54,7 @@ For each changed file:
 
 ### 4. Conduct Deep Review
 
-Review the code based on 15 categories (detailed below in "Review Reference").
+Review the code based on 7 categories (detailed below in "Review Reference").
 
 For each issue found:
 
@@ -176,7 +176,7 @@ If no improvements needed:
 
 ## Review Reference
 
-Review all code against these 15 categories:
+Review all code against these 7 categories. 구체적인 패턴은 `best-practices/rules/` 참조.
 
 ### 1. SOLID 원칙 및 Clean Code
 
@@ -193,118 +193,72 @@ Review all code against these 15 categories:
 
 2-1. **공식문서 기반 리뷰**: React 공식문서 기준으로 모범 사례 준수 여부
 2-2. **Escape Hatches 패턴**: useEffect, useRef, useMemo, useCallback 올바른 사용법 → rules: `rerender-move-effect-to-event`, `rerender-useref-transient`, `rerender-simple-expression-memo`
+   2-2-1. https://react.dev/learn/escape-hatches#you-might-not-need-an-effect
 2-3. **컴포넌트 설계**: 컴포넌트가 너무 크지 않은지 (200줄 이내 권장), Props drilling 방지, 적절한 컴포넌트 합성(Composition)
 2-4. **성능 최적화**: 불필요한 리렌더링 방지, 의존성 배열 최적화, 조건부 렌더링 최적화 → rules: `rerender-*`, `rendering-conditional-render`
 2-5. **상태 관리**: useState vs useReducer 적절한 선택, 상태 끌어올리기 적절성, 지역 vs 전역 상태
-2-6. **이벤트 처리**: 이벤트 핸들러 네이밍 (handle*/on* 패턴), 이벤트 전파 제어
+2-6. **이벤트 처리**: 이벤트 핸들러 네이밍 (handle*/on* 패턴), 이벤트 전파 제어 → rules: `naming-conventions`
 2-7. **컴포넌트 라이프사이클**: useEffect 의존성 배열 정확성, 정리(cleanup) 함수, 무한 루프 방지 → rules: `rerender-narrow-dependencies`
+2-8. **Error Boundary**: 적절한 에러 경계 설정, 에러 복구 메커니즘
 
 ### 3. TypeScript 품질
 
-3-1. **타입 안전성**: any 사용 최소화, 적절한 타입 정의 → rules: `ts-no-any`, `ts-no-type-assertion`
+3-1. **타입 안전성**: any 사용 금지, 적절한 타입 정의 → rules: `ts-no-any`, `ts-no-type-assertion`
 3-2. **인터페이스 vs 타입**: 적절한 선택과 일관성
 3-3. **제네릭 활용**: 코드 재사용성을 위한 제네릭 사용
 3-4. **타입 가드**: 런타임 타입 체크의 안전성 → rules: `ts-no-type-assertion`
 3-5. **유틸리티 타입**: Pick, Omit, Partial 등 적절한 활용
-3-6. **enum vs union type**: 적절한 선택
-3-7. **readonly 키워드**: 불변성 보장을 위한 사용
+3-6. **enum vs union type**: enum 대신 union type 사용 → rules: `ts-enum-vs-union`
 
-### 4. React Hook Form
+### 4. 라이브러리 패턴 (React Hook Form + React Query)
 
+**React Hook Form:**
 4-1. **공식문서 기준**: React Hook Form 문서 모범 사례
 4-2. **성능**: uncontrolled components 활용으로 불필요한 리렌더링 방지
 4-3. **유효성 검사**: resolver 패턴과 validation 규칙의 적절성
-4-4. **에러 처리**: 폼 에러 상태 관리와 사용자 경험
-4-5. **필드 등록**: register vs Controller 적절한 선택
+4-4. **필드 등록**: register vs Controller 적절한 선택
 
-### 5. React Query (TanStack Query)
+**React Query (TanStack Query):**
+4-5. **공식문서 및 모범 사례**: TanStack Query 문서 기준, TkDodo 블로그 패턴
+4-6. **쿼리 키 관리**: 일관성 있는 쿼리 키 구조
+4-7. **캐싱 전략**: staleTime, cacheTime 적절한 설정
+4-8. **에러 처리**: QueryErrorResetBoundary, retry 정책
+4-9. **쿼리 무효화**: 적절한 invalidation 전략 → rules: `struct-data-layer-cohesion`
 
-5-1. **공식문서 및 모범 사례**: TanStack Query 문서 기준
-5-2. **TkDodo 블로그**: 실용적인 React Query 패턴들
-5-3. **쿼리 키 관리**: 일관성 있는 쿼리 키 구조
-5-4. **캐싱 전략**: staleTime, cacheTime 적절한 설정
-5-5. **에러 처리**: QueryErrorResetBoundary, retry 정책
-5-6. **무한 쿼리**: useInfiniteQuery 적절한 사용
-5-7. **낙관적 업데이트**: optimistic updates 구현 품질
-5-8. **쿼리 무효화**: 적절한 invalidation 전략 → rules: `struct-data-layer-cohesion`
+### 5. 성능 최적화
 
-### 6. 성능 최적화
+5-1. **번들 사이즈**: 불필요한 의존성, 코드 스플리팅 필요성
+5-2. **메모리 누수**: 이벤트 리스너, 타이머, 구독 정리
+5-3. **가상화**: 긴 목록에 대한 가상 스크롤링 필요성
+5-4. **네트워크 요청**: 중복 요청 방지, 디바운싱/스로틀링
+5-5. **렌더링 최적화**: 조건부 렌더링 성능 개선 → rules: `rendering-conditional-render`, `rerender-*`
 
-6-1. **번들 사이즈**: 불필요한 의존성, 코드 스플리팅 필요성
-6-2. **메모리 누수**: 이벤트 리스너, 타이머, 구독 정리
-6-3. **이미지 최적화**: lazy loading, 적절한 포맷 사용
-6-4. **가상화**: 긴 목록에 대한 가상 스크롤링 필요성
-6-5. **네트워크 요청**: 중복 요청 방지, 디바운싱/스로틀링
-6-6. **렌더링 최적화**: 조건부 렌더링 성능 개선 → rules: `rendering-conditional-render`, `rerender-*`
+### 6. 보안 및 의존성
 
-### 7. 접근성 (Accessibility)
+6-1. **XSS 방지**: dangerouslySetInnerHTML 사용 검토
+6-2. **민감한 정보**: 클라이언트 사이드 노출 방지
+6-3. **패키지 보안**: 알려진 취약점이 있는 패키지 사용 검토
+6-4. **불필요한 의존성**: 사용하지 않는 패키지 정리
+6-5. **의존성 순환**: circular dependency 검사
 
-7-1. **ARIA 속성**: 적절한 aria-* 속성 사용
-7-2. **키보드 네비게이션**: tabIndex, focus 관리
-7-3. **시맨틱 HTML**: 의미있는 HTML 요소 사용
-7-4. **색상 대비**: 충분한 색상 대비 확보
-7-5. **스크린 리더**: alt 텍스트, label 등 적절한 제공
+### 7. CSS 및 스타일링 (vanilla-extract)
 
-### 8. 보안
+7-1. **vanilla-extract 패턴**: style.css.ts 파일 분리, `style()`, `styleVariants()`, `recipe()` 적절한 사용 → rules: `styling-vanilla-extract`
+7-2. **디자인 토큰**: 디자인 시스템 토큰(vars) 활용, 하드코딩된 색상/크기 값 사용 지양 → rules: `styling-design-tokens`
+7-3. **타입 안전성**: 스타일 변수가 타입 안전하게 사용되는지, sprinkles 활용 적절성
+7-4. **성능**: 런타임 오버헤드 없는 정적 CSS 추출 확인, 동적 스타일은 CSS 변수나 `assignInlineVars` 활용
 
-8-1. **XSS 방지**: dangerouslySetInnerHTML 사용 검토
-8-2. **CSRF 방지**: 적절한 토큰 관리
-8-3. **민감한 정보**: 클라이언트 사이드 노출 방지
-8-4. **의존성 보안**: 알려진 취약점이 있는 패키지 사용 검토
+## Best Practices Rules Reference
 
-### 9. 에러 처리
+리뷰 시 `best-practices/rules/` 규칙들을 참조하여 구체적인 패턴 위반을 확인한다:
 
-9-1. **Error Boundary**: 적절한 에러 경계 설정
-9-2. **에러 로깅**: 에러 추적 및 모니터링
-9-3. **사용자 경험**: 친화적인 에러 메시지
-9-4. **복구 메커니즘**: 에러 발생 시 복구 방안
-
-### 10. 테스트 코드
-
-10-1. **테스트 커버리지**: 중요한 로직의 테스트 존재 여부
-10-2. **테스트 품질**: 의미있는 테스트인지, brittle test 여부
-10-3. **테스트 구조**: AAA 패턴 (Arrange, Act, Assert) 준수
-
-### 11. 네이밍 및 컨벤션
-
-11-1. **네이밍 일관성**: 컴포넌트, 함수, 변수명의 일관성
-11-2. **의미있는 이름**: 코드의 의도를 명확히 나타내는 네이밍
-11-3. **컨벤션 준수**: 팀 또는 프로젝트 코딩 컨벤션 준수
-
-### 12. 의존성 관리
-
-12-1. **패키지 버전**: 보안 취약점, 호환성 검토
-12-2. **불필요한 의존성**: 사용하지 않는 패키지 정리
-12-3. **의존성 순환**: circular dependency 검사
-
-### 13. 문서화 및 주석
-
-13-1. **JSDoc**: 복잡한 함수나 컴포넌트에 대한 문서화
-13-2. **주석 품질**: 왜(why)를 설명하는 주석, 불필요한 주석 제거
-13-3. **README**: 컴포넌트 사용법, API 문서화
-
-### 14. CSS 및 스타일링 (vanilla-extract)
-
-14-1. **vanilla-extract 패턴**: style.css.ts 파일 분리, `style()`, `styleVariants()`, `recipe()` 적절한 사용
-14-2. **디자인 토큰**: 디자인 시스템 토큰(vars) 활용, 하드코딩된 색상/크기 값 사용 지양
-14-3. **타입 안전성**: 스타일 변수가 타입 안전하게 사용되는지, sprinkles 활용 적절성
-14-4. **성능**: 런타임 오버헤드 없는 정적 CSS 추출 확인, 동적 스타일은 CSS 변수나 `assignInlineVars` 활용
-
-### 15. 국제화 (i18n)
-
-15-1. **다국어 지원**: 하드코딩된 텍스트 없이 번역 키 사용
-15-2. **번역 키 네이밍**: 일관성 있는 번역 키 구조
-15-3. **복수형 처리**: 언어별 복수형 규칙 고려
-
-## Best Practices Reference
-
-리뷰 시 다음 best-practices 규칙들을 참조하여 구체적인 패턴 위반을 확인한다:
-
-- **React 성능**: `best-practices/rules/react/` - async, rerender, rendering, js 관련 24개 규칙
-- **TypeScript 타입 안전성**: `best-practices/rules/typescript/` - type assertion 금지 등
-- **프로젝트 구조**: `best-practices/rules/structure/` - 컴포넌트 구조, DDD, 데이터 레이어 응집
-
-상세 규칙은 `best-practices/rules/` 아래의 개별 rule 파일 참조.
+- **React 성능**: `rules/react/` - async, rerender, rendering, js 관련 24개 규칙
+- **TypeScript**: `rules/typescript/` - type assertion 금지, any 금지, enum vs union
+- **프로젝트 구조**: `rules/structure/` - 컴포넌트 구조, DDD, 데이터 레이어 응집
+- **스타일링**: `rules/styling/` - vanilla-extract 패턴, 디자인 토큰
+- **접근성**: `rules/accessibility/` - 시맨틱 HTML, ARIA, 키보드 네비게이션
+- **테스트**: `rules/testing/` - AAA 패턴, 동작 기반 테스트
+- **네이밍**: `rules/naming/` - 네이밍 컨벤션, i18n 키 구조, 주석 규칙
 
 ## Review Checklist
 

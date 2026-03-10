@@ -40,6 +40,10 @@ tags: tag1, tag2
 | react | `advanced-` | ref, initialization |
 | typescript | `ts-` | type assertion, generic |
 | structure | `struct-` | 폴더 구조, DDD, 데이터 레이어 |
+| styling | `styling-` | vanilla-extract, 디자인 토큰 |
+| accessibility | `a11y-` | ARIA, 키보드, 시맨틱 HTML |
+| testing | `test-` | AAA 패턴, 테스트 품질 |
+| naming | `naming-` | 네이밍, i18n, 주석 |
 
 새 카테고리가 필요하면 `rules/<new-category>/`와 `skills/<new-category>/SKILL.md`를 함께 생성한다.
 
