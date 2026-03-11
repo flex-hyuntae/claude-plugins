@@ -9,6 +9,7 @@ Flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성,
 | `deploy` | QA/Prod 배포 PR을 커밋 요약(도메인별, 시간순, 작성자별)과 함께 생성 |
 | `test-package` | 모노레포 패키지를 portal 프로토콜로 로컬 앱에 연결하여 테스트 |
 | `add-til` | Notion TIL 데이터베이스에 오늘 배운 내용 기록 |
+| `create-tickets` | 스펙 문서를 기반으로 Linear 티켓 자동 생성 및 리뷰 |
 
 ## 에이전트
 
@@ -54,3 +55,12 @@ i18n 변환 해줘
 ```
 
 또는 "오늘 배운거야", "TIL", "지식 기반에 추가해줘" 등으로 호출. Notion MCP 연결 필요.
+
+### create-tickets
+
+```
+/flex-workflow:create-tickets
+/flex-workflow:create-tickets auto-employee-number
+```
+
+`spec/{feature-name}/` 디렉토리의 스펙 문서를 읽어 Linear 티켓을 자동 생성합니다. Data modeling → UI Component → API 적용 순서로 분해하고, 자체 리뷰 후 피드백을 반영합니다. Linear MCP 연결 필요.
