@@ -33,7 +33,7 @@ Personal Claude Code plugin marketplace.
 | [git](plugins/git/README.md) | Git workflow automation | `git-commit`, `github-pr`, `git-rebase-stack` | — |
 | [plan](plugins/plan/README.md) | Project planning support | `deep-interview` | — |
 | [code-review](plugins/code-review/README.md) | Comprehensive code review | — | `code-review` |
-| [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package`, `add-til` | `i18n-convert` |
+| [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package`, `add-til`, `create-tickets` | `i18n-convert` |
 | [best-practices](plugins/best-practices/README.md) | 코딩 컨벤션과 성능 최적화 규칙 | `add-best-practice` | — |
 
 ## Adding a Plugin
