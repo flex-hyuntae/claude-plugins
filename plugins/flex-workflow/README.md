@@ -1,6 +1,6 @@
 # flex-workflow
 
-Flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성, 패키지 로컬 테스트 환경 설정, i18n 변환을 지원합니다.
+Flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성, 패키지 로컬 테스트 환경 설정, i18n 변환, TC 작성 및 QA 테스트를 지원합니다.
 
 ## 커맨드
 
@@ -10,6 +10,8 @@ Flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성,
 | `test-package` | 모노레포 패키지를 portal 프로토콜로 로컬 앱에 연결하여 테스트 |
 | `add-til` | Notion TIL 데이터베이스에 오늘 배운 내용 기록 |
 | `create-tickets` | 스펙 문서를 기반으로 Linear 티켓 자동 생성 및 리뷰 |
+| `write-tc` | Linear, Figma, Notion, 코드베이스를 분석하여 QA 테스트 케이스 작성 |
+| `run-qa` | 작성된 TC를 Chrome DevTools MCP로 실행하여 QA 테스트 수행 |
 
 ## 에이전트
 
@@ -64,3 +66,21 @@ i18n 변환 해줘
 ```
 
 `spec/{feature-name}/` 디렉토리의 스펙 문서를 읽어 Linear 티켓을 자동 생성합니다. Data modeling → UI Component → API 적용 순서로 분해하고, 자체 리뷰 후 피드백을 반영합니다. Linear MCP 연결 필요.
+
+### write-tc
+
+```
+/flex-workflow:write-tc
+/flex-workflow:write-tc https://linear.app/flex/issue/CORE-1234
+```
+
+Linear 티켓, 코드베이스 변경사항, Figma 디자인, Notion 스펙 문서를 종합 분석하여 QA 테스트 케이스를 작성합니다. TC는 Notion 또는 로컬 파일로 저장됩니다.
+
+### run-qa
+
+```
+/flex-workflow:run-qa
+/flex-workflow:run-qa https://www.notion.so/tc-document-id
+```
+
+`write-tc`로 작성된 TC 문서를 Chrome DevTools MCP로 실행합니다. 각 TC를 순서대로 실행하고, 스크린샷 기반으로 결과를 검증하여 PASS/FAIL 리포트를 생성합니다. Chrome MCP 연결 필요.

@@ -1,5 +1,5 @@
 {
   "name": "flex-workflow",
-  "description": "Flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, Linear 티켓 생성",
-  "version": "2026.03.1"
+  "description": "Flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, Linear 티켓 생성, TC 작성 및 QA 테스트",
+  "version": "2026.03.2"
 }
