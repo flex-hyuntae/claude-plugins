@@ -10,6 +10,7 @@ Flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성,
 | `test-package` | 모노레포 패키지를 portal 프로토콜로 로컬 앱에 연결하여 테스트 |
 | `add-til` | Notion TIL 데이터베이스에 오늘 배운 내용 기록 |
 | `create-tickets` | 스펙 문서를 기반으로 Linear 티켓 자동 생성 및 리뷰 |
+| `enrich-ticket` | QA 티켓을 인터뷰와 자동 탐색(Figma/코드)으로 구조화된 형식으로 강화 |
 | `write-tc` | Linear, Figma, Notion, 코드베이스를 분석하여 QA 테스트 케이스 작성 |
 | `run-qa` | 작성된 TC를 Chrome DevTools MCP로 실행하여 QA 테스트 수행 |
 
@@ -57,6 +58,15 @@ i18n 변환 해줘
 ```
 
 또는 "오늘 배운거야", "TIL", "지식 기반에 추가해줘" 등으로 호출. Notion MCP 연결 필요.
+
+### enrich-ticket
+
+```
+/flex-workflow:enrich-ticket CORE-1234
+/flex-workflow:enrich-ticket https://linear.app/flexteam/issue/CORE-1234/bug-title
+```
+
+PM/PD가 작성한 QA 버그 티켓을 분석하고, Figma 디자인 조회 · 코드베이스 탐색 · 개발자 인터뷰를 통해 누락된 정보를 수집합니다. 최종적으로 AS-IS/TO-BE/영향 범위/코드 위치/수용 기준 구조로 티켓 설명을 업데이트합니다. Linear MCP 연결 필요.
 
 ### create-tickets
 
