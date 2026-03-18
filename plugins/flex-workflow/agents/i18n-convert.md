@@ -347,6 +347,18 @@ Translation files can be large (3000+ lines). When editing:
 - **Use consistent naming**: Follow the domain.feature.context.key pattern
 - **Validate thoroughly**: Run type-check and lint after changes
 - **Test in browser**: Verify translations display correctly
+- **조건 분기 시 반드시 `trans()` 사용**: 삼항 연산자, 변수 할당 등 조건식에서 번역 키를 사용할 때는 반드시 `trans()` 함수로 감싸야 한다. `<Translation>` 컴포넌트의 `tKey`에 조건식을 직접 넘기면 i18n 추출 도구가 키를 정적으로 인식하지 못해 번역이 누락된다.
+
+  ```tsx
+  // ❌ BAD — 추출 도구가 키를 인식하지 못함
+  <Translation tKey={isActive ? 'status.active' : 'status.inactive'} />
+  const label = isNew ? 'action.create' : 'action.edit';
+  <Translation tKey={label} />
+
+  // ✅ GOOD — trans()로 감싸서 추출 가능
+  {isActive ? trans('status.active') : trans('status.inactive')}
+  const label = isNew ? trans('action.create') : trans('action.edit');
+  ```
 
 ## Batch Conversion Strategy
 
