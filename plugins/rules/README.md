@@ -26,7 +26,7 @@
 ### add-rule
 
 ```
-/rules:add-rule useEffect 내부에서 setState를 호출하지 말고 derived state로 전환
+/add-rule useEffect 내부에서 setState를 호출하지 말고 derived state로 전환
 ```
 
 코딩 패턴이나 컨벤션을 설명하면, 적절한 카테고리에 규칙 파일을 생성합니다.
@@ -34,7 +34,7 @@
 ### write
 
 ```
-/rules:write
+/write
 ```
 
 코드를 작성·수정·리팩토링할 때 자동으로 트리거됩니다. 작업 대상 코드에 해당하는 카테고리(react, typescript, styling 등)의 규칙을 읽고 준수하는 코드를 생성합니다.
