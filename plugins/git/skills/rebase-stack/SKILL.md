@@ -1,5 +1,5 @@
 ---
-name: git-rebase-stack
+name: rebase-stack
 description: Stacked PR의 base branch merge 후 나머지 branch들을 순차 rebase합니다
 disable-model-invocation: true
 ---

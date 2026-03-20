@@ -1,5 +1,5 @@
 ---
-name: add-rule
+name: add
 description: "코딩 패턴이나 컨벤션을 rules 플러그인에 추가한다."
 disable-model-invocation: true
 argument-hint: "<패턴 설명>"
