@@ -17,7 +17,7 @@ Personal Claude Code plugin marketplace.
 /plugin install plan@flex-hyuntae-plugins
 /plugin install code-review@flex-hyuntae-plugins
 /plugin install flex-workflow@flex-hyuntae-plugins
-/plugin install best-practices@flex-hyuntae-plugins
+/plugin install rules@flex-hyuntae-plugins
 ```
 
 ### Update marketplace
@@ -34,7 +34,7 @@ Personal Claude Code plugin marketplace.
 | [plan](plugins/plan/README.md) | Project planning support | `deep-interview` | — |
 | [code-review](plugins/code-review/README.md) | Comprehensive code review | — | `code-review` |
 | [flex-workflow](plugins/flex-workflow/README.md) | Flex project workflows | `deploy`, `test-package`, `add-til`, `create-tickets` | `i18n-convert` |
-| [best-practices](plugins/best-practices/README.md) | 코딩 컨벤션과 성능 최적화 규칙 | `add-best-practice` | — |
+| [rules](plugins/rules/README.md) | 코딩 컨벤션과 성능 최적화 규칙 (35개) | `add-rule` | — |
 
 ## Adding a Plugin
 

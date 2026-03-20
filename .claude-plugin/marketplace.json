@@ -27,7 +27,7 @@
       "name": "code-review",
       "source": "./plugins/code-review",
       "description": "SOLID 원칙 기반 종합 코드 리뷰를 한국어로 수행하고 GitHub에 S1/S2/S3 심각도별 코멘트 작성",
-      "version": "2026.03.2",
+      "version": "2026.03.3",
       "keywords": ["code-review", "solid", "react", "typescript", "github"]
     },
     {
@@ -38,11 +38,11 @@
       "keywords": ["deploy", "test-package", "i18n", "flex", "workflow", "til", "notion", "linear", "tickets", "qa", "tc"]
     },
     {
-      "name": "best-practices",
-      "source": "./plugins/best-practices",
-      "description": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙",
-      "version": "2026.03.3",
-      "keywords": ["conventions", "best-practices", "react", "typescript", "structure", "styling", "accessibility", "testing", "naming", "performance"]
+      "name": "rules",
+      "source": "./plugins/rules",
+      "description": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙 (35개 규칙)",
+      "version": "2026.03.4",
+      "keywords": ["rules", "conventions", "best-practices", "react", "typescript", "structure", "styling", "accessibility", "testing", "naming"]
     }
   ]
 }

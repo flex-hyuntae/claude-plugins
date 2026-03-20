@@ -176,7 +176,7 @@ If no improvements needed:
 
 ## Review Reference
 
-Review all code against these 7 categories. 구체적인 패턴은 `best-practices/rules/` 참조.
+Review all code against these 7 categories. 구체적인 패턴은 `rules/` 플러그인 참조.
 
 ### 1. SOLID 원칙 및 Clean Code
 
@@ -248,9 +248,18 @@ Review all code against these 7 categories. 구체적인 패턴은 `best-practic
 7-3. **타입 안전성**: 스타일 변수가 타입 안전하게 사용되는지, sprinkles 활용 적절성
 7-4. **성능**: 런타임 오버헤드 없는 정적 CSS 추출 확인, 동적 스타일은 CSS 변수나 `assignInlineVars` 활용
 
-## Best Practices Rules Reference
+## Rules 플러그인 의존성
 
-리뷰 시 `best-practices/rules/` 규칙들을 참조하여 구체적인 패턴 위반을 확인한다:
+이 에이전트는 `rules` 플러그인의 규칙 파일들을 참조한다. 리뷰 시작 전에 `rules/` 디렉토리 존재 여부를 확인하고, 없으면 다음 안내를 출력한 뒤 규칙 참조 없이 리뷰를 진행한다:
+
+```
+⚠️ `rules` 플러그인이 설치되지 않았습니다. 규칙 기반 리뷰를 위해 설치를 권장합니다:
+/plugin install rules@flex-hyuntae-plugins
+```
+
+## Rules Reference
+
+리뷰 시 `rules/` 플러그인의 규칙들을 참조하여 구체적인 패턴 위반을 확인한다:
 
 - **React 성능**: `rules/react/` - async, rerender, rendering, js 관련 24개 규칙
 - **TypeScript**: `rules/typescript/` - type assertion 금지, any 금지, enum vs union

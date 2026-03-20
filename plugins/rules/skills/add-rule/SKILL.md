@@ -1,21 +1,20 @@
 ---
-name: add-best-practice
-description: "코딩 패턴이나 컨벤션을 rules/에 추가한다."
+name: add-rule
+description: "코딩 패턴이나 컨벤션을 rules 플러그인에 추가한다."
 disable-model-invocation: true
 argument-hint: "<패턴 설명>"
 ---
 
-# Best Practice 추가
+# Rule 추가
 
 사용자가 "패턴 추가", "컨벤션 추가", "앞으로 이렇게 작성해줘", "add convention", "add pattern" 등으로 호출하면 다음 흐름을 따른다.
 
 ## 1. 저장 절차
 
-1. 해당 카테고리의 `rules/` 디렉토리에서 기존 파일들과 **중복 확인**
+1. 해당 카테고리 디렉토리에서 기존 파일들과 **중복 확인**
 2. 적절한 카테고리와 prefix 결정
-3. `rules/<category>/<prefix>-<name>.md` 파일 생성
-4. 해당 카테고리의 `skills/<category>/SKILL.md` Quick Reference에 추가
-5. **버전 bump 필수**: `.claude-plugin/plugin.json`과 `marketplace.json`의 version을 동일하게 올린다
+3. `<category>/<prefix>-<name>.md` 파일 생성
+4. **버전 bump 필수**: `.claude-plugin/plugin.json`과 `marketplace.json`의 version을 동일하게 올린다
 
 ## 2. Rule 파일 형식
 
@@ -45,7 +44,7 @@ tags: tag1, tag2
 | testing | `test-` | AAA 패턴, 테스트 품질 |
 | naming | `naming-` | 네이밍, i18n, 주석 |
 
-새 카테고리가 필요하면 `rules/<new-category>/`와 `skills/<new-category>/SKILL.md`를 함께 생성한다.
+새 카테고리가 필요하면 `<new-category>/` 디렉토리를 생성한다.
 
 ## 4. 완료 보고
 
