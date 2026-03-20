@@ -13,8 +13,8 @@
 ### deep-interview
 
 ```
-/plan:deep-interview
-/plan:deep-interview 목표 관리 엑셀 다운로드 기능
+/deep-interview
+/deep-interview 목표 관리 엑셀 다운로드 기능
 ```
 
 한국어로 심층 질문을 진행하고, 완료 후 `spec/{feature-name}/` 디렉토리에 스펙 문서를 생성합니다. 스펙 완료 후 `/flex-workflow:create-tickets`로 Linear 티켓을 생성할 수 있습니다.
