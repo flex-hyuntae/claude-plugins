@@ -23,8 +23,8 @@ Git 워크플로우 자동화 플러그인. Conventional commit 형식의 커밋
 ### github-pr
 
 ```
-/pr
-/pr --draft
+/github-pr
+/github-pr --draft
 ```
 
 현재 브랜치의 모든 커밋을 분석하여 PR 제목(conventional commit)과 한국어 설명을 자동 생성합니다. PR 생성 전 type-check/lint/test 검증을 수행하고, 대화에서 학습 포인트를 정리합니다.
