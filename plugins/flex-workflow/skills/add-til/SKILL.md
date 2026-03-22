@@ -1,6 +1,6 @@
 ---
 name: add-til
-description: "오늘 배운 내용(TIL)을 Notion 데이터베이스에 기록한다."
+description: "오늘 배운 내용(TIL)을 Obsidian vault(GitHub repo)에 토픽 노트로 기록한다."
 argument-hint: "<배운 내용>"
 ---
 
@@ -8,46 +8,68 @@ argument-hint: "<배운 내용>"
 
 사용자가 "오늘 배운거야", "TIL", "지식 기반에 추가해줘", "배운점 추가" 등으로 호출하면 다음 흐름을 따른다.
 
-## 0. Notion MCP 연결 확인
+## 0. Vault 경로 확인
 
-Notion MCP 도구(`mcp__notion__notion-create-pages` 등)가 사용 가능한지 확인한다.
-사용 불가능하면 다음 메시지를 출력하고 중단한다:
+TIL vault 경로: `~/Projects/flex/til`
+GitHub repo: `flex-hyuntae/til` (private)
 
-> Notion MCP가 연결되어 있지 않습니다.
-> Claude Code 설정에서 Notion MCP 서버를 추가해주세요.
-> 참고: https://www.notion.so/integrations
+해당 디렉토리가 존재하는지 확인한다. 없으면 다음 메시지를 출력하고 중단한다:
+
+> TIL vault가 없습니다. 먼저 `gh repo clone flex-hyuntae/til ~/Projects/flex/til` 로 클론해주세요.
 
 ## 1. 내용 정리
 
 사용자가 제공한 내용을 분석하여:
-- **제목**: 배운 내용을 한 줄로 요약 (예: "모달 닫기 애니메이션을 위한 open/type 상태 분리 패턴")
+- **토픽 제목**: 배운 내용의 핵심 주제 (예: "AG-Grid 셀 상태 관리", "webpack bail 옵션과 child compiler")
 - **날짜**: 오늘 날짜 (YYYY-MM-DD 형식)
-- **본문**: 사용자가 제공한 상세 내용을 정리 (마크다운 형식)
+- **태그**: 관련 기술 키워드 (예: `[webpack, css, vanilla-extract]`)
+- **본문**: 사용자가 제공한 상세 내용을 마크다운으로 정리
+- **연결 노트**: 기존 Topics/ 폴더의 노트를 확인하여 관련 있는 노트를 `[[노트명]]` 링크로 연결
 
-## 2. Notion 페이지 생성
+## 2. 기존 노트 확인
 
-`mcp__notion__notion-create-pages` 도구를 사용하여 페이지를 생성한다.
+`~/Projects/flex/til/Topics/` 폴더의 기존 노트 목록을 확인한다.
+- 내용이 기존 토픽과 겹치면 기존 노트를 업데이트할지 새로 만들지 사용자에게 확인한다.
+- 관련 있는 기존 노트가 있으면 `[[노트명]]` 으로 양방향 연결한다 (새 노트에서 기존 노트 링크 + 기존 노트에도 새 노트 링크 추가).
 
-```json
-{
-  "parent": {
-    "data_source_id": "31f0592a-4a92-805c-a5ea-000ba4b5152a"
-  },
-  "pages": [
-    {
-      "properties": {
-        "제목": "<생성한 제목>",
-        "date:날짜:start": "<오늘 날짜 YYYY-MM-DD>",
-        "date:날짜:is_datetime": 0
-      },
-      "content": "<정리한 본문>"
-    }
-  ]
-}
+## 3. 토픽 노트 생성
+
+`~/Projects/flex/til/Topics/<토픽 제목>.md` 파일을 생성한다.
+
+```markdown
+---
+date: <오늘 날짜 YYYY-MM-DD>
+tags: [<태그들>]
+---
+
+# <토픽 제목>
+
+## 요약
+
+<한두 줄 요약>
+
+## 상세 내용
+
+<정리한 본문>
+
+## 연결 노트
+
+- [[관련 토픽 1]]
+- [[관련 토픽 2]]
 ```
 
-## 3. 완료 보고
+## 4. Git 커밋 & 푸시
+
+```bash
+cd ~/Projects/flex/til
+git add -A
+git commit -m "feat: <토픽 제목> 추가"
+git push
+```
+
+## 5. 완료 보고
 
 생성 완료 후 사용자에게 보고:
-- 생성된 제목
-- Notion 페이지 링크 (응답에 포함된 경우)
+- 생성된 토픽 제목
+- 연결된 기존 노트 목록
+- Obsidian Graph View에서 확인하도록 안내
