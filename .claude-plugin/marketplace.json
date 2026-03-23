@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Personal Claude Code plugin marketplace by flex-hyuntae",
-    "version": "2026.02.3",
+    "version": "2026.03.23",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -13,36 +13,66 @@
       "name": "git",
       "source": "./plugins/git",
       "description": "Conventional commit 형식의 커밋 메시지 생성, GitHub PR 자동 생성, stacked PR rebase 정리",
-      "version": "2026.03.3",
-      "keywords": ["git", "commit", "pull-request", "conventional-commit", "rebase", "stacked-pr"]
+      "version": "2026.03.23",
+      "keywords": [
+        "git",
+        "commit",
+        "pull-request",
+        "conventional-commit",
+        "rebase",
+        "stacked-pr"
+      ]
     },
     {
       "name": "plan",
       "source": "./plugins/plan",
       "description": "심층 인터뷰를 통해 기술 스펙 문서를 자동 생성",
-      "version": "2026.03.1",
+      "version": "2026.03.23",
       "keywords": ["interview", "spec", "requirements", "planning"]
     },
     {
       "name": "code-review",
       "source": "./plugins/code-review",
       "description": "SOLID 원칙 기반 종합 코드 리뷰를 한국어로 수행하고 GitHub에 S1/S2/S3 심각도별 코멘트 작성",
-      "version": "2026.03.3",
+      "version": "2026.03.23",
       "keywords": ["code-review", "solid", "react", "typescript", "github"]
     },
     {
       "name": "flex-workflow",
       "source": "./plugins/flex-workflow",
       "description": "Flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, Linear 티켓 생성/강화, TC 작성 및 QA 테스트",
-      "version": "2026.03.6",
-      "keywords": ["deploy", "test-package", "i18n", "flex", "workflow", "til", "obsidian", "linear", "tickets", "qa", "tc"]
+      "version": "2026.03.23",
+      "keywords": [
+        "deploy",
+        "test-package",
+        "i18n",
+        "flex",
+        "workflow",
+        "til",
+        "obsidian",
+        "linear",
+        "tickets",
+        "qa",
+        "tc"
+      ]
     },
     {
       "name": "rules",
       "source": "./plugins/rules",
       "description": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙 (35개 규칙)",
-      "version": "2026.03.5",
-      "keywords": ["rules", "conventions", "best-practices", "react", "typescript", "structure", "styling", "accessibility", "testing", "naming"]
+      "version": "2026.03.23",
+      "keywords": [
+        "rules",
+        "conventions",
+        "best-practices",
+        "react",
+        "typescript",
+        "structure",
+        "styling",
+        "accessibility",
+        "testing",
+        "naming"
+      ]
     }
   ]
 }
