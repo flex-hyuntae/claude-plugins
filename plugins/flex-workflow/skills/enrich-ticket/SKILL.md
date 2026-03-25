@@ -142,6 +142,12 @@ AskUserQuestion 사용, 한국어. 질문 갯수 제약 없음 — 필요한 만
 - `path/to/hook.ts` — [역할 설명]
 - `path/to/utils.ts` — [역할 설명]
 
+# 구현 가이드
+- [어떤 파일에서 어떤 함수/컴포넌트를 수정해야 하는지 구체적으로 기술]
+- [예: `MessageList.tsx`에서 `useEffect` 내 `subscribeToTask` 호출 추가]
+- [예: `processA2AStream`의 기존 이벤트 처리 로직이 그대로 적용됨]
+- [예: `isNewContext: false`로 기존 context에 연결]
+
 # 원인 추정
 - **가설**: [개발자의 원인 추정]
 - **확인 포인트**: [검증할 코드 위치/조건]
