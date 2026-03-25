@@ -17,7 +17,7 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 
 ### Phase 1: Slack 검색
 
-두 검색을 **병렬로** 실행한다. response_format은 `detailed`를 사용한다.
+세 검색을 **병렬로** 실행한다. response_format은 `detailed`를 사용한다.
 
 **검색 1 — 참여한 스레드 (답장):**
 
@@ -39,6 +39,16 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 - limit: 20
 - response_format: detailed
 
+**검색 3 — 멘션된 스레드 (타인이 나를 멘션):**
+
+`mcp__claude_ai_Slack__slack_search_public_and_private`로 검색:
+- query: `to:<@U03VBV710JY> on:{오늘 날짜}`
+- include_context: false
+- sort: timestamp
+- sort_dir: desc
+- limit: 20
+- response_format: detailed
+
 결과가 20개 이상이면 cursor로 다음 페이지를 모두 가져온다.
 
 ### Phase 2: 고유 스레드 목록 구성
@@ -52,7 +62,12 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 - 답장이 있는 메시지만 포함 (reply_count > 0)
 - `channel_id`와 `message_ts`를 추출
 
-두 결과를 합치고 `channel_id + parent_ts` 기준으로 중복 제거한다.
+**검색 3 결과** (멘션된 메시지):
+- 각 메시지의 permalink에서 `thread_ts` 파라미터가 있으면 추출 → 부모 메시지 timestamp
+- `thread_ts`가 없으면 `message_ts`를 사용 (최상위 메시지에서 멘션된 경우)
+- `channel_id`와 `parent_ts`를 추출
+
+세 결과를 합치고 `channel_id + parent_ts` 기준으로 중복 제거한다.
 
 ### Phase 3: 스레드 읽기 + 링크 추출
 
