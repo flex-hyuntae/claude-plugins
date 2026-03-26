@@ -12,12 +12,14 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 - **Slack User ID**: `U03VBV710JY`
 - **Workspace**: `flex-cv82520.slack.com`
 - **날짜**: 오늘 (YYYY-MM-DD)
+- **봇 알림 채널 (직접 읽기 필요)**:
+  - `C02CWLDRP6F` — #alarm-git-pr-frontend (GitHub 봇이 attachment로 멘션하므로 검색 불가)
 
 ## Workflow
 
 ### Phase 1: Slack 검색
 
-세 검색을 **병렬로** 실행한다. response_format은 `detailed`를 사용한다.
+검색 1~3을 **병렬로** 실행한다. response_format은 `detailed`를 사용한다.
 
 **검색 1 — 참여한 스레드 (답장):**
 
@@ -51,6 +53,16 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 
 결과가 20개 이상이면 cursor로 다음 페이지를 모두 가져온다.
 
+**검색 4 — 봇 알림 채널 직접 읽기:**
+
+Constants의 봇 알림 채널은 검색 API로 멘션을 잡을 수 없다 (봇이 attachment/block 형태로 보내서 텍스트가 비어있음).
+`mcp__claude_ai_Slack__slack_read_channel`로 직접 읽는다:
+- channel_id: 각 봇 알림 채널 ID
+- oldest: 오늘 00:00:00 KST의 Unix timestamp
+- response_format: concise
+
+읽은 메시지 중에서 `<@U03VBV710JY>` 멘션이 포함된 스레드만 추출한다.
+
 ### Phase 2: 고유 스레드 목록 구성
 
 **검색 1 결과** (스레드 답장):
@@ -67,7 +79,11 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 - `thread_ts`가 없으면 `message_ts`를 사용 (최상위 메시지에서 멘션된 경우)
 - `channel_id`와 `parent_ts`를 추출
 
-세 결과를 합치고 `channel_id + parent_ts` 기준으로 중복 제거한다.
+**검색 4 결과** (봇 알림 채널):
+- 내 멘션이 포함된 메시지의 `thread_ts` 또는 `message_ts`를 추출
+- `channel_id`와 `parent_ts`를 추출
+
+모든 결과를 합치고 `channel_id + parent_ts` 기준으로 중복 제거한다.
 
 ### Phase 3: 스레드 읽기 + 링크 추출
 
