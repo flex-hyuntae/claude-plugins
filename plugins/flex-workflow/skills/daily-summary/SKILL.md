@@ -14,12 +14,14 @@ description: "오늘 참여한 Slack 스레드를 시간순으로 요약하고, 
 - **날짜**: 오늘 (YYYY-MM-DD)
 - **봇 알림 채널 (직접 읽기 필요)**:
   - `C02CWLDRP6F` — #alarm-git-pr-frontend (GitHub 봇이 attachment로 멘션하므로 검색 불가)
+  - `C03B26ULE21` — 배포 알림 채널 (dev-bot, attachment 형태)
+  - `CR2CWKF8Q` — 배포 알림 채널 (dev-bot, attachment 형태)
 
 ## Workflow
 
 ### Phase 1: Slack 검색
 
-검색 1~3을 **병렬로** 실행한다. response_format은 `detailed`를 사용한다.
+검색 1~3과 봇 채널 읽기를 **병렬로** 실행한다. response_format은 `detailed`를 사용한다.
 
 **검색 1 — 참여한 스레드 (답장):**
 
@@ -61,9 +63,29 @@ Constants의 봇 알림 채널은 검색 API로 멘션을 잡을 수 없다 (봇
 `mcp__claude_ai_Slack__slack_read_channel`로 직접 읽는다:
 - channel_id: 각 봇 알림 채널 ID
 - oldest: 오늘 00:00:00 KST의 Unix timestamp
-- response_format: concise
+- response_format: detailed
+- limit: 100
 
-읽은 메시지 중에서 `<@U03VBV710JY>` 멘션이 포함된 스레드만 추출한다.
+봇 채널 메시지의 텍스트는 비어있으므로, 스레드가 있는 메시지(reply_count > 0이고 오늘 답글이 있는)를 추출한다.
+해당 스레드의 replies를 `slack_read_thread`로 읽어서 `<@U03VBV710JY>` 멘션이 포함된 스레드만 포함한다.
+텍스트에서 멘션을 못 찾으면: GitHub DM(`D040QG6LW95`)에서 추출한 PR URL과 매칭하여 관련 스레드를 식별한다.
+
+### Phase 1.5: 동적 채널 활동 스캔
+
+검색 1~3 결과에서 등장한 **고유 channel_id 목록**을 추출한다. (DM, Group DM 채널은 제외 — channel ID가 `D`나 Group DM으로 시작하는 것 제외)
+
+이 채널 목록 각각에 대해 `mcp__claude_ai_Slack__slack_read_channel`로 오늘 메시지를 읽는다:
+- oldest: 오늘 00:00:00 KST의 Unix timestamp
+- response_format: concise
+- limit: 100
+
+읽은 결과에서:
+1. 오늘 활동이 있는 스레드를 추출한다 (thread_ts가 있는 메시지 또는 reply_count > 0인 부모 메시지)
+2. 부모 메시지의 timestamp가 오늘 **이전**인 것만 필터한다 (오늘 시작된 스레드는 검색 1~3에서 이미 캡처됨)
+3. Phase 2에서 이미 수집된 스레드와 중복 제거한다
+4. 새로 발견된 부모 스레드를 `slack_read_thread`로 읽어서, 다음 조건 중 하나라도 만족하는 스레드만 포함한다:
+   - `<@U03VBV710JY>` 직접 멘션이 있는 스레드
+   - 유저(`U03VBV710JY`)가 메시지를 작성한 적 있는 스레드 (참여한 스레드)
 
 ### Phase 2: 고유 스레드 목록 구성
 
@@ -82,8 +104,11 @@ Constants의 봇 알림 채널은 검색 API로 멘션을 잡을 수 없다 (봇
 - `channel_id`와 `parent_ts`를 추출
 
 **검색 4 결과** (봇 알림 채널):
-- 내 멘션이 포함된 메시지의 `thread_ts` 또는 `message_ts`를 추출
+- 유저 관련 PR 스레드의 `thread_ts` 또는 `message_ts`를 추출
 - `channel_id`와 `parent_ts`를 추출
+
+**Phase 1.5 결과** (동적 채널 활동 스캔):
+- 과거 스레드 중 유저 관여 확인된 것의 `channel_id`와 `parent_ts`를 추가
 
 모든 결과를 합치고 `channel_id + parent_ts` 기준으로 중복 제거한다.
 
@@ -100,7 +125,12 @@ Constants의 봇 알림 채널은 검색 API로 멘션을 잡을 수 없다 (봇
 - response_format: concise
 - 모든 메시지에서 URL 패턴을 검색한다.
 
-**3-3. Slack permalink 생성:**
+**3-3. 봇 채널 스레드 처리:**
+
+봇 알림 채널(C02CWLDRP6F, C03B26ULE21, CR2CWKF8Q)의 스레드는 텍스트가 비어있을 수 있다.
+이 경우 GitHub DM 데이터에서 매칭된 PR URL을 사용하거나, "GitHub PR notification" 으로 표기한다.
+
+**3-4. Slack permalink 생성:**
 
 부모 메시지의 `message_ts`에서 `.`을 제거하여 permalink 생성:
 `https://flex-cv82520.slack.com/archives/{channel_id}/p{ts_without_dot}`
@@ -149,3 +179,4 @@ N. **한줄 요약** ([thread](slack_permalink))
 - 같은 URL이 여러 스레드에서 발견되어도 각 스레드에서 별도로 출력한다.
 - 오늘 활동이 없으면: "오늘 Slack 활동이 없습니다." 출력
 - 스레드 읽기 실패 시 해당 스레드는 Slack permalink와 "읽기 실패"만 출력
+- 봇 채널 스레드의 텍스트가 비어있으면 "GitHub PR notification"으로 표기하고, 가능한 경우 GitHub DM에서 매칭된 PR 정보를 포함한다.
