@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Personal Claude Code plugin marketplace by flex-hyuntae",
-    "version": "2026.03.23",
+    "version": "2026.03.27",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -23,14 +23,7 @@
         "stacked-pr"
       ]
     },
-    {
-      "name": "plan",
-      "source": "./plugins/plan",
-      "description": "심층 인터뷰를 통해 기술 스펙 문서를 자동 생성",
-      "version": "2026.03.25.1",
-      "keywords": ["interview", "spec", "requirements", "planning"]
-    },
-    {
+{
       "name": "code-review",
       "source": "./plugins/code-review",
       "description": "SOLID 원칙 기반 종합 코드 리뷰를 한국어로 수행하고 GitHub에 S1/S2/S3 심각도별 코멘트 작성",
@@ -40,8 +33,8 @@
     {
       "name": "flex-workflow",
       "source": "./plugins/flex-workflow",
-      "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, Linear 티켓 생성/강화, TC 작성, QA 테스트, 일일 활동 요약",
-      "version": "2026.03.27.1",
+      "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, 일일 활동 요약",
+      "version": "2026.03.27.2",
       "keywords": [
         "deploy",
         "test-package",
@@ -50,10 +43,6 @@
         "workflow",
         "til",
         "obsidian",
-        "linear",
-        "tickets",
-        "qa",
-        "tc",
         "daily-summary",
         "slack"
       ]
