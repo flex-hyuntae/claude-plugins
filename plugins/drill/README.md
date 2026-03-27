@@ -23,7 +23,7 @@ plan → prepare → [개발] → review → qa
 ## 출력 구조
 
 ```
-~/Projects/til/spec/{feature-name}/
+~/Projects/flex/til/spec/{feature-name}/
 ├── SPEC.md              # Index — 문제 정의, 전체 동작, concept 링크
 ├── concepts/
 │   ├── table.md         # 개별 동작 명세 (SHOULD/SHOULD NOT)

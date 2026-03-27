@@ -12,7 +12,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 ## 출력 구조
 
 ```
-~/Projects/til/spec/{feature-name}/
+~/Projects/flex/til/spec/{feature-name}/
 ├── SPEC.md              # Index — 문제 정의, 전체 동작, concept 링크
 └── concepts/
     ├── {name}.md        # 개별 동작 명세
@@ -28,7 +28,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 - Notion URL → 문서 로드
 - Figma URL → 디자인 문서 로드
 - 주제가 명확하지 않으면 AskUserQuestion으로 명확히 합니다
-- 기존 `~/Projects/til/spec/` 디렉토리에 관련 스펙이 있는지 확인합니다 (Glob 사용)
+- 기존 `~/Projects/flex/til/spec/` 디렉토리에 관련 스펙이 있는지 확인합니다 (Glob 사용)
 
 ### Phase 2: 문제 정의 인터뷰
 
@@ -115,7 +115,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 - 문제 정의 (Phase 2에서 수집)
 - 전체 동작 설명
 - Concepts 테이블 (각 concept 파일 링크)
-- Decision Log (빈 테이블)
+- Decision Log (빈 테이블) — plan 단계에서는 엔트리를 채우지 않음. Decision Log는 review 단계(`/drill:review`)에서 Spec과 구현의 차이가 발견될 때만 작성
 - 피그마/노션 참조 링크
 
 **concepts/{name}.md** — `templates/CONCEPT.md` 형식 참조:
@@ -131,7 +131,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 - 사용자 플로우는 ASCII 다이어그램으로 표현
 - Concept 간 관계는 `관련 Concept` 섹션에 상대 경로 링크로 표현
 
-**저장 위치:** `~/Projects/til/spec/{feature-name}/` (프로젝트 루트 기준)
+**저장 위치:** `~/Projects/flex/til/spec/{feature-name}/` (프로젝트 루트 기준)
 
 ### Phase 7: 최종 확인
 

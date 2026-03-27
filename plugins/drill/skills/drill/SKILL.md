@@ -28,7 +28,7 @@ plan → prepare → [개발] → review → qa 워크플로우를 연결하는 
 
 ## 상태 추적
 
-`~/Projects/til/spec/{feature}/.drill-state.json`에 진행 상태를 저장합니다:
+`~/Projects/flex/til/spec/{feature}/.drill-state.json`에 진행 상태를 저장합니다:
 
 ```json
 {
@@ -54,7 +54,7 @@ plan → prepare → [개발] → review → qa 워크플로우를 연결하는 
 /drill:drill
 ```
 
-`~/Projects/til/spec/` 하위의 모든 `.drill-state.json`을 스캔하여 진행 중인 drill 목록을 표시합니다:
+`~/Projects/flex/til/spec/` 하위의 모든 `.drill-state.json`을 스캔하여 진행 중인 drill 목록을 표시합니다:
 
 ```
 진행 중인 drill:
