@@ -1,7 +1,5 @@
 # {FEATURE-NAME} - Spec
 
-> 이 파일의 이름은 `{FEATURE-NAME}.md`입니다. (예: `STREAMING-ANIMATION.md`)
-
 ## 문제 정의
 
 [무엇이 문제이고 왜 해결해야 하는지]
