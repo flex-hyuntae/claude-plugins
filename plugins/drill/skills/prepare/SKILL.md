@@ -51,7 +51,7 @@ Spec/Concepts를 기반으로 Linear 티켓을 생성하거나, 기존 티켓을
 
 ### Phase 1: 스펙 문서 로드
 
-- `~/Projects/flex/til/spec/{feature-name}/SPEC.md` 읽기
+- `~/Projects/flex/til/spec/{feature-name}/{FEATURE-NAME}.md` 읽기
 - `~/Projects/flex/til/spec/{feature-name}/concepts/*.md` 파일들 모두 읽기
 - 디렉토리가 없으면: `/drill:plan`을 먼저 실행하세요
 
@@ -122,9 +122,9 @@ Concept들을 분석하여 티켓 분해안을 작성합니다.
 - 구현 가이드 (코드 탐색 결과)
 - 코드 위치
 
-### Phase 6: SPEC.md 업데이트
+### Phase 6: Spec 파일 업데이트
 
-생성된 티켓 정보를 SPEC.md에 반영하지 않습니다 (Linear 섹션 없음).
+생성된 티켓 정보를 Spec 파일에 반영하지 않습니다 (Linear 섹션 없음).
 대신 사용자에게 생성된 티켓 목록과 URL을 안내합니다.
 
 ---

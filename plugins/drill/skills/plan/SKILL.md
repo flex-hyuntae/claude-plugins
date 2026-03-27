@@ -13,7 +13,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 ```
 ~/Projects/flex/til/spec/{feature-name}/
-├── SPEC.md              # Index — 문제 정의, 전체 동작, concept 링크
+├── {FEATURE-NAME}.md    # Index — 문제 정의, 전체 동작, concept 링크
 └── concepts/
     ├── {name}.md        # 개별 동작 명세
     └── ...
@@ -111,7 +111,8 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 확정된 Concept 목록으로 Spec 문서를 작성합니다.
 
-**SPEC.md** — `templates/SPEC.md` 형식 참조:
+**{FEATURE-NAME}.md** — `templates/SPEC.md` 형식 참조:
+- 파일명은 feature name을 대문자 + 하이픈으로 (예: `STREAMING-ANIMATION.md`)
 - 제목의 feature name은 **대문자**로 작성 (예: `# MARKDOWN ANIMATION - Spec`)
 - 문제 정의 (Phase 2에서 수집)
 - 전체 동작 설명
@@ -159,7 +160,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
    ↓
 5. Concept 확인 (사용자 검증)
    ↓
-6. 문서 작성 (SPEC.md + concepts/*.md)
+6. 문서 작성 ({FEATURE-NAME}.md + concepts/*.md)
    ↓
 7. 최종 확인
 ```

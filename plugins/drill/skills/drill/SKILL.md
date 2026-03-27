@@ -15,7 +15,7 @@ plan → prepare → [개발] → review → qa 워크플로우를 연결하는 
 ```
 /drill:drill {feature}
    ↓
-1. /drill:plan         → SPEC.md + concepts/ 생성
+1. /drill:plan         → {FEATURE-NAME}.md + concepts/ 생성
    ↓
 2. /drill:prepare      → Linear 티켓 생성
    ↓
@@ -110,7 +110,7 @@ AskUserQuestion으로 시작 단계 선택.
 2. 다음 단계 안내
 
 ```
-✅ plan 단계 완료 — SPEC.md + 3개 Concept 생성
+✅ plan 단계 완료 — {FEATURE-NAME}.md + 3개 Concept 생성
 
 다음 단계: prepare (Linear 티켓 생성)
 진행할까요?
