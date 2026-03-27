@@ -59,6 +59,24 @@
       ]
     },
     {
+      "name": "drill",
+      "source": "./plugins/drill",
+      "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
+      "version": "2026.03",
+      "keywords": [
+        "spec",
+        "concept",
+        "ticket",
+        "review",
+        "sync",
+        "tc",
+        "workflow",
+        "orchestration",
+        "drill",
+        "interview"
+      ]
+    },
+    {
       "name": "rules",
       "source": "./plugins/rules",
       "description": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙 (35개 규칙)",
