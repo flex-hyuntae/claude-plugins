@@ -33,8 +33,8 @@
     {
       "name": "flex-workflow",
       "source": "./plugins/flex-workflow",
-      "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, 일일 활동 요약",
-      "version": "2026.03.27.2",
+      "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록",
+      "version": "2026.03.27.3",
       "keywords": [
         "deploy",
         "test-package",
@@ -42,16 +42,14 @@
         "flex",
         "workflow",
         "til",
-        "obsidian",
-        "daily-summary",
-        "slack"
+        "obsidian"
       ]
     },
     {
       "name": "drill",
       "source": "./plugins/drill",
       "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
-      "version": "2026.03.4",
+      "version": "2026.03.27.1",
       "keywords": [
         "spec",
         "concept",
