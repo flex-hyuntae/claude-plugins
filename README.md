@@ -14,7 +14,7 @@ Personal Claude Code plugin marketplace.
 
 ```shell
 /plugin install git@flex-hyuntae-plugins
-/plugin install plan@flex-hyuntae-plugins
+/plugin install drill@flex-hyuntae-plugins
 /plugin install code-review@flex-hyuntae-plugins
 /plugin install flex-workflow@flex-hyuntae-plugins
 /plugin install rules@flex-hyuntae-plugins
@@ -31,9 +31,9 @@ Personal Claude Code plugin marketplace.
 | Plugin | Description | Commands | Agents |
 |--------|-------------|----------|--------|
 | [git](plugins/git/README.md) | Git workflow automation | `commit`, `create-pr`, `rebase-stack` | — |
-| [plan](plugins/plan/README.md) | Project planning support | `deep-interview` | — |
+| [drill](plugins/drill/README.md) | Spec/Concept 기반 개발 워크플로우 | `drill`, `plan`, `prepare`, `review`, `qa` | — |
 | [code-review](plugins/code-review/README.md) | Comprehensive code review | — | `code-review` |
-| [flex-workflow](plugins/flex-workflow/README.md) | flex project workflows | `deploy`, `test-package`, `add-til`, `create-tickets` | `i18n-convert` |
+| [flex-workflow](plugins/flex-workflow/README.md) | flex project workflows | `deploy`, `test-package`, `add-til`, `daily-summary` | `i18n-convert` |
 | [rules](plugins/rules/README.md) | 코딩 컨벤션과 성능 최적화 규칙 (35개) | `add` | — |
 
 ## Adding a Plugin
