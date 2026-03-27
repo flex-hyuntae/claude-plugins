@@ -112,6 +112,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 확정된 Concept 목록으로 Spec 문서를 작성합니다.
 
 **SPEC.md** — `templates/SPEC.md` 형식 참조:
+- 제목의 feature name은 **대문자**로 작성 (예: `# MARKDOWN ANIMATION - Spec`)
 - 문제 정의 (Phase 2에서 수집)
 - 전체 동작 설명
 - Concepts 테이블 (각 concept 파일 링크)

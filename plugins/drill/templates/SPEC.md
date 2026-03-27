@@ -1,4 +1,4 @@
-# {Feature Name} - Spec
+# {FEATURE NAME} - Spec
 
 ## 문제 정의
 
