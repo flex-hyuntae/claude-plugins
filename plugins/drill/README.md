@@ -16,6 +16,7 @@ plan → prepare → [개발] → review → qa
 |--------|------|
 | `drill` | 전체 워크플로우 오케스트레이션 (상태 추적, 이어하기) |
 | `plan` | 심층 인터뷰 → SPEC.md + Concepts 작성 |
+| `add-concept` | 기존 Spec에 새로운 Concept 추가 (독립 실행) |
 | `prepare` | Spec/Concepts → Linear 티켓 생성 또는 기존 티켓 강화 |
 | `review` | PR vs Spec/Concept 차이 감지 → Decision Log 작성 |
 | `qa` | Spec + Concepts + Decision Log → TC 작성 |
@@ -44,6 +45,7 @@ plan → prepare → [개발] → review → qa
 ### 개별 스킬
 ```
 /drill:plan 직급 생성 모달
+/drill:add-concept job-grade-modal 에러 패널
 /drill:prepare job-grade-modal
 /drill:review https://github.com/org/repo/pull/123
 /drill:qa job-grade-modal
