@@ -88,9 +88,9 @@ Use **Conventional Commit** format:
 - **ALWAYS include scope** - it's mandatory, not optional
 - Analyze ALL commits in the branch, not just the latest one
 - Determine the primary type of change (feat, fix, chore, refactor, etc.)
-- Write a concise, imperative subject line in English
+- **한글로 작성** (예: "목표 데이터 엑셀 내보내기 기능 추가")
 - Keep under 72 characters total
-- Subject should be lowercase and imperative (add, fix, update, not adds/added)
+- 간결한 명사형/동사형 종결 ("추가", "수정", "변경")
 - No period at the end
 
 **Scope Selection Guide:**
@@ -103,24 +103,24 @@ Identify scope from:
 
 **Subject Writing Guide:**
 
+- **한글로 작성**
 - Focus on WHAT changed, not HOW
-- Be concise: "use X API" not "change API to use X instead of Y"
-- Imperative mood: "add feature" not "adding feature" or "added feature"
+- 간결하게: "X API 사용" not "기존 Y API를 X API로 변경하여 승인 처리 개선"
 - Avoid implementation details in subject (save for description)
 
 **Good Examples:**
 
-- `feat(goal): add excel export functionality`
-- `fix(auth): resolve token expiration handling`
-- `refactor(user-profile): use search-with-approval API`
-- `chore(deps): update react-query to v5`
+- `feat(goal): 목표 데이터 엑셀 내보내기 기능 추가`
+- `fix(auth): 토큰 만료 처리 오류 수정`
+- `refactor(user-profile): search-with-approval API 사용`
+- `chore(deps): react-query v5 업데이트`
 
 **Bad Examples:**
 
-- `refactor: 경력/학력/가족 조회 API를 search-with-approval로 변경` (no scope, too long, mixed language, implementation details)
+- `refactor: 경력/학력/가족 조회 API를 search-with-approval로 변경` (no scope, too long, implementation details)
 - `Fix bug` (no scope, not specific)
-- `feat: Added new feature for users` (no scope, not imperative, capitalized)
-- `refactor(remotes-user-profile): change the API endpoint from search to search-with-approval for better approval handling` (too long, too detailed)
+- `feat: 사용자를 위한 새로운 기능 추가` (no scope)
+- `refactor(remotes-user-profile): 기존 search API를 search-with-approval로 변경하여 승인 처리 개선` (too long, too detailed)
 
 ### 5. Analyze Changes for PR Description
 
@@ -329,7 +329,7 @@ https://flexhq.slack.com/archives/xxxxx
 - Fill PR template sections with meaningful content based on actual changes
 - Always assign the PR to the user (@me)
 - Base branch is typically `develop` unless specified otherwise
-- Write descriptions in Korean (한국어) for flex project
+- PR 제목(subject)과 설명(description) 모두 한국어로 작성
 - Remove or leave blank template sections that don't apply (design, slack)
 - Check for uncommitted changes and warn user before creating PR
 - Ensure the branch is pushed to remote before creating PR

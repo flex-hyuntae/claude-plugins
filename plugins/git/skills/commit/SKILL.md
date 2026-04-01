@@ -86,8 +86,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - Never omit the scope - every commit must have one
 
 **Subject line:**
-- Use imperative mood ("add" not "added" or "adds")
-- Don't capitalize first letter
+- **한글로 작성** (예: "목표 데이터 엑셀 내보내기 기능 추가")
+- 간결한 명사형/동사형 종결 ("추가", "수정", "변경")
 - No period at the end
 - Keep under 50 characters if possible
 - Be specific and descriptive
@@ -136,10 +136,10 @@ After creating the commit:
 ### Example 1: Feature Addition
 
 ```
-feat(goal): add excel export functionality for goal data
+feat(goal): 목표 데이터 엑셀 내보내기 기능 추가
 
-Added new button and API integration to export goal data to Excel format.
-Includes error handling and success notifications.
+목표 데이터를 Excel 파일로 내보내는 버튼과 API 연동을 추가.
+에러 처리 및 성공 알림 포함.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
@@ -147,7 +147,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Example 2: Bug Fix
 
 ```
-fix(auth): resolve token expiration handling
+fix(auth): 토큰 만료 처리 오류 수정
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
@@ -155,7 +155,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Example 3: Chore
 
 ```
-chore(deps): update react-query to v5.0.0
+chore(deps): react-query v5.0.0 업데이트
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
@@ -163,10 +163,10 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Example 4: Refactoring
 
 ```
-refactor(review): extract review comment logic to custom hook
+refactor(review): 리뷰 코멘트 로직을 커스텀 훅으로 분리
 
-Moved complex comment handling logic from component to useReviewComments hook
-for better testability and reusability.
+복잡한 코멘트 처리 로직을 useReviewComments 훅으로 분리하여
+테스트 용이성과 재사용성 개선.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
@@ -175,14 +175,14 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ```
 # WRONG - Missing scope
-refactor: extract review comment logic to custom hook
+refactor: 리뷰 코멘트 로직을 커스텀 훅으로 분리
 
 # WRONG - Missing scope
-fix: resolve token expiration handling
+fix: 토큰 만료 처리 오류 수정
 
 # CORRECT - With scope
-refactor(review): extract review comment logic to custom hook
-fix(auth): resolve token expiration handling
+refactor(review): 리뷰 코멘트 로직을 커스텀 훅으로 분리
+fix(auth): 토큰 만료 처리 오류 수정
 ```
 
 ## Important Notes
