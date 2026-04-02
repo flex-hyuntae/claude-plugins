@@ -33,6 +33,11 @@ GitHub repo: `flex-hyuntae/til` (private)
 - 내용이 기존 토픽과 겹치면 기존 노트를 업데이트할지 새로 만들지 사용자에게 확인한다.
 - 관련 있는 기존 노트가 있으면 `[[노트명]]` 으로 양방향 연결한다 (새 노트에서 기존 노트 링크 + 기존 노트에도 새 노트 링크 추가).
 
+## 작성 규칙
+
+- 기술 용어는 영어로 작성한다 (예: reconciliation, call stack, linked list, bailout, bitmask, shallow comparison)
+- 설명 문장은 한국어로 작성하되, 널리 쓰이는 기술 용어는 음역하지 않고 영어 원문 그대로 쓴다
+
 ## 3. 토픽 노트 생성
 
 `~/Projects/flex/til/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `graph.json`의 `colorGroups`에 새 색상 그룹을 추가한다.
