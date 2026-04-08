@@ -130,13 +130,13 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 **concepts/{name}.md** — `templates/CONCEPT.md` 형식 참조:
 - 개요: 이 개념이 무엇인지
-- 책임: 이 개념이 해야 할 일, 사용자 플로우, 에지 케이스. 다른 concept에 영향을 주는 부분은 `→ [[concept]]` 인라인 링크
+- 책임: 이 개념이 해야 할 일, 사용자 플로우, 에지 케이스. 다른 concept에 영향을 주는 부분은 `[[concept]]` 인라인 링크
 - 관련 Concept 링크
 
 **Concept 원칙:**
 - **단일 책임**: 각 Concept은 자기 책임만 다룬다. 책임 외의 것은 진행하지 않는다
 - **책임 확장**: 필요하면 책임을 키우고 개념도 변경한다
-- **영향 명시**: 자기 동작이 다른 concept에 영향을 주면 `→ [[concept]]`로 표시
+- **영향 명시**: 자기 동작이 다른 concept에 영향을 주면 `[[concept]]`로 표시
 - **구현 상세 제외**: 파일 경로, 코드 스니펫, 함수명, 컴포넌트명 등
 - **구체적 코드명 사용 금지**: `subscribeToTask` → "재구독 호출", `MessageList.tsx` → "메시지 리스트"
 - 사용자 플로우는 ASCII 다이어그램으로 표현
