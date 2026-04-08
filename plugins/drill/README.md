@@ -7,7 +7,7 @@ Spec/Concept 기반 개발 워크플로우 오케스트레이션 플러그인.
 ## 워크플로우
 
 ```
-plan → prepare → [개발] → review → qa
+plan → prepare → write → review → qa
 ```
 
 ## 커맨드
@@ -18,6 +18,7 @@ plan → prepare → [개발] → review → qa
 | `plan` | 심층 인터뷰 → SPEC.md + Concepts 작성 |
 | `add-concept` | 기존 Spec에 새로운 Concept 추가 (독립 실행) |
 | `prepare` | Spec/Concepts → Linear 티켓 생성 또는 기존 티켓 강화 |
+| `write` | Linear 티켓 기반 Spec/Concept 참조 코드 작성 |
 | `review` | PR vs Spec/Concept 차이 감지 → Decision Log 작성 |
 | `qa` | Spec + Concepts + Decision Log → TC 작성 |
 
@@ -47,6 +48,7 @@ plan → prepare → [개발] → review → qa
 /drill:plan 직급 생성 모달
 /drill:add-concept job-grade-modal 에러 패널
 /drill:prepare job-grade-modal
+/drill:write CORE-1234
 /drill:review https://github.com/org/repo/pull/123
 /drill:qa job-grade-modal
 ```

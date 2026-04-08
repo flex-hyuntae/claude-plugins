@@ -1,7 +1,7 @@
 ---
 name: write
 description: "코드를 작성·수정·리팩토링할 때 rules 플러그인의 규칙을 참조한다. React 컴포넌트, TypeScript, 스타일링, 프로젝트 구조, 접근성, 테스트, 네이밍 관련 코드를 생성할 때 자동으로 사용한다."
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Rules 적용
