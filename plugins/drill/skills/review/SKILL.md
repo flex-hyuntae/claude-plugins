@@ -77,6 +77,7 @@ Concept '{name}'에서는 "{SHOULD 항목}"으로 정의되어 있는데,
 **선택지:**
 - **의도적 변경** — Decision Log 생성 + 기존 Concept 업데이트
 - **Concept 추가 필요** — 새 Concept 파일 생성 + Decision Log
+- **Concept 폐기/대체** — 기존 Concept을 `_archive/`로 이동 + Decision Log
 - **구현 누락** — Linear 티켓 생성 (추후 수정 대상)
 - **다른 작업에서 구현 예정** — 이 PR 범위가 아님, 기존 또는 별도 티켓에서 처리
 - **건너뛰기** — 이 차이는 무시
@@ -94,6 +95,24 @@ Concept '{name}'에서는 "{SHOULD 항목}"으로 정의되어 있는데,
 1. Decision Log 작성
 2. `~/Projects/flex/til/spec/{feature}/concepts/{new-name}.md` 새 Concept 파일 생성 (`templates/CONCEPT.md` 참조)
 3. Spec 파일 Concepts 테이블 + Decision Log 테이블 업데이트
+
+**Concept 폐기/대체:**
+1. `~/Projects/flex/til/spec/{feature}/decisions/YYYY-MM-DD-slug.md` Decision Log 작성
+   - "트리거"에 PR 또는 스펙 논의 명시
+   - 대체 concept이 있으면 링크
+2. 기존 Concept 파일을 `concepts/_archive/{name}.md`로 이동 (디렉토리 없으면 생성)
+3. 이동한 파일 상단에 archive 배너 추가:
+   ```
+   > **⚠️ Archived (YYYY-MM-DD)**
+   > {concept-name} 개념은 [{대체 concept}](../{new}.md)으로 대체되었습니다.
+   > 결정 근거: ../../decisions/YYYY-MM-DD-slug.md
+   ```
+4. Spec 파일 업데이트:
+   - Concepts 테이블에서 해당 행 제거
+   - 테이블 아래에 `archived: [name](concepts/_archive/name.md) — [사유 또는 대체] (YYYY-MM-DD)` 한 줄 추가
+   - Concept 연결 리스트에서 해당 concept 링크 제거
+   - Decision Log 테이블에 항목 추가
+5. 다른 Concept 파일들의 "관련 Concept" / 인라인 `[[name]]` 참조 정리
 
 **구현 누락:**
 1. Linear 티켓 생성 (`mcp__linear-server__save_issue`)

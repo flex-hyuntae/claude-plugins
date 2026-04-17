@@ -125,6 +125,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 - 문제 정의 (Phase 2에서 수집)
 - 전체 동작 설명
 - Concepts 테이블 (각 concept 파일 링크)
+- **Concept 연결**은 하이픈 리스트로 `[name](concepts/name.md) → [name](concepts/name.md): 설명` 형식. 코드블럭 안에 `[[concept]]`만 쓰면 GitHub/VS Code에서 링크가 렌더되지 않으므로 금지
 - Decision Log (빈 테이블) — plan 단계에서는 엔트리를 채우지 않음. Decision Log는 review 단계(`/drill:review`)에서 Spec과 구현의 차이가 발견될 때만 작성
 - 피그마/노션 참조 링크
 
