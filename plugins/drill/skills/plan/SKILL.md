@@ -148,7 +148,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 스펙 문서 작성 후:
 - 사용자에게 스펙 문서 경로 안내
-- Concept별 핵심 SHOULD/SHOULD NOT 요약 제공
+- Concept별 핵심 책임·에지 케이스 요약 제공
 - 추가 인터뷰 필요 여부 확인
 - 다음 단계 안내: `/drill:prepare`로 티켓 생성
 
@@ -177,7 +177,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 다음 조건이 모두 충족되면 인터뷰 종료:
 - 핵심 도메인 개념이 식별됨 (모델, 구조, 프로세스, 정책)
-- 각 Concept의 개요와 SHOULD/SHOULD NOT이 정의됨
+- 각 Concept의 개요와 책임·에지 케이스가 정의됨
 - Concept 간 관계가 파악됨
 - 더 이상 중요한 미결 질문이 없음
 

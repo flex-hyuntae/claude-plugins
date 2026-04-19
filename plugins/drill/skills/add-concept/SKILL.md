@@ -55,11 +55,11 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 - 명백하거나 피상적인 질문 금지
 - 구현 상세(파일명, 함수명, 라이브러리)가 아닌 **동작**에 집중
 - "만약 ~한 상황이라면?" 형태의 시나리오 기반 질문
-- 기존 Concept의 SHOULD/SHOULD NOT을 참조하여 경계 질문 생성
+- 기존 Concept의 책임·에지 케이스를 참조하여 경계 질문 생성
 - AskUserQuestion 사용, 한국어
 
 **인터뷰 완료 판단:**
-- SHOULD/SHOULD NOT이 정의됨
+- 책임·에지 케이스가 정의됨
 - 주요 사용자 플로우가 파악됨
 - 에지 케이스가 충분히 수집됨
 - 기존 Concept과의 경계가 명확함
@@ -68,16 +68,16 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 
 `templates/CONCEPT.md` 형식으로 `concepts/{name}.md` 생성:
 - 이 동작이 해결하는 문제
-- SHOULD: 기본 동작, 사용자 플로우 (ASCII 다이어그램), 에지 케이스
-- SHOULD NOT: 금지 동작 + 담당 Concept
+- 책임: 기본 동작, 사용자 플로우 (ASCII 다이어그램)
+- 에지 케이스: 예외/경계 상황과 기대 동작 (금지 동작은 별도 concept 담당 언급)
 - 관련 Concept 링크
 
 **문서 작성 원칙:**
-- **동작 명세만 포함**: 사용자 플로우, 에지 케이스, SHOULD/SHOULD NOT
+- **동작 명세만 포함**: 사용자 플로우, 책임, 에지 케이스
 - **구현 상세 제외**: 파일 경로, 코드 스니펫, 함수명, 컴포넌트명 등
 - 사용자 플로우는 ASCII 다이어그램으로 표현
 
-작성 후 사용자에게 핵심 SHOULD/SHOULD NOT 요약을 제시하고 확인을 요청합니다.
+작성 후 사용자에게 핵심 책임·에지 케이스 요약을 제시하고 확인을 요청합니다.
 
 ### Phase 5: Spec Index 업데이트 + 완료
 
@@ -87,7 +87,7 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 
 **완료 안내:**
 - 생성된 파일 경로
-- 핵심 SHOULD/SHOULD NOT 요약
+- 핵심 책임·에지 케이스 요약
 - 업데이트된 기존 파일 목록
 - 다음 단계 안내: 필요시 `/drill:prepare`로 관련 티켓 생성
 
