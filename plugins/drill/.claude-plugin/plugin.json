@@ -1,5 +1,5 @@
 {
   "name": "drill",
   "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
-  "version": "2026.04.20"
+  "version": "2026.04.20.1"
 }
