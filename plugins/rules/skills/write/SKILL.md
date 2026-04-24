@@ -21,6 +21,7 @@ disable-model-invocation: false
 | 시맨틱 HTML, ARIA, 키보드 | `accessibility/` | 1 |
 | 테스트 코드 | `testing/` | 1 |
 | 네이밍, i18n 키 | `naming/` | 1 |
+| flex 프로젝트 내부 컨벤션 (React Query Suspense, Modal 등) | `flex/` | 2 |
 
 ## 절차
 
