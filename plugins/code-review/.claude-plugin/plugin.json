@@ -1,5 +1,5 @@
 {
   "name": "code-review",
   "description": "SOLID 원칙 기반 종합 코드 리뷰를 한국어로 수행하고 GitHub에 S1/S2/S3 심각도별 코멘트 작성",
-  "version": "2026.03.23"
+  "version": "2026.05.12.1"
 }
