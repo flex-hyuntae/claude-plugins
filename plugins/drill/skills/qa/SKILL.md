@@ -1,6 +1,7 @@
 ---
 name: qa
-description: Spec, Concepts, Decision Log, 구현 코드를 기반으로 QA 테스트 케이스를 작성합니다
+description: 'Spec/Concept/Decision Log/구현 코드를 종합해 QA 테스트 케이스(TC)를 작성한다. 사용자가 "/drill:qa", "QA TC 만들어줘", "테스트 케이스 작성", "커버리지 매트릭스"를 요청할 때 트리거. TC 초안 작성은 drill-qa agent에 위임 — 이 skill은 입력 수집·사용자 리뷰·저장 담당. drill 워크플로우 마지막 단계.'
+compatibility: 'Linear MCP 권장 (티켓 컨텍스트 사용 시)'
 disable-model-invocation: true
 argument-hint: "[spec-feature-name]"
 ---

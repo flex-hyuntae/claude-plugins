@@ -1,6 +1,7 @@
 ---
 name: add-concept
-description: 기존 Spec에 새로운 Concept을 추가합니다
+description: '기존 Spec에 새로운 Concept만 독립적으로 추가한다. 사용자가 "/drill:add-concept", "concept 추가", "새 개념 정의", "스펙에 도메인 추가"를 요청할 때 트리거. 전체 plan 인터뷰를 다시 하지 않고, 개발 중 발견한 새 동작 단위만 확장할 때 사용. plan과 동일한 작성 원칙(도메인 어휘·구현 디테일 금지) 적용.'
+compatibility: 'Linear/Notion/Figma MCP 권장 (URL 입력 시).'
 disable-model-invocation: true
 argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-url|figma-url]"
 ---

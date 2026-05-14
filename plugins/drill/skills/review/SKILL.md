@@ -1,6 +1,7 @@
 ---
 name: review
-description: PR과 연결된 Linear 티켓을 대조하고, 차이를 Ticket → Concept → Spec 순으로 cascade 업데이트하며 Decision Log를 작성합니다
+description: 'PR과 연결된 Linear 티켓을 대조해 차이를 감지하고, Ticket → Concept → Spec 순으로 cascade 업데이트하며 Decision Log를 작성한다. 사용자가 "/drill:review", "PR 리뷰", "스펙 동기화", "구현이 스펙과 다르면 정리해줘"를 요청할 때 트리거. 차이 분석은 drill-review agent에 위임 — 이 skill은 사용자 확정·파일 수정 담당. drill 워크플로우 네 번째 단계.'
+compatibility: 'Linear MCP + gh CLI 필수'
 disable-model-invocation: true
 argument-hint: "[feature-name] [pr-url|pr-number]"
 ---

@@ -1,6 +1,6 @@
 ---
 name: add
-description: "코딩 패턴이나 컨벤션을 rules 플러그인에 추가한다."
+description: '새로 발견한 코딩 패턴이나 컨벤션을 rules 플러그인에 규칙 파일로 추가한다. 사용자가 "패턴 추가", "컨벤션 추가", "앞으로 이렇게 작성해줘", "rule 추가", "add convention", "add pattern", "/rules:add"로 호출할 때 트리거. 카테고리(react/typescript/styling 등) + prefix(rerender-/struct-/js-)에 맞춰 적절한 파일명·디렉토리에 저장.'
 disable-model-invocation: true
 argument-hint: "<패턴 설명>"
 ---

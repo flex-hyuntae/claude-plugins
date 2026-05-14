@@ -1,6 +1,7 @@
 ---
 name: prepare
-description: Spec/Concepts를 기반으로 Linear 티켓을 생성하거나 기존 티켓을 강화합니다
+description: 'Spec/Concepts를 바탕으로 Linear 티켓을 생성하거나 기존 티켓을 강화한다. 사용자가 "/drill:prepare", "티켓 만들어줘", "Linear 티켓 생성", "티켓 보강", "스펙에서 티켓 발급"을 요청할 때 트리거. 인자가 spec feature 이름이면 생성 모드, Linear URL/ID면 강화 모드. drill 워크플로우의 두 번째 단계(plan 다음).'
+compatibility: 'Linear MCP 필수'
 disable-model-invocation: true
 argument-hint: "[spec-feature-name|linear-issue-url|issue-id]"
 ---

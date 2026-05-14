@@ -1,6 +1,6 @@
 ---
 name: rebase-stack
-description: Stacked PR의 base branch merge 후 나머지 branch들을 순차 rebase합니다
+description: 'Stacked PR에서 base branch가 merge된 후 나머지 branch들을 순차 rebase하고 force-with-lease로 push한다. 사용자가 "restack", "/git:rebase-stack", "스택 정리", "rebase stack", "base가 merge됐어 나머지 rebase해줘"를 요청할 때 트리거. Full chain 입력 필수(merge된 branch 포함). Worktree에서 사용 중인 branch나 working tree dirty 상태면 중단. 보호 브랜치(develop/qa/main)에는 push 안 함.'
 disable-model-invocation: true
 ---
 
@@ -97,98 +97,13 @@ git log --oneline <prev-branch>..<branch>
 
 ### 4. 순차 Rebase 실행
 
-**핵심 알고리즘 (`--onto` + old tip 기반):**
+`current_target`을 base-branch로 초기화하고 chain을 순서대로 돌면서 unmerged branch만 `git rebase --onto $current_target $old_parent <branch>` 로 옮긴다. `old_parent`는 이전 branch의 OLD tip(merged 무관). 알고리즘 의사코드·구체 실행 예시·old_parent 결정 표는 [references/SCENARIOS.md](references/SCENARIOS.md) 참고.
 
-`current_target`을 base-branch로 초기화하고, chain의 각 branch를 순서대로 처리합니다.
-
-```
-current_target = <base-branch>
-
-for each bi in [branch1, branch2, ...]:
-  if bi is merged:
-    skip (current_target 변경 없음)
-  else:
-    old_parent = OLD tip of previous branch in chain
-                 (첫 번째 unmerged branch이고 이전이 모두 merged이면:
-                  git merge-base <bi> <base-branch>)
-    git rebase --onto $current_target $old_parent bi
-    current_target = bi
-```
-
-**구체적 실행 예시** (`develop → a → b → c`, a가 squash merge됨):
-
-```bash
-# 사전 저장된 old tips
-OLD_A=...  OLD_B=...  OLD_C=...
-
-# a: merged → skip, current_target = develop
-
-# b: unmerged, 이전 branch = a (merged)
-#    old_parent = OLD_A (a의 rebase 전 tip)
-git rebase --onto develop $OLD_A b
-# → a의 커밋 제외, b 자체 커밋만 replay
-# current_target = b
-
-# c: unmerged, 이전 branch = b
-#    old_parent = OLD_B
-git rebase --onto b $OLD_B c
-# current_target = c
-```
-
-**`old_parent` 결정 규칙:**
-
-| 상황 | old_parent |
-|------|-----------|
-| 이전 branch가 chain에 존재 (merged/unmerged 무관) | 이전 branch의 OLD tip |
-| chain의 첫 번째 branch이면서 unmerged | `git merge-base <branch> <base-branch>` |
-
-각 rebase 완료 후 결과를 표시합니다:
-
-```
-✅ feat/B: develop 위로 rebase 완료 (abc1234 → def5678)
-```
+각 rebase 완료 후 `✅ feat/B: develop 위로 rebase 완료 (abc1234 → def5678)` 형식으로 표시.
 
 ### 5. 충돌 처리
 
-Rebase 중 충돌이 발생하면:
-
-1. **즉시 멈추고** 충돌 파일 목록을 표시합니다:
-
-```bash
-git diff --name-only --diff-filter=U
-```
-
-2. 사용자에게 안내합니다:
-
-```
-⚠️ feat/B를 rebase하는 중 충돌이 발생했습니다.
-
-충돌 파일:
-- src/components/UserList.tsx
-- src/hooks/useUsers.ts
-
-충돌을 해결한 후 알려주세요.
-```
-
-3. `AskUserQuestion`으로 **"충돌을 해결하셨나요? (해결완료 / 중단)"** 질문합니다.
-
-4. 사용자가 "해결했다"/"해결완료"라고 답하면:
-
-```bash
-git add .
-git rebase --continue
-```
-
-- 성공하면 다음 branch로 계속 진행
-- 또 충돌이 나면 다시 1번으로 돌아감
-
-5. 사용자가 "중단"이라고 답하면:
-
-```bash
-git rebase --abort
-```
-
-중단 사유를 표시하고 skill을 종료합니다.
+Rebase 중 충돌 발생 시 즉시 멈추고 충돌 파일을 보여준 뒤 `AskUserQuestion` 으로 "해결완료 / 중단" 질문. "해결완료" → `git add . && git rebase --continue`, "중단" → `git rebase --abort` 후 종료. 안내 메시지 포맷·반복 충돌 대응 상세는 [references/SCENARIOS.md](references/SCENARIOS.md) 참고.
 
 ### 6. Force Push
 
@@ -243,59 +158,21 @@ git push --force-with-lease origin <branch2>
 
 ## 예시
 
-### 예시 1: 기본 사용 (merged branch 없음)
-
-```
-restack develop feat/auth-api feat/auth-ui feat/auth-tests
-```
-
-결과:
-- `feat/auth-api`를 `develop` 위로 rebase (`--onto develop $(merge-base) feat/auth-api`)
-- `feat/auth-ui`를 rebased `feat/auth-api` 위로 rebase (`--onto feat/auth-api $OLD_API feat/auth-ui`)
-- `feat/auth-tests`를 rebased `feat/auth-ui` 위로 rebase (`--onto feat/auth-ui $OLD_UI feat/auth-tests`)
-
-### 예시 2: 첫 번째 branch가 squash merge된 경우
-
-`develop → A → B → C` 에서 A가 develop으로 squash merge된 후:
-
-```
-restack develop feat/A feat/B feat/C
-```
-
-결과:
-- `feat/A`: merged → skip
-- `feat/B`: `git rebase --onto develop $OLD_A feat/B` (A의 커밋 제외, B 자체 커밋만 replay)
-- `feat/C`: `git rebase --onto feat/B $OLD_B feat/C`
-
-### 예시 3: 중간 branch가 merge된 경우
-
-`develop → A → B → C → D` 에서 A, B가 순차 merge된 후:
-
-```
-restack develop feat/A feat/B feat/C feat/D
-```
-
-결과:
-- `feat/A`: merged → skip
-- `feat/B`: merged → skip
-- `feat/C`: `git rebase --onto develop $OLD_B feat/C` (current_target은 develop, old_parent는 B의 old tip)
-- `feat/D`: `git rebase --onto feat/C $OLD_C feat/D`
+3가지 대표 시나리오(merged 없음 / 첫 번째 squash merge / 중간 branch merge)는 [references/SCENARIOS.md](references/SCENARIOS.md) 참고.
 
 ## 중요 사항
 
-- **Full chain 입력**: merged branch도 포함하여 정확한 old tip 기반 rebase를 보장합니다
-- **Working tree는 반드시 clean 상태**여야 합니다
-- **Protected branch (develop, qa, main)에는 절대 force push하지 않습니다**
-- `--force-with-lease`를 사용하여 다른 사람의 push를 덮어쓰지 않도록 합니다
-- 충돌 발생 시 사용자에게 해결을 맡기고, 해결 후 계속 진행합니다
-- 모든 주요 단계에서 사용자 확인을 받습니다 (계획, push)
-- Rebase 전 모든 branch의 tip을 미리 저장하여 `--onto`의 upstream으로 사용합니다
-- Squash merge된 branch는 자동 감지 불가 — 사용자 확인을 통해 판정합니다
+- Full chain 입력 (merged branch 포함) — 정확한 old tip 기반 rebase의 전제
+- Working tree clean 상태 필수
+- 보호 브랜치(develop/qa/main)에는 force push 금지
+- `--force-with-lease` 사용 (다른 사람의 push 덮어쓰기 방지)
+- 모든 주요 단계(계획·push)에서 사용자 확인
+- Squash merge는 자동 감지 불가 — 사용자 확인으로 판정
 
 ## 오류 처리
 
-- **git fetch 실패**: 네트워크 연결 확인 안내
-- **Branch 없음**: 해당 branch 이름 표시 후 종료
-- **Worktree 충돌**: worktree에서 checkout된 branch 안내 후 종료
-- **Rebase 충돌**: 충돌 파일 표시 후 사용자에게 해결 요청
-- **Push 실패**: 오류 메시지 표시 후 재시도 여부 확인
+- git fetch 실패 → 네트워크 확인 안내
+- Branch 없음 → 해당 이름 표시 후 종료
+- Worktree에서 사용 중 → 해당 branch 안내 후 종료
+- Rebase 충돌 → 충돌 파일 표시 후 사용자에게 해결 요청 (위 Step 5)
+- Push 실패 → 오류 메시지 표시 후 재시도 여부 확인

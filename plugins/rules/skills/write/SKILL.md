@@ -1,6 +1,6 @@
 ---
 name: write
-description: "코드를 작성·수정·리팩토링할 때 rules 플러그인의 규칙을 참조한다. React 컴포넌트, TypeScript, 스타일링, 프로젝트 구조, 접근성, 테스트, 네이밍 관련 코드를 생성할 때 자동으로 사용한다."
+description: '코드를 작성·수정·리팩토링할 때 rules 플러그인에 정의된 규칙(React 컴포넌트, TypeScript, 스타일링, 프로젝트 구조, 접근성, 테스트, 네이밍, flex 컨벤션)을 참조한다. Edit/Write 직전 자동 트리거해서 카테고리별 규칙 파일을 로드한 뒤 코드를 생성한다. 작업 대상 카테고리는 매핑 표 기반으로 판단 — 여러 카테고리가 겹치면 모두 로드. typescript/ts-no-any, ts-no-type-assertion, naming/naming-conventions은 항상 적용.'
 disable-model-invocation: false
 ---
 

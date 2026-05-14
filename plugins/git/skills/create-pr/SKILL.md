@@ -1,6 +1,7 @@
 ---
 name: create-pr
-description: Conventional Commit 형식의 PR 타이틀과 템플릿 기반 설명을 자동 생성합니다
+description: 'Conventional Commit 형식(type(scope): subject)의 PR 타이틀과 프로젝트 PR 템플릿 기반 한글 설명을 생성한다. 사용자가 "PR 만들어줘", "create PR", "/git:create-pr", "pull request 생성"을 요청할 때 트리거. 생성 직전 type-check + lint + test 자동 실행(완료 게이트). 자동으로 본인(@me) assignee 지정. 배포 PR(qa/prod)에는 사용하지 않음 — flex-workflow:deploy 사용.'
+compatibility: 'gh CLI + GitHub MCP 권장'
 disable-model-invocation: true
 ---
 
@@ -45,82 +46,17 @@ git diff origin/develop..HEAD
 
 ### 3. Completion Validation Gate
 
-PR 생성 전 필수 검증을 수행합니다. 하나라도 실패하면 PR 생성을 중단합니다.
-
-**패키지명 자동 감지:**
-
-변경된 파일 경로에서 패키지명을 추출합니다:
-
-```bash
-# 변경된 파일 목록에서 패키지 경로 추출
-git diff origin/develop..HEAD --name-only | grep -oP 'apps/[^/]+' | sort -u
-```
-
-- `apps/remotes-goal` → `@flex-apps/remotes-goal`
-- `apps/remotes-evaluation` → `@flex-apps/remotes-evaluation`
-- 패키지 감지 불가 시 사용자에게 경고 후 확인
-
-**검증 명령어:**
-
-```bash
-# 감지된 각 패키지에 대해 실행
-yarn turbo run type-check --filter=@flex-apps/{package-name}
-yarn turbo run lint --filter=@flex-apps/{package-name}
-yarn turbo run test --filter=@flex-apps/{package-name}
-```
-
-**결과 처리:**
-
-- 모두 통과: 다음 단계로 진행
-- 실패 항목 있음: 오류 내용 표시 후 PR 생성 중단, 수정 안내
-- 테스트가 없는 경우 (`test` 스크립트 미존재): 경고만 표시하고 진행
+변경된 파일에서 패키지를 자동 감지하고 type-check + lint + test 를 실행한다. 하나라도 실패하면 PR 생성을 중단하고 사용자에게 수정을 안내한다. 자세한 명령·결과 처리는 [references/TROUBLESHOOTING.md](references/TROUBLESHOOTING.md) 참고.
 
 ### 4. Generate PR Title
 
-Use **Conventional Commit** format:
+Conventional Commit 형식 `<type>(<scope>): <subject>` 으로 작성한다.
 
-```
-<type>(<scope>): <subject>
-```
+- **모든 commit** 을 분석해 주된 type 결정 (최신 commit 1개만 보지 말 것)
+- **scope** 는 항상 포함 — 주 영향 패키지/도메인 (`remotes-` prefix 제외, 예: `goal`, `auth`, `deps`). cross-cutting이면 `all`
+- **subject** 는 한글 명사형/동사형 종결, 72자 이하, 마침표 없음, WHAT만 (구현 디테일은 description으로)
 
-**Critical Rules:**
-
-- **ALWAYS include scope** - it's mandatory, not optional
-- Analyze ALL commits in the branch, not just the latest one
-- Determine the primary type of change (feat, fix, chore, refactor, etc.)
-- **한글로 작성** (예: "목표 데이터 엑셀 내보내기 기능 추가")
-- Keep under 72 characters total
-- 간결한 명사형/동사형 종결 ("추가", "수정", "변경")
-- No period at the end
-
-**Scope Selection Guide:**
-Identify scope from:
-
-1. Main package/application affected (e.g., `remotes-goal`, `payroll`, `user-profile`)
-2. Domain area if cross-cutting (e.g., `auth`, `api`, `deps`)
-3. Use most specific scope when multiple files changed
-4. For monorepo: Use application name without `remotes-` prefix when possible
-
-**Subject Writing Guide:**
-
-- **한글로 작성**
-- Focus on WHAT changed, not HOW
-- 간결하게: "X API 사용" not "기존 Y API를 X API로 변경하여 승인 처리 개선"
-- Avoid implementation details in subject (save for description)
-
-**Good Examples:**
-
-- `feat(goal): 목표 데이터 엑셀 내보내기 기능 추가`
-- `fix(auth): 토큰 만료 처리 오류 수정`
-- `refactor(user-profile): search-with-approval API 사용`
-- `chore(deps): react-query v5 업데이트`
-
-**Bad Examples:**
-
-- `refactor: 경력/학력/가족 조회 API를 search-with-approval로 변경` (no scope, too long, implementation details)
-- `Fix bug` (no scope, not specific)
-- `feat: 사용자를 위한 새로운 기능 추가` (no scope)
-- `refactor(remotes-user-profile): 기존 search API를 search-with-approval로 변경하여 승인 처리 개선` (too long, too detailed)
+자세한 good/bad 예시와 subject 작성 가이드는 [references/EXAMPLES.md](references/EXAMPLES.md) 참고.
 
 ### 5. Analyze Changes for PR Description
 
@@ -175,37 +111,7 @@ Or use the mcp**github**get_me tool to get user information.
 
 ### 7. Learnings Summary
 
-PR 생성 직전, 현재 대화를 리뷰하여 학습 포인트를 **메시지로** 사용자에게 전달합니다. (PR 본문에 넣지 않음)
-
-**수집 대상:**
-
-1. **Claude가 다르게 접근한 부분**: 사용자가 Claude의 코드나 접근 방식을 수정/거부한 경우
-   - 예: "이 패턴 대신 X를 사용해" → Claude가 처음 제안한 것과 다른 접근
-   - 예: 사용자가 Edit으로 직접 수정한 코드와 Claude가 작성한 코드의 차이
-
-2. **사용자가 명시한 학습 포인트**: "이건 기억해", "이건 배운 점이야", "앞으로는 이렇게 해" 등 명시적 언급
-
-**출력 형식:**
-
-```
-## 학습 포인트 정리
-
-### Claude가 다르게 접근한 부분
-- [상황]: [Claude의 접근] → [사용자의 수정]
-- ...
-
-### 사용자가 명시한 포인트
-- [내용]
-- ...
-
-> CLAUDE.md에 반영할 내용이 있다면 알려주세요.
-```
-
-**규칙:**
-
-- 학습 포인트가 없으면 이 섹션을 건너뜀
-- 사용자에게 확인 후, CLAUDE.md에 반영할 내용이 있으면 제안
-- PR 본문에는 절대 포함하지 않음
+PR 생성 직전, 대화를 리뷰해 학습 포인트(Claude가 다르게 접근한 부분 / 사용자가 명시한 학습 포인트)를 사용자 메시지로 전달한다. PR 본문에는 포함하지 않는다. 수집 대상·출력 형식 상세는 [references/TROUBLESHOOTING.md](references/TROUBLESHOOTING.md) 참고.
 
 ### 8. Create Pull Request
 
@@ -283,80 +189,16 @@ The description should follow this structure:
 
 ## Examples
 
-### Example 1: Feature Addition
-
-**Title:**
-
-```
-feat(goal): add excel export functionality
-```
-
-**Description:**
-
-```markdown
-# 📝 변경 사항
-
-## 개요
-
-목표 데이터를 Excel 파일로 내보낼 수 있는 기능을 추가했습니다.
-
-## as-is
-
-- 목표 데이터를 외부로 추출하려면 수동으로 복사/붙여넣기 해야 했습니다.
-- 대량의 데이터를 다루기 어려웠습니다.
-
-## to-be
-
-- Excel 내보내기 버튼을 클릭하면 현재 필터된 목표 데이터를 Excel 파일로 다운로드할 수 있습니다.
-- 모든 컬럼과 포맷이 유지됩니다.
-- 에러 처리 및 성공 알림이 포함되어 있습니다.
-
-# 🔗 같이 보면 좋아요
-
-## design
-
-https://www.figma.com/file/xxxxx
-
-## slack
-
-https://flexhq.slack.com/archives/xxxxx
-```
+Full PR 예시(title + description)는 [references/EXAMPLES.md](references/EXAMPLES.md) 참고.
 
 ## Important Notes
 
-- Always use conventional commit format for PR title
-- Analyze ALL commits and changes in the branch, not just the latest commit
-- Fill PR template sections with meaningful content based on actual changes
-- Always assign the PR to the user (@me)
-- Base branch is typically `develop` unless specified otherwise
-- PR 제목(subject)과 설명(description) 모두 한국어로 작성
-- Remove or leave blank template sections that don't apply (design, slack)
-- Check for uncommitted changes and warn user before creating PR
-- Ensure the branch is pushed to remote before creating PR
+- 브랜치의 모든 commit·변경 사항을 분석한다 (최신 commit 1개만 보지 말 것)
+- PR 제목·설명 모두 한국어
+- base branch는 기본 `develop` — qa/main에는 직접 PR 금지
+- 적용 불가한 템플릿 섹션(design/slack)은 비워두거나 제거
+- assignee는 항상 `@me` (본인)
 
-## Error Handling
+## Safety / Error Handling
 
-If PR creation fails:
-
-- Show the error message to the user
-- Check if branch is pushed to remote (if not, ask user to push)
-- Check if PR already exists between these branches
-- Verify repository permissions
-- Suggest potential fixes
-
-If branch is not pushed:
-
-```bash
-# Offer to push the branch
-git push -u origin <current-branch>
-```
-
-## Safety Checks
-
-Before creating PR:
-
-- Check that current branch is not `develop`, `qa`, or `main`
-- Verify there are commits ahead of base branch
-- Warn if there are uncommitted changes
-- Check if branch exists on remote (push if needed)
-- Ensure user is authenticated with GitHub
+사전 안전 체크(브랜치·remote 상태·완료 게이트), PR 생성 실패 시 대응, Learnings Summary 처리 등 상세는 [references/TROUBLESHOOTING.md](references/TROUBLESHOOTING.md) 참고.

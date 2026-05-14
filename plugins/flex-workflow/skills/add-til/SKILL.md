@@ -1,6 +1,7 @@
 ---
 name: add-til
-description: "오늘 배운 내용(TIL)을 Obsidian vault(GitHub repo)에 토픽 노트로 기록한다."
+description: '오늘 배운 내용(TIL)을 Obsidian vault(GitHub repo)에 토픽 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "오늘 배운거야", "TIL", "TIL 추가", "지식 기반에 추가", "배운점 추가", "/add-til"로 호출할 때 트리거. 기존 노트와 자동 양방향 연결([[노트명]] 링크). 기술 용어는 영어 원문 유지, 설명은 한국어.'
+compatibility: '~/Projects/flex/til vault clone + git push 권한 필요'
 argument-hint: "<배운 내용>"
 ---
 

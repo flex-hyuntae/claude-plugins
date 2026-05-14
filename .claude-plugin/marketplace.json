@@ -13,7 +13,7 @@
       "name": "git",
       "source": "./plugins/git",
       "description": "Conventional commit 형식의 커밋 메시지 생성, GitHub PR 자동 생성, stacked PR rebase 정리",
-      "version": "2026.04",
+      "version": "2026.05.14.1",
       "keywords": [
         "git",
         "commit",
@@ -34,7 +34,7 @@
       "name": "flex-workflow",
       "source": "./plugins/flex-workflow",
       "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록",
-      "version": "2026.04",
+      "version": "2026.05.14.1",
       "keywords": [
         "deploy",
         "test-package",
@@ -49,7 +49,7 @@
       "name": "drill",
       "source": "./plugins/drill",
       "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
-      "version": "2026.05.12.2",
+      "version": "2026.05.14.1",
       "keywords": [
         "spec",
         "concept",
@@ -69,7 +69,7 @@
       "name": "rules",
       "source": "./plugins/rules",
       "description": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙 (37개 규칙)",
-      "version": "2026.04.24.1",
+      "version": "2026.05.14.1",
       "keywords": [
         "rules",
         "conventions",

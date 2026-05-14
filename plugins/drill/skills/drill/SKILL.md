@@ -1,6 +1,7 @@
 ---
 name: drill
-description: plan → prepare → write → review → qa 워크플로우를 오케스트레이션합니다
+description: 'plan → prepare → write → review → qa 워크플로우 전체를 오케스트레이션한다. 사용자가 "/drill", "/drill:drill", "drill 시작", "전체 워크플로우 돌려줘", "feature 작업 시작"을 요청할 때 트리거. 각 단계 진행 상태를 추적하고 중간 이탈 시 resume 인자로 이어하기 가능. 각 하위 skill은 단독 실행도 지원.'
+compatibility: 'Linear MCP + gh CLI 필수. drill 플러그인 전체 스킬 의존.'
 disable-model-invocation: true
 argument-hint: "[feature-name|resume]"
 ---
