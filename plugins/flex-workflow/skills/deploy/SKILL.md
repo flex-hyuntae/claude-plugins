@@ -1,6 +1,7 @@
 ---
 name: deploy
-description: QA/Prod 배포 PR을 커밋 요약과 함께 자동 생성합니다
+description: 'QA/Prod 배포 PR을 커밋 요약과 함께 자동 생성한다. 사용자가 "deploy qa", "deploy prod", "/deploy", "배포 PR 만들어줘", "QA 배포", "프로덕션 배포"를 요청할 때 트리거. develop→qa, qa→main 브랜치 전략 가정. PR 제목은 v2.YYYY-MM-DD.0 형식, 본문은 도메인·오더·작성자별로 정리된 커밋 요약.'
+compatibility: 'gh CLI + develop/qa/main 브랜치 전략을 따르는 레포'
 disable-model-invocation: true
 argument-hint: "[qa|prod]"
 ---
@@ -73,140 +74,15 @@ git log main..qa --format="%H|%s|%an" --no-merges
 
 Output format: `{commit_hash}|{commit_subject}|{author_name}`
 
-### 5. Parse Commits and Map to PRs
+### 5. Parse Commits, Build PR Body, Create PR
 
-For each commit:
+각 commit을 `<type>(<domain>): <message> (#<pr-number>)` 로 파싱해 도메인·오더·작성자별로 정리한 PR 본문을 만든다. 임시 파일(`deployment-summary.md`)에 본문을 작성하고 `gh pr create` 로 PR 생성, 생성 직후 임시 파일을 삭제한다.
 
-1. **Parse commit message:**
-   ```
-   fix(objective): fix issue with objective (#4156)
-   ```
-   - Type: `fix`
-   - Domain: `objective`
-   - Message: `fix issue with objective`
-   - PR number: `4156` (if present in commit message)
+상세한 파싱 규칙·PR 본문 3섹션 포맷·gh pr create 옵션·에러 fallback은 [references/PR-BODY-FORMAT.md](references/PR-BODY-FORMAT.md) 참고.
 
-2. **Extract PR number:**
-   - Look for `(#XXXX)` pattern in commit subject
-   - If not found, search GitHub using commit message
+### 6. Confirm with User
 
-3. **Build commit data structure:**
-   ```json
-   {
-     "hash": "abc123",
-     "type": "fix",
-     "domain": "objective",
-     "message": "fix issue with objective",
-     "pr_number": "4156",
-     "author": "John Doe"
-   }
-   ```
-
-### 6. Generate PR Body
-
-Create a markdown file with three sections:
-
-#### Section 1: Domains
-Group commits by domain (scope):
-
-```markdown
-# Domains
-## objective
-- [fix: fix issue with objective](https://github.com/{owner}/{repo}/pull/4156)
-- [feat: add new objective feature](https://github.com/{owner}/{repo}/pull/4157)
-## user
-- [fix: fix user authentication bug](https://github.com/{owner}/{repo}/pull/4158)
-```
-
-#### Section 2: Orders
-List all commits in chronological order:
-
-```markdown
-# Orders
-- [fix: fix issue with objective](https://github.com/{owner}/{repo}/pull/4156)
-- [feat: add new objective feature](https://github.com/{owner}/{repo}/pull/4157)
-- [fix: fix user authentication bug](https://github.com/{owner}/{repo}/pull/4158)
-```
-
-#### Section 3: Authors
-Group commits by author:
-
-```markdown
-# Authors
-## John Doe
-- [fix: fix issue with objective](https://github.com/{owner}/{repo}/pull/4156)
-- [feat: add new objective feature](https://github.com/{owner}/{repo}/pull/4157)
-## Jane Smith
-- [fix: fix user authentication bug](https://github.com/{owner}/{repo}/pull/4158)
-```
-
-### 7. Create Deployment Summary File
-
-```bash
-# Create temporary file in project root
-cat > deployment-summary.md <<'EOF'
-# Domains
-...
-
-# Orders
-...
-
-# Authors
-...
-EOF
-```
-
-### 8. Create Pull Request
-
-**IMPORTANT: PR Body Creation**
-
-Use one of these correct methods:
-
-**Method 1: Store content in variable first**
-```bash
-BODY_CONTENT=$(cat deployment-summary.md)
-gh pr create --title "..." --base qa --head develop --assignee @me --body "$BODY_CONTENT
-
-Generated with Claude Code
-
-Co-Authored-By: Claude <noreply@anthropic.com>"
-```
-
-**PR Options:**
-
-For QA:
-```bash
-gh pr create \
-  --title "release(all): v2.{year}-{month}-{date}.0 정기배포 QA Release" \
-  --base qa \
-  --head develop \
-  --assignee @me \
-  --body "..."
-```
-
-For Prod:
-```bash
-gh pr create \
-  --title "release(all): v2.{year}-{month}-{date}.0 정기배포 Prod Release" \
-  --base main \
-  --head qa \
-  --assignee @me \
-  --body "..."
-```
-
-### 9. Clean Up Temporary File
-
-```bash
-rm deployment-summary.md
-```
-
-### 10. Confirm with User
-
-Show the PR URL and summary:
-- Number of commits included
-- PR link
-- Deployment stage
-- Target date
+PR URL과 요약을 표시: 포함 commit 수, PR 링크, 배포 stage(qa/prod), 타겟 날짜.
 
 ## Branch Strategy
 
@@ -214,55 +90,23 @@ Show the PR URL and summary:
 develop → qa → main
 ```
 
-- **develop**: Development branch
-- **qa**: QA testing branch (deploy date = today + 2 days)
-- **main**: Production branch (deploy date = today)
-
-## Error Handling
-
-### No commits found
-```
-Error: No commits found between {base} and {head}
-This might mean:
-- Branches are already in sync
-- Need to pull latest changes from remote
-```
-
-### PR creation failed
-```
-Error: Failed to create PR
-Possible causes:
-- Insufficient permissions
-- Branch protection rules
-- Conflicting PR already exists
-```
-
-### Commit parsing failed
-```
-Warning: Could not parse commit: {commit_subject}
-Skipping this commit from summary.
-```
-
-### PR number not found
-```
-Warning: Could not find PR number for commit: {commit_subject}
-Using commit link instead: https://github.com/{owner}/{repo}/commit/{hash}
-```
+- **develop**: 개발 브랜치
+- **qa**: QA 테스팅 브랜치 (deploy date = today + 2 days)
+- **main**: 프로덕션 브랜치 (deploy date = today)
 
 ## Important Notes
 
-- **Always sync branches** before getting commit history
-- **Use PR links**, not commit links in the summary
-- **Group commits** by domain, order, and author
-- **Clean up** temporary files after PR creation
-- **Verify** all commit messages follow Conventional Commits format
-- **Handle missing PR numbers** gracefully with fallback to commit links
-- **Format dates correctly** with leading zeros
+- 항상 base/head 브랜치 모두 remote와 sync한 후 진행
+- 요약에는 PR 링크 사용 (commit 링크는 PR 번호 없을 때만 fallback)
+- 날짜는 leading zero 포함 (`v2.2026-01-15.0`)
+- 임시 파일은 PR 생성 후 정리
 
 ## Git Safety Protocol
 
-- NEVER force push
-- NEVER skip hooks
-- NEVER modify commit history
-- DO NOT push changes (only create PR)
-- READ-ONLY operations on git history
+force push·hook skip·history 변조는 사용하지 않는다. 이 skill은 git history에 대해 read-only로 동작하고, PR 생성만 수행한다 (브랜치 push는 하지 않음).
+
+## Error Handling
+
+- **No commits found** between base/head → 브랜치가 이미 sync된 상태이거나 remote pull 필요. 사용자에게 안내.
+- **PR creation failed** → 권한·브랜치 보호·기존 PR 충돌 등 가능성을 사용자에게 안내.
+- **Commit parsing/PR number 실패** → 해당 commit만 warning + skip 또는 commit link fallback. 자세한 fallback 메시지는 [references/PR-BODY-FORMAT.md](references/PR-BODY-FORMAT.md).

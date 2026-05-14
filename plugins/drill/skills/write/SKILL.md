@@ -1,6 +1,7 @@
 ---
 name: write
-description: Linear 티켓을 받아 Spec/Concept 기반으로 코드를 작성합니다
+description: 'Linear 티켓을 받아 연결된 Spec/Concept와 구현 가이드를 로드하고 코드를 작성한다. 사용자가 "/drill:write", "이 티켓 구현해줘", "티켓 작성", Linear URL과 함께 "코드 짜줘"를 요청할 때 트리거. 한 번에 티켓 1개만 처리. rules 플러그인이 설치되어 있으면 rules:write가 자동 적용된다. drill 워크플로우 세 번째 단계.'
+compatibility: 'Linear MCP 필수. rules 플러그인 권장.'
 disable-model-invocation: true
 argument-hint: "[linear-issue-url|issue-id]"
 ---

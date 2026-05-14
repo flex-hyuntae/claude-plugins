@@ -1,6 +1,7 @@
 ---
 name: ship
-description: 티켓 여러 개를 받아 의존 순서대로 draft PR을 batch 생성합니다. 독립 티켓은 병렬, 의존 체인은 stacked.
+description: 'Linear 티켓 여러 개를 받아 의존 그래프를 만들고 worktree + /drill:write + 자동 커밋 분할로 draft PR을 batch 생성한다. 사용자가 "/drill:ship", "여러 티켓 PR 한번에", "stacked PR 생성", "batch PR"을 요청할 때 트리거. 독립 티켓은 병렬, 의존 체인은 stacked PR. 의존 분석은 drill-deps agent 활용.'
+compatibility: 'Linear MCP + gh CLI + git worktree 지원 필수'
 disable-model-invocation: true
 argument-hint: "<ticket-ids>"
 ---

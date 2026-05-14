@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Conventional Commits 형식의 커밋 메시지를 생성합니다
+description: 'Conventional Commits 형식(type(scope): subject)으로 커밋 메시지를 생성하고 staged 파일만 커밋한다. 사용자가 "commit", "커밋", "/git:commit", "커밋 만들어줘", "변경사항 커밋"을 요청할 때 트리거. scope는 항상 포함 — 파일 경로 기반 도메인을 추출한다(PR 검색·changelog·코드 오너 매핑이 scope 기반이라 누락되면 자동화가 깨진다). secrets 의심 파일(.env 등)은 사전 경고, amend·no-verify는 명시 요청 없으면 사용하지 않음. subject는 한글 명사형/동사형.'
 disable-model-invocation: true
 ---
 
@@ -46,13 +46,10 @@ git diff --cached
 # If needed, read specific files to understand context
 ```
 
-Analyze:
-- What type of change is this? (feat, fix, chore, docs, refactor, style, test, build, ci, perf, revert)
-- **REQUIRED**: Determine the scope based on file paths:
-  - Look at the directory structure (e.g., `remotes-goal` → `goal`, `packages/core-*-hooks` → `core-hooks`)
-  - Use the primary domain or feature name affected
-  - Use `all` only if multiple distinct domains are affected
-- What is the purpose and impact of the change?
+분석 항목:
+- Type: feat, fix, chore, docs, refactor, style, test, build, ci, perf, revert
+- Scope: 파일 경로에서 도메인 추출 (예: `apps/remotes-goal/...` → `goal`, `packages/core-*-hooks/...` → `core-hooks`). 여러 도메인이 섞이면 `all`. 자세한 추출 패턴은 [references/EXAMPLES.md](references/EXAMPLES.md)
+- Purpose: 이 변경의 목적과 영향
 
 ### 4. Generate Commit Message
 
@@ -78,12 +75,6 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - `ci`: CI/CD configuration changes
 - `perf`: Performance improvements
 - `revert`: Reverting a previous commit
-
-**Scope guidelines:**
-- **REQUIRED**: Scope must always be included (e.g., `goal`, `evaluation`, `review`, `user`, `auth`)
-- Use the domain or feature name based on the files being changed
-- Use `all` for changes affecting multiple domains
-- Never omit the scope - every commit must have one
 
 **Subject line:**
 - **한글로 작성** (예: "목표 데이터 엑셀 내보내기 기능 추가")
@@ -133,73 +124,16 @@ After creating the commit:
 
 ## Examples
 
-### Example 1: Feature Addition
-
-```
-feat(goal): 목표 데이터 엑셀 내보내기 기능 추가
-
-목표 데이터를 Excel 파일로 내보내는 버튼과 API 연동을 추가.
-에러 처리 및 성공 알림 포함.
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-### Example 2: Bug Fix
-
-```
-fix(auth): 토큰 만료 처리 오류 수정
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-### Example 3: Chore
-
-```
-chore(deps): react-query v5.0.0 업데이트
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-### Example 4: Refactoring
-
-```
-refactor(review): 리뷰 코멘트 로직을 커스텀 훅으로 분리
-
-복잡한 코멘트 처리 로직을 useReviewComments 훅으로 분리하여
-테스트 용이성과 재사용성 개선.
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-### BAD Examples (Missing Scope)
-
-```
-# WRONG - Missing scope
-refactor: 리뷰 코멘트 로직을 커스텀 훅으로 분리
-
-# WRONG - Missing scope
-fix: 토큰 만료 처리 오류 수정
-
-# CORRECT - With scope
-refactor(review): 리뷰 코멘트 로직을 커스텀 훅으로 분리
-fix(auth): 토큰 만료 처리 오류 수정
-```
+자세한 good/bad 예시와 scope 추출 패턴 표는 [references/EXAMPLES.md](references/EXAMPLES.md) 참고.
 
 ## Important Notes
 
-- **CRITICAL**: Scope is ALWAYS required - never create commits without scope
-- Always follow the Conventional Commits format strictly
-- Analyze the actual code changes, don't just rely on file names
-- Be concise but descriptive in commit messages
-- Never commit files that likely contain secrets (.env, credentials.json, etc.)
-- If you see potential secrets, warn the user before committing
-- Keep commit scope focused - suggest splitting if changes are too diverse
-- Always include the Co-Authored-By line to indicate Claude collaboration
+- Conventional Commits 포맷 엄수
+- 파일명이 아닌 실제 코드 변경을 분석
+- secrets 의심 파일(.env, credentials.json 등)은 커밋 전 사용자에게 경고
+- 한 커밋에 여러 도메인이 섞이면 분리 제안
+- Co-Authored-By 라인 포함
 
 ## Error Handling
 
-If commit fails:
-- Show the error message to the user
-- Suggest potential fixes (e.g., pre-commit hook failures, merge conflicts)
-- Do NOT use `--amend` or `--no-verify` unless explicitly requested
-- Create a NEW commit after fixing issues
+커밋 실패 시 에러 메시지를 사용자에게 보여주고 가능한 원인(pre-commit hook 실패, merge conflict 등)을 제안. `--amend`나 `--no-verify`는 사용자가 명시 요청하지 않으면 사용하지 않는다 (hook 실패 시 amend는 이전 커밋을 덮어쓰므로 새 커밋 생성이 안전).
