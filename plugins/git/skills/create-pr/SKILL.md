@@ -1,6 +1,6 @@
 ---
 name: create-pr
-description: 'Conventional Commit 형식(type(scope): subject)의 PR 타이틀과 프로젝트 PR 템플릿 기반 한글 설명을 생성한다. 사용자가 "PR 만들어줘", "create PR", "/git:create-pr", "pull request 생성"을 요청할 때 트리거. 생성 직전 type-check + lint + test 자동 실행(완료 게이트). 자동으로 본인(@me) assignee 지정. 배포 PR(qa/prod)에는 사용하지 않음 — flex-workflow:deploy 사용.'
+description: 'Conventional Commit 형식(type(scope): subject)의 PR 타이틀과 프로젝트 PR 템플릿 기반 한글 설명을 생성한다. 사용자가 "PR 만들어줘", "create PR", "/git:create-pr", "pull request 생성"을 요청할 때 트리거. 생성 직전 type-check + lint + test 자동 실행(완료 게이트). 자동으로 본인(@me) assignee 지정. 배포 PR(qa/prod)에는 사용하지 않음 — flex-workflow:deploy 사용. PR 생성 직후 drill 플러그인이 설치되어 있으면 /drill:review가 자동 호출되어 스펙 동기화를 제안한다. code-review는 사용자가 명시적으로 요청할 때만 호출.'
 compatibility: 'gh CLI + GitHub MCP 권장'
 disable-model-invocation: true
 ---
@@ -145,11 +145,19 @@ After creating the PR:
 - Show the assignee
 - Confirm creation was successful
 
-### 10. Auto Code Review (Optional)
+### 10. Post-PR Hook — drill:review 자동 호출
 
-After PR creation, you may optionally run a code review using the `code-review` plugin if installed:
+PR 생성 직후 `drill` 플러그인이 설치되어 있으면 `/drill:review <pr-number>`를 자동 호출한다. PR ↔ Linear 티켓 차이를 감지해 Concept/Spec cascade 동기화를 제안하는 단계로, 명시적으로 챙기지 않으면 누락되기 쉬워 자동화 슬롯에 둔다. dispatcher가 feature name을 자체 보충하므로 PR 번호만 넘기면 됨.
 
-- `/code-review:code-review` with the newly created PR URL
+**설치 감지:**
+
+```bash
+ls ~/.claude/plugins/marketplaces/*/plugins/drill 2>/dev/null
+```
+
+미설치 시 skip — 별도 안내 메시지 없이 통과. 사용자가 사전에 "리뷰 안 받겠다"고 명시한 경우에만 skip.
+
+**code-review는 자동 호출하지 않는다** — 사용자가 명시적으로 "코드 리뷰 해줘", "`/code-review:code-review` 돌려줘" 라고 요청할 때만 호출. 모든 PR에 자동으로 돌리기에는 비용/소음이 크다는 사용자 결정.
 
 ## PR Description Template Format
 
