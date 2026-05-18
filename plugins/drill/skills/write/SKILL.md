@@ -14,17 +14,13 @@ Linear 티켓 하나를 받아 Spec/Concept + 구현 가이드로 코드 작성.
 
 **write 단계 = 티켓의 how 결정을 그대로 구현**. 단계별 질문 차원·원칙은 `plan` skill `§Layer 경계` 참고. spec/concept 은 도메인 어휘·책임 경계 참조용일 뿐 write 단계에서 재해석하지 않는다.
 
-### write 단계 자의 결정 금지 항목
+### write 단계 자의 결정 금지
 
-티켓 본문의 §수용 기준 / §구현 가이드 / §코드 위치 가 결정해야 할 항목 — write 가 임의로 정하지 않는다:
+티켓 본문의 §수용 기준 / §구현 가이드 / §코드 위치 가 결정해야 할 how 항목 — write 가 임의로 정하지 않는다:
 
-- **노출 매체·위치** (Dropdown / Popover / Toast / Modal / Sheet)
-- **선택지 우선순위** (옵션 카탈로그 중 본 사이클 포함 여부)
-- **카탈로그 구체 항목** (Dropdown 항목 / 메뉴 액션 N개)
-- **동일 행위 중복 처리** (Callout 과 More 메뉴 양쪽 vs 한 곳)
-- **컴포넌트 시그니처·prop 분기**
-- **카피·라벨** (CTA 텍스트)
-- **가드·권한 분기** (disabled vs 비노출)
+- **UI 구체화** — 노출 매체·위치 (Dropdown / Popover / Toast / Modal / Sheet) / 선택지 우선순위 / 동일 행위 중복 처리
+- **카탈로그 항목** — Dropdown 항목 / 메뉴 액션 N 개 등 구체 카탈로그
+- **시그니처·카피·가드** — 컴포넌트 prop 분기 / CTA 라벨 / 권한별 disabled vs 비노출
 
 ### 티켓에 모호성이 남아있으면 → Cascade
 
