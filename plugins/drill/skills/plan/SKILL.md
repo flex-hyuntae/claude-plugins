@@ -129,6 +129,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 **{FEATURE-NAME}.md** (`templates/SPEC.md` 기반, 파일명·제목 모두 대문자):
 
+- **목차**: H1 (`# {FEATURE-NAME}`) 다음에 ToC 블록 자동 박기 — Obsidian `Automatic Table of Contents` (johansatge) 가 헤더 트리 자동 렌더링. 옵션 `minLevel: 2 / maxLevel: 4 / exclude: /^목차$/`, 코드블록 language `toc`
 - 문제 정의 (Phase 2 수집)
 - 전체 동작
 - Concepts 테이블 (각 concept 링크)
@@ -138,6 +139,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 
 **concepts/{name}.md** (`templates/CONCEPT.md` 기반):
 
+- **목차**: H1 (`# Concept: {Name}`) 다음에 동일 ToC 블록 자동 박기
 - 개요 (한두 문장 정의 + 왜 별도 concept 인지) / 책임 (도메인 어휘) / 관련 Concept / 미정
 
 **원칙**:

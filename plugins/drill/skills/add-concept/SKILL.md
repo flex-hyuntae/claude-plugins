@@ -74,6 +74,7 @@ concept 유형(모델/구조/프로세스/정책)에 맞는 축만 선택. **구
 
 `concepts/{name}.md` 생성 (`templates/CONCEPT.md` 기반). 인터뷰 답변을 섹션에 매핑:
 
+- **목차**: H1 (`# Concept: {Name}`) 다음에 ToC 블록 자동 박기. Obsidian `Automatic Table of Contents` (johansatge) 플러그인이 헤더 트리를 자동 렌더링·갱신. 옵션 — `minLevel: 2` (H1 제외) / `maxLevel: 4` / `exclude: /^목차$/` (자기 자신 제외). 코드블록 language 는 `toc`.
 - **개요**: 한두 문장 정의 + 별도 존재 이유
 - **책임**: 책임 영역별 도메인 규칙·정책·동작 (도메인 어휘로)
 - **관련 Concept**: 의존·영향·구분 concept 링크
