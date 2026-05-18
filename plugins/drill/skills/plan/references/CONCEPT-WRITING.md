@@ -25,6 +25,10 @@
 - **카탈로그성 표**: 동작·기능을 모두 나열한 표 (도메인 어휘 한 줄로 압축)
 - **ASCII 플로우 다이어그램**: 도메인 단계 명칭은 bullet 한 줄로 충분 (시각적 plot 은 spec / 구현 영역)
 - **카피·픽셀·색·아이콘**: 디자인 영역
+- **선택지 열거의 우선순위·본 사이클 포함 여부**: "size selector / navigator / count 중 본 사이클" / "옵션 A / B / C 중 어떤 거" 같은 옵션 우선순위 결정은 ticket 영역. spec 은 "X 를 사용한다" 까지
+- **동일 행위의 중복 노출 처리**: "본문 첨부 Callout 의 다운로드와 More 메뉴 다운로드 중복 처리" 같은 위치 다중 처리는 ticket. spec 은 "X 영역에서 다운로드 가능" 까지
+- **컴포넌트 시그니처·prop 분기**: "discriminated union props" / "variant" → ticket. spec 은 도메인 분기(예: "단건 / 벌크 시나리오") 까지
+- **카탈로그 항목 구체 값**: "Dropdown 항목 = ON / OFF" / "Footer paginator 4-state" — ticket 영역
 
 ## 보조 원칙
 
@@ -133,6 +137,54 @@
 표현되든 같은 분류를 따른다.
 ```
 
+### 🚫 나쁜 예 — 선택지 우선순위·본 사이클 결정
+
+```
+지식 목록은 페이지네이션을 사용한다. Footer paginator 는
+size selector / navigator / count 표시를 모두 노출한다 (본 사이클).
+
+다운로드 액션은 본문 첨부 Callout 의 [다운로드] 버튼 +
+사이드픽 More 메뉴 [다운로드] 항목 양쪽에서 제공한다.
+
+AI 게시 셀의 Dropdown 항목은 ON / OFF 두 가지로 구성된다.
+```
+
+### ✅ 좋은 예 — 약속까지만, 선택은 ticket 으로 위임
+
+```
+- 지식 목록은 페이지네이션을 사용한다 — 본 사이클에 포함할 옵션(size selector / navigator / count) 은 ticket 영역
+- 파일 타입은 사이드픽 안에서 다운로드 가능하다 — 노출 위치(Callout 단독 vs More 메뉴 중복) 는 ticket 영역
+- AI 게시 ON / OFF 를 제어할 수 있다 — 컨트롤 표현(Dropdown / Toggle 등) 은 ticket 영역
+```
+
+### 🚫 나쁜 예 — 행위 카탈로그 + 위치 결정 혼재
+
+```
+사이드픽 More 메뉴는 5 액션을 노출한다: 복제 / 그룹 옮기기 /
+다운로드 / 공유 / 삭제. 다운로드는 파일 타입에만 노출되며 본문
+첨부 Callout 과 중복으로 제공된다.
+```
+
+### ✅ 좋은 예 — 동작 약속만
+
+```
+지식 문서·파일의 상세 화면에서는 다음 액션이 가능하다:
+- AI 게시 ON/OFF 전환
+- 그룹 옮기기
+- 파일 타입의 경우 다운로드
+- 삭제
+- 생성자·수정자 메타 확인
+
+각 액션의 노출 위치·진입 매체·중복 처리는 ticket 영역.
+```
+
+> **패턴 핵심**:
+>
+> 1. **"X 를 할 수 있다"** 약속까지가 spec — "어디서 / 어떻게 / 몇 개 / 어느 순서로" 는 ticket
+> 2. **선택지 우선순위 / 본 사이클 포함 여부 결정** 은 prepare 단계에서 ticket 본문이 다룬다
+> 3. **동일 행위의 다중 위치 중복** 같은 결정은 ticket 영역. spec 은 "{영역} 안에서 {행위} 가능" 까지
+> 4. spec 의 모호성을 결함으로 오해해서 닫으려 하지 않는다 — 의도된 자유도
+
 ## Concept 분리 vs 통합 결정 기준
 
 도메인을 N개 concept 으로 나눌지, 단일 concept 안 sub-section 으로 둘지 결정할 때.
@@ -164,7 +216,13 @@
 - 책임 분리 이력: `"서버에서 내려온다"` / `"클라이언트가 보유"` / `"마이그레이션"` / `"BE 와 1:1 매핑"`
 - 추상 메타: `"분류 축"` / `"직교"` / `"단일 source 필드"` / `"두 도메인 축"`
 - 매체 분기 결정: `"X 0건 → 별도 안내"` / `"변경 없음 → Y skip"` (매체 결정, 도메인 동작이 아니면 X)
+- **선택지·옵션 카탈로그**: `"옵션 A / B / C"` / `"본 사이클 포함"` / `"3 항목 중"` / `"size selector / navigator"` — 우선순위 결정은 ticket 영역
+- **위치 중복 결정**: `"X 와 Y 양쪽에서 제공"` / `"Callout 과 More 메뉴 중복"` / `"진입점 N 개"` — 위치 결정은 ticket 영역
+- **카탈로그 항목 구체 값**: `"Dropdown 항목 = ON / OFF"` / `"4-state"` / `"5 액션"` — 카탈로그는 ticket 영역
+- **시그니처·prop 분기 어휘**: `"discriminated union"` / `"variant prop"` / `"prop 시그니처"` — 구현 영역
 
 치환 예: "OAuth" → "외부 서비스 로그인", "토큰 만료" → "인증 만료", "polling" → "주기적 확인", "분류 축" → "필터" 또는 "라이프사이클".
 
-매체 변경(Modal → Popover 등)은 spec cascade 가 아니라 구현 영역이다.
+선택지·위치·카탈로그 치환 예: "Footer paginator 는 size selector / navigator / count 노출" → "지식 목록은 페이지네이션을 사용한다 (옵션은 ticket)", "Callout 과 More 메뉴 중복 다운로드" → "사이드픽 안에서 다운로드 가능 (위치는 ticket)", "Dropdown 항목 = ON/OFF" → "AI 게시 ON/OFF 제어 가능 (컨트롤 표현은 ticket)".
+
+매체 변경(Modal → Popover 등) / 선택지 변경(size selector 포함 여부) / 위치 변경(More 메뉴 항목 추가) 은 spec cascade 가 아니라 ticket 영역이다.

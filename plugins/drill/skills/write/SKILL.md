@@ -10,28 +10,56 @@ argument-hint: "[linear-issue-url|issue-id]"
 
 Linear 티켓 하나를 받아 Spec/Concept + 구현 가이드로 코드 작성. rules 규칙은 `rules:write` 스킬이 자동 적용 (rules 플러그인 필요).
 
+## Layer 경계 — Ticket = Single Source
+
+write 단계의 핵심 원칙: **티켓 본문이 구현의 single source**. spec/concept 은 도메인 어휘·책임 경계 참조용.
+
+### 원칙
+
+- 티켓 본문의 §수용 기준 / §구현 가이드 / §코드 위치 가 **이미 구체화된 결정** — 그대로 구현
+- spec/concept 본문에 있는 모호한 약속("X 가 가능하다") 는 **참조용**이지 write 단계에서 재해석할 대상이 아님
+- write 단계에서 자의로 결정해선 안 되는 항목:
+  - **노출 매체·위치** (Dropdown / Popover / Toast / Modal / Sheet 등)
+  - **선택지 우선순위** (옵션 카탈로그 중 본 사이클 포함 여부)
+  - **카탈로그 구체 항목** (Dropdown 항목 / 메뉴 액션 N개)
+  - **동일 행위 중복 처리** (Callout 과 More 메뉴 양쪽 vs 한 곳)
+  - **컴포넌트 시그니처·prop 분기**
+  - **카피·라벨** (CTA 텍스트)
+  - **가드·권한 분기** (disabled vs 비노출)
+
+### 티켓에 모호성이 남아있으면 → Cascade
+
+티켓 본문을 읽었는데 위 항목 중 하나라도 결정 안 됨 / "미정" 으로 남아있음 / 명시 없음:
+
+1. **write 단계에서 자의 결정 금지**
+2. AskUserQuestion 으로 사용자에게 확인 — 단순 결정이면 즉시 닫고 진행 + 티켓 본문 업데이트(`save_issue`)
+3. spec/concept 의 모호성과 얽혀있어 큰 결정이면 → **`/drill:prepare` 강화 모드로 cascade** (티켓 본문 재정합 후 write 재개)
+4. 임시 코드 작성 후 "나중에 정하자" 식 진행 금지 — 모호성을 코드로 흡수하지 않는다
+
 ## Workflow
 
 ### 1. 컨텍스트 로드
 
 1. `mcp__linear-server__get_issue` 로 티켓
-2. description에서 관련 Concept 경로 추출 → Spec index + Concept 파일 로드
+2. description 에서 관련 Concept 경로 추출 → Spec index + Concept 파일 로드 (**도메인 어휘·책임 경계 참조용**)
 3. 확인: 목표 / 수용 기준 / 구현 가이드 / 코드 위치
+4. **Layer 점검** — 티켓 본문이 §Layer 경계 의 결정 차원(위치·매체·옵션·시그니처·중복·카피·가드)을 모두 닫고 있는지 확인. 결정 안 됨 항목 있으면 Cascade 절차로
 
 ### 2. 코드베이스 탐색 (인터랙티브)
 
 Glob/Grep으로 관련 파일 → 핵심 파일 Read → 기존 패턴·유틸 재사용 판단.
 
 적절한 위치를 찾을 때까지 AskUserQuestion 반복:
-- 컴포넌트/로직/타입 추가 위치
+- 컴포넌트/로직/타입 추가 위치 (티켓의 §코드 위치 가 명확하면 생략 가능)
 - 기존 재사용 vs 신규 생성
 
 ### 3. 코드 작성 (반복)
 
 수용 기준을 하나씩 충족:
-1. Concept 책임·에지 케이스 = 수용 기준
-2. 구현 가이드 방향에 맞게 Edit/Write
+1. **티켓의 §수용 기준 = single source of truth** — Concept 으로 거슬러 올라가서 재해석하지 않는다
+2. **티켓의 §구현 가이드·§코드 위치** 의 결정을 그대로 따른다
 3. `rules:write` 자동 적용 (직접 로드 안 함)
+4. 충족 중 layer 결정이 빠진 게 드러나면 즉시 멈추고 §Cascade 절차
 
 **작업 단위 완료 후 AskUserQuestion**: "커밋 / 이어서 진행".
 
@@ -52,9 +80,12 @@ yarn turbo run lint --filter=@flex-apps/{pkg}
 
 - 한 번에 티켓 1개만
 - 한국어, 코드 위치·커밋 지속 확인
+- **티켓 본문이 single source** — spec/concept 으로 거슬러 올라가 자의 재해석 금지
+- **모호성을 코드로 흡수 금지** — 결정 빠진 항목 발견 시 §Cascade
 
 ## 에러
 
 - 티켓 조회 실패 → URL/ID 재확인
 - Spec/Concept 없음 → 티켓 정보만으로 진행 또는 `/drill:plan` 안내
 - type-check/lint 실패 → 수정 후 재검증
+- **티켓 본문에 layer 결정 빠짐** (위치/매체/옵션/시그니처/중복/카피/가드) → §Cascade — 단순 결정은 AskUserQuestion + `save_issue` 로 닫고 진행 / 큰 결정은 `/drill:prepare` 강화 모드로 cascade
