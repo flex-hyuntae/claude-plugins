@@ -1,6 +1,6 @@
 ---
 name: add-concept
-description: '기존 Spec에 새로운 Concept만 독립적으로 추가한다. 사용자가 "/drill:add-concept", "concept 추가", "새 개념 정의", "스펙에 도메인 추가"를 요청할 때 트리거. 전체 plan 인터뷰를 다시 하지 않고, 개발 중 발견한 새 동작 단위만 확장할 때 사용. plan과 동일한 작성 원칙(도메인 어휘·구현 디테일 금지) 적용.'
+description: '기존 Spec에 새로운 Concept만 독립적으로 추가한다. 사용자가 "/drill:add-concept", "concept 추가", "새 개념 정의", "스펙에 도메인 추가"를 요청할 때 트리거. 전체 plan 인터뷰를 다시 하지 않고, 개발 중 발견한 새 동작 단위만 확장할 때 사용. plan과 동일한 작성 원칙(도메인 어휘·구현 디테일 금지·what/why 만) 적용.'
 compatibility: 'Linear/Notion/Figma MCP 권장 (URL 입력 시).'
 disable-model-invocation: true
 argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-url|figma-url]"
@@ -10,9 +10,7 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 
 기존 Spec에 Concept만 독립적으로 추가. 전체 plan을 다시 하지 않고 개발 중 새로운 동작 단위만 확장.
 
-## Concept 의 본질
-
-**Concept = DDD 의 도메인**. 자기 책임 영역을 가지는 도메인 단위로 본다 — 무엇을 담당하고 무엇을 담당하지 않는지 명확히, 다른 도메인과의 관계는 `[[concept]]` 링크로 명시. 도메인 어휘(ubiquitous language)로 작성하며 구현은 다른 레이어의 관심사. 자세한 정의는 `plan` skill 참고.
+> **본질·원칙·인터뷰 방법은 `plan` skill 과 동일** — 본 문서는 add-concept 특이 사항만 다룬다. 동일 항목은 plan 참조.
 
 ## Workflow
 
@@ -26,84 +24,30 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 
 - 인자 2 해석 — concept name / 텍스트 / Linear·Notion·Figma URL
 - URL이면 각 MCP로 로드 (`get_issue`, `notion-fetch`, `get_design_context`)
-- 기존 Concept과 중복 의심 → 중복 알림 + 기존 Concept 수정 제안
+- **기존 Concept과 중복 의심 → 중복 알림 + 기존 Concept 수정 제안** (add-concept 만의 단계)
 
 ### 3. 개념 인터뷰
 
-목표: `templates/CONCEPT.md` 섹션(개요·책임·에지 케이스·관련 Concept)을 채울 수준. 한국어 AskUserQuestion.
+목표: `templates/CONCEPT.md` 섹션(개요·책임·관련 Concept·관련 Decision·미정)을 채울 수준. 한국어 AskUserQuestion.
 
-**소크라테스식 질문법**: 정보를 수집하는 게 아니라 사고를 명확하게 만드는 것이 목표. 모든 답변에 최소 1개의 파고드는 질문을 붙인다.
+**인터뷰 방법은 `plan` skill `§3 도메인 심층 인터뷰` 와 동일** — 질문 유형·축·소크라테스식 질문법·게이트·Layer 검수 단계 그대로 적용. add-concept 만의 차이:
 
-| 질문 유형 | 목적 | 예시 |
-|-----------|------|------|
-| 정의 | 모호한 표현을 구체화 | "X가 정확히 무엇인가?", "한 문장으로?" |
-| 가정 탐색 | 당연시한 전제를 드러냄 | "항상 그런가?", "예외가 있다면?" |
-| 근거 확인 | 결정 이유를 명시화 | "왜 그렇게 설계했는가?" |
-| 함의 추적 | 에지 케이스 자연 도출 | "X가 사실이라면 Y 상황에서는?" |
-| 반례 탐색 | 경계 조건 발굴 | "이게 성립하지 않는 경우는?" |
-| 모순 짚기 | 불일치 명시화 | "앞서 A라고 했는데 B와 어떻게 일치하는가?" |
+- 한 Concept 범위 — 새로 추가하는 1개만 인터뷰 (plan 처럼 여러 Concept 분해 단계 없음)
+- 기존 Concept 들과의 관계 질문을 추가로 — "기존 [[A]] 와 어떻게 구분되는가?" / "[[B]] 가 본 concept 을 어떻게 참조해야 하는가?"
 
-**질문 축:**
-
-| 축          | 대응 섹션               | 예시                                |
-| ----------- | ----------------------- | ----------------------------------- |
-| 정체성      | 개요                    | "한 문장 정의?", "왜 별도 concept?" |
-| 책임·경계   | 책임                    | "담당 / 담당 않는 것?"              |
-| 동작/플로우 | 책임 (프로세스성)       | "시작·분기·완료?"                   |
-| 규칙·불변   | 책임 (모델/구조/정책성) | "핵심 규칙·불변?"                   |
-| 경계 상황   | 에지 케이스             | "빈/예외/만료/삭제?"                |
-| 관계        | 관련 Concept            | "의존·영향·구분되는 concept?"       |
-
-**명확성 차원** — 각 차원에 `0 / 25 / 50 / 75 / 100` 점수 부여:
-
-| 차원 | 0점 (불명확) | 100점 (명확) |
-|------|-------------|-------------|
-| 정체성 | 한 문장 정의가 없거나 모호 | 한 문장 정의 + 왜 별도 Concept인지 |
-| 책임·경계 | 담당·비담당 경계가 흐림 | 담당 목록 + 비담당 목록 명시 |
-| 도메인 규칙 | 핵심 규칙·불변 조건이 안 나옴 | 규칙·정책·불변 조건 구체화 |
-| 관계 | 다른 Concept과 의존·영향 불명확 | 관련 Concept + 의존 방향 명시 |
-| 에지 케이스 | 빈/예외/만료/삭제 상황 미처리 | 주요 경계 상황 처리 방향 결정 |
-
-**게이트**: 모호성 = 100 − 가중 평균. **모호성 ≤ 20% 달성 시 인터뷰 종료 가능**. 초과 시 최저 점수 차원부터 파고들기 계속.
-
-concept 유형(모델/구조/프로세스/정책)에 맞는 축만 선택. **구현 상세·UI 표현은 묻지 않음** (티켓·디자인 영역). 자세한 추상 수준은 §4 작성 원칙.
-
-완료 조건: 한 문장 정의 · 책임·경계 명확 · 관련 concept 관계 파악 · 주요 도메인 차원 에지 케이스 수집 · **모호성 ≤ 20%**.
+> **질문 차원 = what / why 만** (plan skill `§Layer 경계` 참고). how 차원은 prepare 단계로 위임.
 
 ### 4. Concept 문서 작성
 
-`concepts/{name}.md` 생성 (`templates/CONCEPT.md` 기반). 인터뷰 답변을 섹션에 매핑:
+`concepts/{name}.md` 생성 (`templates/CONCEPT.md` 기반). 인터뷰 답변을 섹션에 매핑.
 
-- **목차**: H1 (`# Concept: {Name}`) 다음에 ToC 블록 자동 박기. Obsidian `Automatic Table of Contents` (johansatge) 플러그인이 헤더 트리를 자동 렌더링·갱신. 옵션 — `minLevel: 2` (H1 제외) / `maxLevel: 4` / `exclude: /^목차$/` (자기 자신 제외). 코드블록 language 는 `toc`.
-- **개요**: 한두 문장 정의 + 별도 존재 이유
-- **책임**: 책임 영역별 도메인 규칙·정책·동작 (도메인 어휘로)
-- **관련 Concept**: 의존·영향·구분 concept 링크
-- **미정**: 도메인 차원 미결 항목
+**작성 원칙은 `plan` skill `§6 문서 작성` + `references/CONCEPT-WRITING.md` 와 동일** — KEEP/DROP·도메인 어휘·매체 어휘 치환·decision 인라인 금지(§관련 Decision 으로 모음)·인터뷰 시 what/why 만. 본 단계에서 핵심만 재서술:
 
-**원칙** — concept 의 본질은 **도메인 책임·규칙·관계**. spec / concept / decision 어느 곳에도 **구현 디테일·UI 표현·동작 카탈로그는 두지 않는다** — 티켓·디자인 산출물의 몫.
+- **목차**: H1 (`# Concept: {Name}`) 다음에 ToC 블록 (`minLevel: 2 / maxLevel: 4 / exclude: /^목차$/`, language `toc`)
+- **개요·책임·관련 Concept·관련 Decision·미정** 섹션 순
+- **§관련 Decision**: 본 concept 영향 decision 들을 표(날짜·요약·영향 부분) 로 모음. 본문 인라인 `[Decision X](path)` 금지
 
-> **독자 기준**: PM·디자이너·기획자가 읽어도 알아듣는 도메인 어휘로 쓴다. 뷰 본문은 매체("Popover" 등) 대신 **"X 뷰가 다루는 정보·동작"** 으로 쓰고, 정보는 명사 / 동작은 동사로 노출한다. 단위가 다른 항목은 그룹 분리하고, 세부 플로우는 별도 concept 으로 위임한다. 자세한 좋은 예는 `plan` skill `§6` 참고.
-
-- **포함 (KEEP)** — 도메인 책임 · 단일 동작 흐름 · UX 큰 흐름 · 데이터 큰 흐름:
-  - 도메인 정의 / 책임 / 규칙·정책 / 관계 / 핵심 분류·상태 (도메인 어휘)
-  - 사용자가 거치는 큰 단계 (추상 동사: "연결한다" / "해제한다" / "확정된다")
-- **제외 (DROP)**:
-  - **노출 매체 / 컴포넌트 종류**: "Popover" / "Modal" / "Dialog" / "Toast" / "AlertDialog" / "Sheet" / "Tooltip" — 매체는 디자인·구현 결정. "연결 설정 Popover" → "연결 설정 뷰", "성공 Toast" → "성공 안내"
-  - **구현 동사** ("...가 뜬다 / 열린다") — 도메인 동사로 압축
-  - UI 표현·위치 인용 ("리스트 상단 Callout" / "헤더 CTA 배지")
-  - CTA 카피 ("[가져오기]" / "[확인]")
-  - API 시그니처·필드명·코드명
-  - 카탈로그성 표 (동작·기능을 모두 나열한 표)
-  - ASCII 플로우 다이어그램 (단계 명칭은 bullet 한 줄로 충분)
-  - 카피·픽셀·색·아이콘
-- **decision 본문 인용 X, 링크만**: "X 정책은 [Decision Y]" 한 줄
-- **서비스별 분기 위임**: 상위 concept 에 모든 서비스 나열 X — 서비스 concept 으로 위임
-- **중복 작성 방지**: 같은 정책이 여러 concept 에 반복 X — "X 의 Y 는 [[A]] 참고" 단일 source
-- **줄 수 상한 없음**: 도메인 본질이 큰 경우 클 수 있음. verbose·구현 디테일·중복 결과로 길어진 게 아닌지 점검
-
-자세한 좋은/나쁜 예시는 `plan` skill `§6 원칙` 참고.
-
-> **자가 점검 키워드** — Popover / Modal / Dialog / Toast / Sheet / Tooltip / AlertDialog / "뜬다" / "열린다" / `OAuth` / `토큰` / `polling` / `BE` 가 본문에 등장하면 매체 또는 구현 어휘다. 도메인 표현으로 다시 쓴다 ("OAuth" → "외부 서비스 로그인", "토큰 만료" → "인증 만료", "polling" → "주기적 확인"). 매체 변경은 concept 변경이 아닌 구현 영역.
+자가 점검: 본문에 매체 어휘(Popover/Modal/Toast/Sheet/AlertDialog)·구현 어휘(OAuth/토큰/polling/BE)·선택지 카탈로그·how 차원이 등장하면 `references/CONCEPT-WRITING.md` 의 치환 가이드 적용.
 
 **책임 단위 분리 모호 시 AskUserQuestion** — 어떤 동작을 본 concept 안에 두는가, 별도 concept 으로 빼는가가 애매하면 추정으로 진행하지 말고 사용자 결정을 받는다.
 
