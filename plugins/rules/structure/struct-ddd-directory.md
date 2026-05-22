@@ -7,29 +7,16 @@ tags: structure, ddd, directory, domain
 
 ## DDD 기반 디렉토리 구조
 
-기능(component)별이 아닌 도메인/동작별로 그룹핑한다.
-
-**Incorrect (기능별 flat 구조):**
+기능(component)별이 아닌 도메인 단위로 묶는다.
 
 ```
-components/GoalList/
-components/GoalForm/
-components/GoalDetail/
-hooks/useGoalQuery.ts
-queries/goal/
+<domain>/
+├── api/        # query / mutation factory (→ flex/react-query-factory.md)
+├── ui/         # 도메인 컴포넌트
+├── lib/        # 훅 · 유틸 · store
+└── model/      # 타입 · 파서
 ```
 
-**Correct (도메인별 구조):**
-
-```
-<domain | category | ...>/
-├── components/          # 도메인 관련 컴포넌트들
-├── queries/             # React Query (useQueryOptionsFactory 등)
-├── hooks/               # 도메인 전용 훅
-├── utils/               # 유틸 함수
-└── models/              # 타입 정의
-```
-
-- 각 도메인은 자체적으로 components, queries, hooks 등을 보유
-- queries 내에서 `useQueryOptionsFactory` 패턴으로 queryOptions 추상화
-- 계층적 query key 관리 (`['domain', 'action', params]`)
+- queries / mutations 는 도메인 내 `api/` 에 모은다
+- query factory 는 `{ baseQueryKey, options }` 패턴 (→ `flex/react-query-factory.md`)
+- 도메인을 가로지르는 의존이 생기면 별도 도메인으로 추출

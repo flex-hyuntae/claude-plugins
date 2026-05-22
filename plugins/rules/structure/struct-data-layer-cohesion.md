@@ -7,29 +7,21 @@ tags: structure, react-query, data-layer, mutation
 
 ## 데이터 레이어 응집
 
-`invalidateQueries`, `setQueryData` 등 query 데이터 조작은 query/mutation 훅 내부에서 처리한다. 뷰(컴포넌트)는 데이터를 consume만 한다.
+`invalidateQueries` / `setQueryData` 등 cache 조작은 query / mutation 정의 안에서 처리한다. 뷰는 데이터를 consume 만 한다.
 
-**Incorrect (컴포넌트에서 직접 조작):**
-
-```tsx
-// component
-const queryClient = useQueryClient();
-queryClient.invalidateQueries(['goals']);
-```
-
-**Correct (mutation 훅 내부에서 처리):**
+queryKey 자체도 컴포넌트가 직접 만들지 말고 query factory 의 `baseQueryKey` 또는 `options(...).queryKey` 를 참조한다 (→ `flex/react-query-factory.md`).
 
 ```tsx
-// mutation hook
+// ❌ 컴포넌트가 raw key 로 직접 invalidate
+queryClient.invalidateQueries({ queryKey: ['knowledge-list'] });
+
+// ✅ mutation 의 onSettled / callback 에서 처리
 const useUpdateGoal = () =>
   useMutation({
     mutationFn: updateGoalApi,
-    onSettled: () => {
-      queryClient.invalidateQueries(['goals']);
-    },
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: knowledgeListQueries.baseQueryKey,
+      }),
   });
-
-// component - UI 피드백만 전달
-const { mutate } = useUpdateGoal();
-mutate(data, { onSuccess: () => toast.success('저장 완료') });
 ```
