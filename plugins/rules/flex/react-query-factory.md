@@ -21,6 +21,14 @@ queries: {
 
 각 query factory 가 `{ baseQueryKey, options }` 를 반환하도록 한다. `baseQueryKey` 가 params 를 무시한 partial prefix, `options` 는 `queryOptions(...)` (params 없을 때) 또는 `(params) => queryOptions(...)` (params 있을 때).
 
+캐시 범위가 3단으로 계층화된다:
+
+| 범위 | 키 | 용도 |
+|---|---|---|
+| 도메인 전체 | `knowledgeListQueries.baseQueryKey` | 도메인 invalidate |
+| 특정 query 군 | `knowledgeListQueries.queries.paginationList(axios).baseQueryKey` | 그 query 의 모든 params 캐시에 대한 `setQueriesData` / `invalidateQueries` |
+| 특정 params 캐시 | `knowledgeListQueries.queries.paginationList(axios).options(params).queryKey` | `setQueryData` / `getQueryData` (specific) |
+
 ### 골격
 
 ```ts
