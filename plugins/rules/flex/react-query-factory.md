@@ -1,15 +1,15 @@
 ---
 title: React Query — Query Factory 패턴
 impact: HIGH
-impactDescription: queryKey 일관성 + mutation 의 부분 캐시 조작에서 키 누락 방지
+impactDescription: params 가 있는 query 의 partial prefix key 를 정의 옆에 묶어 누락 방지
 tags: react-query, query-factory, query-key, flex
 ---
 
 ## React Query — Query Factory 패턴
 
-각 query factory 는 `{ baseQueryKey, options }` 를 반환한다. `baseQueryKey` 는 그 query 의 partial prefix, `options` 는 `queryOptions(...)` (params 없을 때) 또는 `(params) => queryOptions(...)` (params 있을 때).
+v5 `queryOptions` 는 params 가 포함된 specific queryKey 만 만들어주고, params 가 빠진 partial prefix (그 query 군의 모든 캐시를 가리키는 키) 는 자동으로 묶어주지 않는다. mutation 이 `setQueriesData` / `invalidateQueries` 로 부분 캐시를 다루려면 partial key 를 정의와 떨어진 자리에서 다시 작성해야 해 키가 흩어지고 누락 위험이 커진다.
 
-mutation 이 `setQueriesData` / `invalidateQueries` 로 부분 캐시를 다룰 때 query 정의 옆의 같은 `baseQueryKey` 를 그대로 참조하므로 key 가 흩어지지 않고 새 query 추가 시 누락이 어렵다.
+각 query factory 가 자기 `baseQueryKey` (partial prefix) 와 `options` 를 같이 노출하는 `{ baseQueryKey, options }` 패턴으로 통일한다.
 
 ### 골격
 
