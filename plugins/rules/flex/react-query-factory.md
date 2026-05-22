@@ -76,16 +76,48 @@ const knowledgeListQueries = {
 useSuspenseQuery(knowledgeListQueries.queries.paginationList(axios).options(params));
 useSuspenseQuery(knowledgeListQueries.queries.category(axios).options());
 
-// mutation 의 부분 캐시 조작 — params 무시한 prefix 사용
+// mutation 의 부분 캐시 조작 — params 무시한 prefix 는 partial matching 이라 generic 명시 필요
 const queryKey = knowledgeListQueries.queries.paginationList(axios).baseQueryKey;
 await qc.cancelQueries({ queryKey });
 qc.setQueriesData<SearchKnowledgeApiResponse>({ queryKey }, old => ...);
 
+// specific queryKey (queryOptions 의 결과) 는 DataTag 가 붙어 generic 없이 추론됨
+const queryKey = knowledgeDetailQueries.queries.detail(axios).options({ id }).queryKey;
+qc.setQueryData(queryKey, old => (old ? { ...old, title } : old));
+
 // 도메인 전체 invalidate
 qc.invalidateQueries({ queryKey: knowledgeListQueries.baseQueryKey });
+```
+
+### onMutate / onError 는 `effectsOn` 으로 감싸 누락 검출
+
+mutation 의 onMutate / onError 에서 query 군별 cache 조작은 `effectsOn<typeof xxxQueries.queries>()({...})` 로 감싼다. 각 query key 에 대해 effect 함수 또는 `null` 을 명시하도록 강제되므로, 새 query 추가 시 누락이 컴파일 타임에 잡힌다.
+
+```ts
+return mutationOptions({
+  onMutate: variables =>
+    effectsOn<typeof knowledgeListQueries.queries>()({
+      paginationList: async () => { /* cancel + get + setQueries */ },
+      infiniteList: null,
+      jiraSpaceList: null,
+      googleCalendarList: null,
+    }),
+  onError: (_err, _vars, context) =>
+    effectsOn<typeof knowledgeListQueries.queries>()({
+      paginationList: () => {
+        context?.paginationList?.forEach(([k, d]) => qc.setQueryData(k, d));
+        return null;
+      },
+      infiniteList: null,
+      jiraSpaceList: null,
+      googleCalendarList: null,
+    }),
+});
 ```
 
 ### 안티 패턴
 
 - `partialKeys` 같은 별도 객체에 prefix 만 따로 모아두기 → 정의와 분리되어 새 query 추가 시 키 누락
 - `snapshotAndUpdate<T>` 같은 헬퍼로 mutation 의 cache 조작을 감싸기 → query 정의의 queryKey 가 가진 data 타입 inference 가 헬퍼 generic 으로 가려짐. inline 으로 `cancelQueries` + `getQueriesData` + `setQueriesData` 직접 호출
+- specific queryKey (`xxx(axios).options(params).queryKey`) 에 `setQueryData<T>` / `getQueryData<T>` generic 명시 → v5 DataTag 추론을 가림. generic 없이 호출
+- mutation 의 onError 에서 raw `forEach` 만 호출 → effectsOn 으로 감싸 새 query 키 누락이 컴파일 타임에 잡히게
