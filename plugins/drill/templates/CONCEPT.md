@@ -1,5 +1,13 @@
 # Concept: {Name}
 
+## 목차
+
+```toc
+minLevel: 2
+maxLevel: 4
+exclude: /^목차$/
+```
+
 ## 개요
 
 [한두 문장 정의 + 왜 별도 concept 인지]
