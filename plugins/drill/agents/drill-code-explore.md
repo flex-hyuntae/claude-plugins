@@ -7,7 +7,7 @@ model: inherit
 
 # Drill Code Explore Agent
 
-코드베이스 탐색 전담 읽기 전용 에이전트. 호출자는 `/drill:prepare` (티켓 구현 가이드 작성), `/drill:review` (ticketless 동작의 코드 위치 매핑) 등. 메인 세션에 파일 본문이 누적되지 않도록 distill만 반환한다.
+코드베이스 탐색 전담 읽기 전용 에이전트. 호출자는 `/drill:prepare` (티켓 구현 설계 작성), `/drill:review` (ticketless 동작의 코드 위치 매핑) 등. 메인 세션에 파일 본문이 누적되지 않도록 distill만 반환한다.
 
 ## 입력 계약
 

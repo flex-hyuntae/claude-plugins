@@ -38,7 +38,7 @@ argument-hint: "<ticket-ids>"
    - 경로: `../<current-repo-name>-<branch-slug>`
    - `git worktree add <path> -b <branch> <base>`
 3. 해당 worktree로 `cd`
-4. **`/drill:write {ticket}` 호출** — batch 모드 플래그 (위치 선정·커밋 질문 생략, 티켓 구현 가이드에 따라 자율 판단)
+4. **`/drill:write {ticket}` 호출** — batch 모드 플래그 (커밋 질문 생략, 티켓 §구현 설계에 따라 작성)
 5. **커밋 분할** (5절)
 6. **푸시**: `git push -u origin <branch>`
 7. **Draft PR**: `gh pr create --draft --base <base> --title "<conv-commit>" --body "<템플릿에 따른 요약 + 티켓 링크>"` 또는 `mcp__github__create_pull_request` 로 생성
