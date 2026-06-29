@@ -18,7 +18,7 @@ argument-hint: "<ticket-ids>"
 
 ### 2. 티켓 충분성 게이트 (prepare 선행)
 
-`/drill:write` 는 부족한 티켓을 만나면 스스로 §Cascade(AskUserQuestion 또는 `/drill:prepare` 강화)한다. 그런데 ship 의 batch write 는 §3 확인 이후 사용자 질문이 없으므로, **write 가 질문해야 할 상황을 여기서 미리 닫아 둔다**. 판정 기준은 write 의 §Cascade 와 동일하다 — 티켓 §구현 설계가 **제품 how·구현 how**(노출 위치·카탈로그·시그니처·변경 파일·기존 패턴·재사용·레이어)를 닫고 있는가.
+ship 의 batch write 는 §3 확인 이후 무질문 → write 가 §Cascade 할 상황을 여기서 미리 닫는다. 판정 기준은 write 의 §Cascade 와 동일 — 티켓 §구현 설계가 제품 how·구현 how 를 닫고 있는가.
 
 **판정은 읽기 전용이다 — 티켓 본문을 바꾸지 않는다.** 결과로 분기만 한다:
 
@@ -51,7 +51,7 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
 ### 6. 커밋 분할
 
-**PR ≠ 커밋.** 한 커밋 = **하나의 맥락**(함께 바뀌어야 의미가 완성되는 변경 묶음). 파일 수·줄 수는 기준이 아니다 — 맥락이 어디까지 묶이는지로 가른다. write 가 "작업 단위" 로 커밋하는 것과 같은 결.
+**PR ≠ 커밋.** 한 커밋 = **하나의 맥락**(함께 바뀌어야 의미가 완성되는 묶음) — 파일·줄 수가 아니라 맥락으로 가른다.
 
 **6.1 1차 그룹핑** — 레이어 순으로 묶어 그룹별 add + type-check/lint + Conventional Commit (통과 실패 시 인접 그룹과 병합). 단 한 맥락이 여러 레이어에 걸쳐 한 덩어리면 굳이 쪼개지 않는다.
 타입·모델 → 유틸 → 서비스·훅·API → 컴포넌트 → 테스트 → 잔여(스타일·설정).
@@ -90,7 +90,7 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 - 커밋 분할 완전 자동(질문 없음), 맥락 단위 atomic 지향(§6)
 - stacked 체인은 머지 대기 없이 base 에 바로 쌓음
 - 각 티켓 시작 시 Linear `In Progress` 전환
-- 부족한 티켓은 §2 에서 prepare 강화로 먼저 채운다(write 와 같은 §Cascade 기준). 자명한 QA 는 건너뛴다
+- 부족한 티켓은 §2 에서 먼저 채움 · 자명한 QA 는 건너뜀
 - 한국어
 
 ## `[메모]` 태그 발화
@@ -108,6 +108,5 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
 ## 관련
 
-- `/drill:prepare` 가 만든 티켓을 batch 처리하는 후속 스킬. 부족한 티켓은 §2 에서 강화 모드로 먼저 채운다
-- 티켓별 코드 작성·검증·§Cascade 는 `/drill:write` 가 정의 — ship 은 그 바깥(worktree·커밋분할·push·PR)을 감싼다
+- `/drill:prepare` 가 만든 티켓을 batch 처리하는 후속 스킬 — 코드 작성·검증·§Cascade 는 `/drill:write`, ship 은 그 바깥(worktree·커밋분할·push·PR)
 - PR 피드백 후 Spec 동기화는 `/drill:review`

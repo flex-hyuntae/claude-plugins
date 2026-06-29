@@ -22,12 +22,7 @@ git branch --show-current
 git log origin/develop..HEAD --oneline
 ```
 
-Verify:
-
-- Current branch name
-- Base branch (typically `develop`)
-- Number of commits ahead of base branch
-- Whether there are uncommitted changes (warn if yes)
+현재 브랜치·base(`develop` 기본)·ahead commit 수를 확인하고, 커밋 안 된 변경이 있으면 경고한다.
 
 ### 2. Gather Commits and Changes
 
@@ -67,38 +62,12 @@ Read the pull request template:
 find . -name "pull_request_template.md" -path "*/.github/*"
 ```
 
-Analyze changes to fill template sections:
+변경을 분석해 템플릿 섹션을 채운다 (아래 "PR Description Template Format" 구조):
 
-**For standard template sections:**
-
-1. **개요 (Overview)**
-   - Summarize the main purpose and goals of this PR
-   - What problem does this solve?
-   - What feature does this add?
-
-2. **as-is**
-   - Describe the current state/behavior before this PR
-   - What issues or limitations existed?
-
-3. **to-be**
-   - Describe the new state/behavior after this PR
-   - How does it improve or change things?
-
-4. **design** (if applicable)
-   - Include Figma/design links if changes involve UI
-   - Leave blank or remove section if not applicable
-
-5. **slack** (if applicable)
-   - Include relevant Slack thread links for context
-   - Leave blank or remove section if not applicable
-
-**Analysis approach:**
-
-- Review all modified files and their changes
-- Group changes by feature/fix/refactor
-- Identify key behavioral changes
-- Note any breaking changes or important considerations
-- Check for related issues or tickets
+- **개요**: 이 PR의 목적·해결 문제
+- **as-is**: 이전 상태/한계
+- **to-be**: 변경 후 상태/개선
+- **design / slack** (해당 시): Figma·Slack 링크, 없으면 비움
 
 ### 6. Get Current User Information
 
@@ -136,16 +105,7 @@ Then assign to the user:
 gh pr edit <pr-number> --add-assignee @me
 ```
 
-### 9. Confirm with User
-
-After creating the PR:
-
-- Show the PR URL
-- Display the title and description
-- Show the assignee
-- Confirm creation was successful
-
-### 10. Post-PR Hook — drill:review 자동 호출
+### 9. Post-PR Hook — drill:review 자동 호출
 
 PR 생성 직후 `drill` 플러그인이 설치되어 있으면 `/drill:review <pr-number>`를 자동 호출한다. PR ↔ Linear 티켓 차이를 감지해 Concept/Spec cascade 동기화를 제안하는 단계로, 명시적으로 챙기지 않으면 누락되기 쉬워 자동화 슬롯에 둔다. dispatcher가 feature name을 자체 보충하므로 PR 번호만 넘기면 됨.
 
@@ -201,11 +161,7 @@ Full PR 예시(title + description)는 [references/EXAMPLES.md](references/EXAMP
 
 ## Important Notes
 
-- 브랜치의 모든 commit·변경 사항을 분석한다 (최신 commit 1개만 보지 말 것)
-- PR 제목·설명 모두 한국어
-- base branch는 기본 `develop` — qa/main에는 직접 PR 금지
-- 적용 불가한 템플릿 섹션(design/slack)은 비워두거나 제거
-- assignee는 항상 `@me` (본인)
+- base branch는 기본 `develop` — qa/main에는 직접 PR 금지 (배포는 flex-workflow:deploy)
 
 ## Safety / Error Handling
 

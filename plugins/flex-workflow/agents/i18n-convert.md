@@ -28,29 +28,7 @@ When components have hardcoded text like `t('다운로드가 완료됐어요.')`
 
 ## Translation File Locations
 
-```
-web-applications/
-├── remotes-goal/
-│   └── locales/
-│       ├── ko/translation.json
-│       └── en/translation.json
-├── remotes-evaluation/
-│   └── locales/
-│       ├── ko/translation.json
-│       └── en/translation.json
-├── remotes-review/
-│   └── locales/
-│       ├── ko/translation.json
-│       └── en/translation.json
-├── remotes-people/
-│   └── locales/
-│       ├── ko/translation.json
-│       └── en/translation.json
-└── remotes-user-profile/
-    └── locales/
-        ├── ko/translation.json
-        └── en/translation.json
-```
+각 앱: `web-applications/remotes-<app>/locales/{ko,en}/translation.json`
 
 ## Translation Key Structure
 
@@ -185,42 +163,12 @@ For each hardcoded text:
 
 ### Phase 4: Component Code Updates
 
-#### Example 1: Toast Messages
+하드코딩 텍스트를 키로 치환한다. global 재사용 키가 있으면 우선 사용.
 
 ```typescript
-// Before
-toast.success(t("다운로드가 완료됐어요."));
-toast.error(t("요청이 실패했어요."));
-
-// After
-toast.success(t("goal.manage_goal.excel.download.success"));
-toast.error(t("goal.manage_goal.excel.download.error"));
-```
-
-#### Example 2: Button Labels
-
-```typescript
-// Before
-<Button>{t("재시도")}</Button>
-<Button>{t("다운로드")}</Button>
-
-// After
-<Button>{t("global.재시도")}</Button>
-<Button>{t("global.다운로드")}</Button>
-```
-
-#### Example 3: Form Validation
-
-```typescript
-// Before
-const schema = z.object({
-  name: z.string().min(1, t("이름을 입력해주세요"))
-});
-
-// After
-const schema = z.object({
-  name: z.string().min(1, t("goal.form.validation.name_required"))
-});
+// Before → After
+toast.success(t("다운로드가 완료됐어요."));  // → t("goal.manage_goal.excel.download.success")
+<Button>{t("재시도")}</Button>              // → t("global.재시도")
 ```
 
 ### Phase 5: Validation
@@ -244,22 +192,13 @@ yarn turbo run lint --filter=@flex-apps/remotes-goal
 
 ## Key Naming Guidelines
 
-### Good Examples
+좋은 예: `goal.manage_goal.excel.download.success`, `global.재시도`. 피할 것:
 
 ```
-goal.manage_goal.excel.download.success
-global.재시도
-evaluation.form.validation.required
-review.common.save_success
-```
-
-### Bad Examples
-
-```
-goal.다운로드완료  // Don't mix Korean in keys (except global.* pattern)
-DownloadSuccess  // Use lowercase with underscores
-goal.goal.success  // Don't repeat domain
-very.long.nested.key.structure.that.is.hard.to.read  // Too deep
+goal.다운로드완료  // 키에 한글 혼용 금지 (global.* 패턴 제외)
+DownloadSuccess  // lowercase + underscore 사용
+goal.goal.success  // domain 반복 금지
+very.long.nested.key.structure  // 과도한 depth 금지
 ```
 
 ## Variable Interpolation
@@ -319,34 +258,10 @@ This project uses single braces for variable interpolation. NEVER use double bra
 - "Request failed."
 - "Please try again."
 
-## File Size Considerations
-
-Translation files can be large (3000+ lines). When editing:
-
-1. **Read specific sections:**
-   ```bash
-   # Read lines around a specific key
-   grep -A 5 -B 5 "key_name" locales/ko/translation.json
-   ```
-
-2. **Use Edit tool carefully:**
-   - Ensure `old_string` is unique and exact
-   - Include surrounding context for uniqueness
-   - Verify JSON structure after edit
-
-3. **Test after changes:**
-   - Always run type-check and lint
-   - Check application in browser if possible
-
 ## Important Notes
 
-- **Always update both files**: Korean and English translations must be in sync
-- **Maintain alphabetical order**: Makes it easier to find and manage keys
-- **Avoid nested t() calls**: Don't use `t(t('key'))`
-- **Check for duplicates**: Search existing keys before creating new ones
-- **Use consistent naming**: Follow the domain.feature.context.key pattern
-- **Validate thoroughly**: Run type-check and lint after changes
-- **Test in browser**: Verify translations display correctly
+- ko/en 두 파일을 항상 동기화 (같은 키 집합)
+- nested `t(t('key'))` 금지
 - **조건 분기 시 반드시 `trans()` 사용**: 삼항 연산자, 변수 할당 등 조건식에서 번역 키를 사용할 때는 반드시 `trans()` 함수로 감싸야 한다. `<Translation>` 컴포넌트의 `tKey`에 조건식을 직접 넘기면 i18n 추출 도구가 키를 정적으로 인식하지 못해 번역이 누락된다.
 
   ```tsx
@@ -359,16 +274,3 @@ Translation files can be large (3000+ lines). When editing:
   {isActive ? trans('status.active') : trans('status.inactive')}
   const label = isNew ? trans('action.create') : trans('action.edit');
   ```
-
-## Batch Conversion Strategy
-
-For large-scale conversion:
-
-1. **Identify all hardcoded text** in one file/feature
-2. **Group by context** (toast messages, button labels, etc.)
-3. **Create all translation keys** at once in both files
-4. **Update component code** systematically
-5. **Validate** once at the end
-6. **Test** in application
-
-This approach is more efficient than converting one text at a time.

@@ -50,9 +50,7 @@ AskUserQuestion으로 방식 선택:
 ## 제약
 
 - 한국어
-- agent는 읽기·분석만, 저장은 skill에서
-- 사용자 피드백은 agent 재호출로 반영 (skill이 TC 직접 수정 금지)
-- 저장 경로/페이지는 AskUserQuestion으로 최종 확인
+- TC 초안 작성·수정은 agent 재호출로 (skill이 TC 직접 수정 금지)
 
 ## 에러
 

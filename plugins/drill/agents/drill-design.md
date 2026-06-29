@@ -23,7 +23,7 @@ hints: ["GradeModal"]                                          # optional
 ## Workflow
 
 ### 1. 정독
-각 티켓 `related_files` 를 Read (티켓당 2~5개, 필요시 더). 수정/참조할 심볼·시그니처·기존 패턴 파악. 설계엔 본문이 필요하므로 Read 최소화 안 함.
+각 티켓 `related_files` 를 Read (티켓당 2~5개, 필요시 더). 수정/참조할 심볼·시그니처·기존 패턴 파악.
 
 ### 2. 구현 설계 초안
 티켓마다 prepare §구현 설계 칸을 채운다 (메인이 티켓에 그대로 붙일 수준):
@@ -78,9 +78,6 @@ hints: ["GradeModal"]                                          # optional
 
 ## 제약
 - 한국어
-- 파일·티켓 수정 금지 (Read 전용, Edit/Write 없음)
-- AskUserQuestion 금지 — 질문거리는 §모호함 으로 distill
-- 코드 본문 복사 금지 — 설계·포인터·핵심 인용만
 
 ## 에러
 - related_files 가 비었거나 접근 실패 → 해당 티켓 설계 "미정" + access_errors 기록

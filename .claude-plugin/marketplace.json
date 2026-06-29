@@ -13,7 +13,7 @@
       "name": "git",
       "source": "./plugins/git",
       "description": "Conventional commit 형식의 커밋 메시지 생성, GitHub PR 자동 생성, stacked PR rebase 정리",
-      "version": "2026.05.17.2",
+      "version": "2026.06.29.1",
       "keywords": [
         "git",
         "commit",
@@ -27,14 +27,14 @@
       "name": "code-review",
       "source": "./plugins/code-review",
       "description": "SOLID 원칙 기반 종합 코드 리뷰를 한국어로 수행하고 GitHub에 S1/S2/S3 심각도별 코멘트 작성",
-      "version": "2026.05.12.1",
+      "version": "2026.06.29.1",
       "keywords": ["code-review", "solid", "react", "typescript", "github"]
     },
     {
       "name": "flex-workflow",
       "source": "./plugins/flex-workflow",
       "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, dev 환경 부트스트랩",
-      "version": "2026.05.20.1",
+      "version": "2026.06.29.1",
       "keywords": [
         "deploy",
         "test-package",
@@ -50,7 +50,7 @@
       "name": "drill",
       "source": "./plugins/drill",
       "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
-      "version": "2026.06.29.2",
+      "version": "2026.06.29.3",
       "keywords": [
         "spec",
         "concept",
@@ -70,7 +70,7 @@
       "name": "rules",
       "source": "./plugins/rules",
       "description": "코드 생성 및 리뷰 시 참고할 코딩 컨벤션과 성능 최적화 규칙 (38개 규칙)",
-      "version": "2026.05.22.6",
+      "version": "2026.06.29.1",
       "keywords": [
         "rules",
         "conventions",

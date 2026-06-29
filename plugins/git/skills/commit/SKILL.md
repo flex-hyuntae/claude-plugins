@@ -37,16 +37,7 @@ git diff --name-status
 
 ### 3. Analyze Changes
 
-For the files to be committed:
-
-```bash
-# View the actual changes
-git diff --cached
-
-# If needed, read specific files to understand context
-```
-
-분석 항목:
+`git diff --cached` 로 실제 변경을 분석한다:
 - Type: feat, fix, chore, docs, refactor, style, test, build, ci, perf, revert
 - Scope: 파일 경로에서 도메인 추출 (예: `apps/remotes-goal/...` → `goal`, `packages/core-*-hooks/...` → `core-hooks`). 여러 도메인이 섞이면 `all`. 자세한 추출 패턴은 [references/EXAMPLES.md](references/EXAMPLES.md)
 - Purpose: 이 변경의 목적과 영향
@@ -63,39 +54,15 @@ Follow this format:
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-**Type selection rules:**
-- `feat`: New feature or functionality
-- `fix`: Bug fix
-- `chore`: Maintenance tasks (dependencies, configs, build scripts)
-- `refactor`: Code restructuring without changing behavior
-- `docs`: Documentation changes
-- `style`: Code formatting, whitespace, missing semicolons
-- `test`: Adding or updating tests
-- `build`: Build system or external dependencies
-- `ci`: CI/CD configuration changes
-- `perf`: Performance improvements
-- `revert`: Reverting a previous commit
-
 **Subject line:**
 - **한글로 작성** (예: "목표 데이터 엑셀 내보내기 기능 추가")
-- 간결한 명사형/동사형 종결 ("추가", "수정", "변경")
-- No period at the end
-- Keep under 50 characters if possible
-- Be specific and descriptive
+- 간결한 명사형/동사형 종결 ("추가", "수정", "변경"), 마침표 없음
 
-**Body (optional):**
-- Add only if the change needs explanation beyond the subject
-- Explain WHY, not WHAT (the diff shows what)
-- Wrap at 72 characters
+**Body (optional):** 제목만으로 부족할 때만, WHAT이 아닌 WHY를 설명.
 
 ### 5. Create the Commit
 
-IMPORTANT Git Safety Protocol:
-- NEVER update git config
-- NEVER run destructive commands (push --force, hard reset, etc.) unless explicitly requested
-- NEVER skip hooks (--no-verify, --no-gpg-sign) unless explicitly requested
-- NEVER use `git commit --amend` (create new commits instead)
-- DO NOT push to remote unless explicitly requested
+Git Safety: 명시 요청 없이는 config 변경·force/hard reset·hook skip(--no-verify)·`--amend`·remote push 금지 (새 커밋 생성).
 
 ```bash
 # Stage files if needed (only if user selected specific files)
@@ -115,25 +82,15 @@ EOF
 git log -1 --oneline
 ```
 
-### 6. Confirm with User
-
-After creating the commit:
-- Show the commit message that was created
-- Show the commit hash and summary
-- Confirm the commit was successful
-
 ## Examples
 
 자세한 good/bad 예시와 scope 추출 패턴 표는 [references/EXAMPLES.md](references/EXAMPLES.md) 참고.
 
 ## Important Notes
 
-- Conventional Commits 포맷 엄수
-- 파일명이 아닌 실제 코드 변경을 분석
 - secrets 의심 파일(.env, credentials.json 등)은 커밋 전 사용자에게 경고
 - 한 커밋에 여러 도메인이 섞이면 분리 제안
-- Co-Authored-By 라인 포함
 
 ## Error Handling
 
-커밋 실패 시 에러 메시지를 사용자에게 보여주고 가능한 원인(pre-commit hook 실패, merge conflict 등)을 제안. `--amend`나 `--no-verify`는 사용자가 명시 요청하지 않으면 사용하지 않는다 (hook 실패 시 amend는 이전 커밋을 덮어쓰므로 새 커밋 생성이 안전).
+커밋 실패 시 에러와 가능한 원인(pre-commit hook 실패, merge conflict 등)을 사용자에게 안내. hook 실패 시에도 `--amend`/`--no-verify`로 우회하지 않는다 (새 커밋이 안전).

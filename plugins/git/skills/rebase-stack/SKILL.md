@@ -22,8 +22,6 @@ restack <base-branch> <branch1> <branch2> ...
 
 ### 1. 상태 확인
 
-먼저 저장소의 현재 상태를 확인합니다:
-
 ```bash
 # Run in parallel
 git status --porcelain
@@ -31,17 +29,11 @@ git fetch origin
 git worktree list
 ```
 
-확인 항목:
+다음 중 하나라도 어긋나면 사유를 안내하고 중단한다:
 
-- **Working tree가 clean한지 확인** — 변경 사항이 있으면 중단하고 사용자에게 알림
-- **모든 대상 branch가 존재하는지 확인** — `git branch --list <branch>` 로 각 branch 존재 여부 확인
-- **Worktree에서 checkout된 branch가 없는지 확인** — `git worktree list` 출력에서 대상 branch가 없어야 함
-
-상태 확인 실패 시:
-
-- Working tree가 dirty하면: "커밋하지 않은 변경 사항이 있습니다. 먼저 commit하거나 stash해주세요." 안내 후 종료
-- Branch가 존재하지 않으면: 해당 branch 이름을 알려주고 종료
-- Worktree에서 checkout되어 있으면: "해당 branch가 worktree에서 사용 중입니다." 안내 후 종료
+- Working tree dirty (먼저 commit/stash 필요)
+- 대상 branch 미존재 (`git branch --list <branch>`)
+- 대상 branch가 worktree에서 checkout 중
 
 ### 2. Old Tip 저장 및 Merged Branch 감지
 
@@ -141,38 +133,8 @@ git push --force-with-lease origin <branch2>
 
 ### 7. 결과 보고
 
-모든 작업 완료 후 최종 결과를 보고합니다:
-
-```
-🎉 Restack 완료!
-
-📊 결과:
-  ✅ feat/B: develop 위로 rebase 완료 + push 완료
-  ✅ feat/C: feat/B 위로 rebase 완료 + push 완료
-
-📐 최종 Stack 구조:
-  develop
-  └── feat/B (3 commits)
-      └── feat/C (2 commits)
-```
+각 branch의 rebase+push 결과와 최종 stack 구조를 보고한다.
 
 ## 예시
 
 3가지 대표 시나리오(merged 없음 / 첫 번째 squash merge / 중간 branch merge)는 [references/SCENARIOS.md](references/SCENARIOS.md) 참고.
-
-## 중요 사항
-
-- Full chain 입력 (merged branch 포함) — 정확한 old tip 기반 rebase의 전제
-- Working tree clean 상태 필수
-- 보호 브랜치(develop/qa/main)에는 force push 금지
-- `--force-with-lease` 사용 (다른 사람의 push 덮어쓰기 방지)
-- 모든 주요 단계(계획·push)에서 사용자 확인
-- Squash merge는 자동 감지 불가 — 사용자 확인으로 판정
-
-## 오류 처리
-
-- git fetch 실패 → 네트워크 확인 안내
-- Branch 없음 → 해당 이름 표시 후 종료
-- Worktree에서 사용 중 → 해당 branch 안내 후 종료
-- Rebase 충돌 → 충돌 파일 표시 후 사용자에게 해결 요청 (위 Step 5)
-- Push 실패 → 오류 메시지 표시 후 재시도 여부 확인

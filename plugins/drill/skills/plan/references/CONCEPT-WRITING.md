@@ -184,13 +184,4 @@ AI 게시 셀의 Dropdown 항목은 ON / OFF 두 가지로 구성된다.
 
 ## 자가 점검 키워드
 
-본문에 다음 단어가 등장하면 도메인 표현으로 다시 쓴다 (DROP 표 참고). 매체 변경(Modal → Popover 등) / 선택지 변경 / 위치 변경은 spec cascade 가 아니라 ticket 영역이다.
-
-- 매체·매체 동사: `Popover` / `Modal` / `Dialog` / `Toast` / `Sheet` / `Tooltip` / `AlertDialog` / `"뜬다"` / `"열린다"`
-- 구현·책임 분리 이력: `OAuth` / `토큰` / `polling` / `BE` / `필드명` / `"서버에서 내려온다"` / `"마이그레이션"`
-- 연혁·UX 상태: `"연혁"` / `"구 모델"` / `"~로 회귀"` / `"잠금 표시"` / `"비활성 처리"`
-- 실현 수단: 피쳐키·플래그 키 이름 / `"options API"` / `"FE 대응"`
-- 추상 메타: `"분류 축"` / `"직교"` / `"두 도메인 축"`
-- 선택지·위치·카탈로그·시그니처: `"옵션 A/B/C"` / `"본 사이클 포함"` / `"양쪽에서 제공"` / `"Dropdown 항목 = ON/OFF"` / `"discriminated union"`
-- how 어휘: `"어떻게"` / `"어디에"` / `"어떤 매체"`
-- 본문 인라인 decision 누적: 한 책임 영역에 `[Decision X](path)` 2 회 이상 → §관련 Decision 으로 이관
+본문에 **위 DROP 표의 키워드**가 등장하면 도메인 표현으로 다시 쓴다. 매체 변경(Modal → Popover 등) / 선택지 변경 / 위치 변경은 spec cascade 가 아니라 ticket 영역이다. 추가로, 본문 인라인 `[Decision X](path)` 가 한 책임 영역에 2 회 이상 누적되면 §관련 Decision 으로 이관.

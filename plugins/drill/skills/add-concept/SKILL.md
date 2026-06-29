@@ -30,24 +30,22 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 
 목표: `templates/CONCEPT.md` 섹션(개요·책임·관련 Concept·관련 Decision·미정)을 채울 수준. 한국어 AskUserQuestion.
 
-**인터뷰 방법은 `plan` skill `§3 도메인 심층 인터뷰` 와 동일** — 질문 유형·축·소크라테스식 질문법·게이트·Layer 검수 단계 그대로 적용. add-concept 만의 차이:
+plan `§3 도메인 심층 인터뷰` 그대로. add-concept 만의 차이:
 
 - 한 Concept 범위 — 새로 추가하는 1개만 인터뷰 (plan 처럼 여러 Concept 분해 단계 없음)
 - 기존 Concept 들과의 관계 질문을 추가로 — "기존 [[A]] 와 어떻게 구분되는가?" / "[[B]] 가 본 concept 을 어떻게 참조해야 하는가?"
-
-> **질문 차원 = what / why 만** (plan skill `§Layer 경계` 참고). how 차원은 prepare 단계로 위임.
 
 ### 4. Concept 문서 작성
 
 `concepts/{name}.md` 생성 (`templates/CONCEPT.md` 기반). 인터뷰 답변을 섹션에 매핑.
 
-**작성 원칙은 `plan` skill `§6 문서 작성` + `references/CONCEPT-WRITING.md` 와 동일** — KEEP/DROP·도메인 어휘·매체 어휘 치환·decision 인라인 금지(§관련 Decision 으로 모음)·인터뷰 시 what/why 만. 본 단계에서 핵심만 재서술:
+**작성 원칙은 `plan` skill `§6 문서 작성` + `references/CONCEPT-WRITING.md` 와 동일.** 문서 구조:
 
 - **목차**: H1 (`# Concept: {Name}`) 다음에 ToC 블록 (`minLevel: 2 / maxLevel: 4 / exclude: /^목차$/`, language `toc`)
 - **개요·책임·관련 Concept·관련 Decision·미정** 섹션 순
 - **§관련 Decision**: 본 concept 영향 decision 들을 표(날짜·요약·영향 부분) 로 모음. 본문 인라인 `[Decision X](path)` 금지
 
-자가 점검: 본문에 매체 어휘(Popover/Modal/Toast/Sheet/AlertDialog)·구현 어휘(OAuth/토큰/polling/BE)·선택지 카탈로그·how 차원이 등장하면 `references/CONCEPT-WRITING.md` 의 치환 가이드 적용.
+작성 후 `references/CONCEPT-WRITING.md` 자가 점검 키워드로 매체·구현·how 어휘 누출 점검.
 
 **책임 단위 분리 모호 시 AskUserQuestion** — 어떤 동작을 본 concept 안에 두는가, 별도 concept 으로 빼는가가 애매하면 추정으로 진행하지 말고 사용자 결정을 받는다.
 

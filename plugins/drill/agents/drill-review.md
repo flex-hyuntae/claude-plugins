@@ -186,8 +186,6 @@ cascade_patches:
 ## 제약
 
 - 한국어
-- 코드·티켓 수정 금지 (Edit/Write/save_issue tools 없음)
-- AskUserQuestion 금지
 - diff 전체 복붙 금지 — 필요 최소 스니펫만
 - 각 Diff는 ticket ID(또는 null) + PR 파일 경로/라인 포함
 

@@ -11,10 +11,7 @@ argument-hint: "<패턴 설명>"
 
 ## 1. 저장 절차
 
-1. 해당 카테고리 디렉토리에서 기존 파일들과 **중복 확인**
-2. 적절한 카테고리와 prefix 결정
-3. `<category>/<prefix>-<name>.md` 파일 생성
-4. **버전 bump 필수**: `.claude-plugin/plugin.json`과 `marketplace.json`의 version을 동일하게 올린다
+기존 파일과 중복 확인 → 카테고리·prefix 결정 → `<category>/<prefix>-<name>.md` 생성. 마지막에 **버전 bump 필수**: `.claude-plugin/plugin.json`과 `marketplace.json`의 version을 동일하게 올린다.
 
 ## 2. Rule 파일 형식
 
@@ -45,10 +42,3 @@ tags: tag1, tag2
 | naming | `naming-` | 네이밍, i18n, 주석 |
 
 새 카테고리가 필요하면 `<new-category>/` 디렉토리를 생성한다.
-
-## 4. 완료 보고
-
-저장 완료 후 사용자에게 보고:
-- 저장된 위치 (rule 파일 경로)
-- 저장된 내용 요약
-- 버전 변경 내역

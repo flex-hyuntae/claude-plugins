@@ -20,25 +20,10 @@ When user types `deploy {qa|prod}`, extract the stage:
 
 ### 2. Calculate Deploy Date
 
-```bash
-# For QA: today + 2 days
-# For Prod: today
+- QA: today + 2 days (`date -v+2d +%Y-%m-%d`)
+- Prod: today (`date +%Y-%m-%d`)
 
-# Get current date
-CURRENT_DATE=$(date +%Y-%m-%d)
-
-# For QA, add 2 days
-QA_DATE=$(date -v+2d +%Y-%m-%d)
-
-# Format: YYYY-MM-DD
-# Ensure single-digit dates have leading zero (already handled by date format)
-```
-
-**Date formatting for PR title:**
-- Extract year, month, date
-- Add leading zero if month or date is single digit
-- Format: `v2.{year}-{month}-{date}.0`
-- Example: `v2.2026-01-15.0`
+PR 제목 포맷: `v2.{YYYY-MM-DD}.0` (예: `v2.2026-01-15.0`).
 
 ### 3. Sync Branches with Remote
 
@@ -93,13 +78,6 @@ develop → qa → main
 - **develop**: 개발 브랜치
 - **qa**: QA 테스팅 브랜치 (deploy date = today + 2 days)
 - **main**: 프로덕션 브랜치 (deploy date = today)
-
-## Important Notes
-
-- 항상 base/head 브랜치 모두 remote와 sync한 후 진행
-- 요약에는 PR 링크 사용 (commit 링크는 PR 번호 없을 때만 fallback)
-- 날짜는 leading zero 포함 (`v2.2026-01-15.0`)
-- 임시 파일은 PR 생성 후 정리
 
 ## Git Safety Protocol
 

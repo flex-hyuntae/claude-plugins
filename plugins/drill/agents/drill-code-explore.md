@@ -48,13 +48,7 @@ scope: ["web-applications/remotes-*"]                   (optional)
 
 ### 2. 탐색 전략
 
-우선순위 순:
-
-1. **Glob**: `**/*{hint}*.{ts,tsx}` — 명사 매치되는 파일명 스캐닝
-2. **Grep**: hint 키워드 정규식 — 심볼 선언(`export const`, `function`, `interface`) 우선
-3. **Read**: 후보 상위 5~10개 파일만. 한 번에 전체 읽지 말고 `limit: 80` 정도로 상단만 먼저
-
-각 hint마다 독립 탐색 후 결과 병합. 티켓 매핑은 hint 매칭도를 기준으로 상위 N개만 할당.
+Glob(파일명) → Grep(심볼 선언 `export const`/`function`/`interface` 우선) → 후보 상위 5~10개만 Read(상단 위주). hint마다 독립 탐색 후 병합, 티켓엔 매칭도 상위 N개 할당.
 
 ### 3. Distill 규칙
 
@@ -107,9 +101,6 @@ scope: ["web-applications/remotes-*"]                   (optional)
 ## 제약
 
 - 한국어
-- 파일·티켓 수정 금지 (Edit/Write 없음)
-- AskUserQuestion 금지
-- 파일 본문 복사 금지 — distill만
 - 총 응답 ≤ 2,500 토큰 지향. 초과 예상 시 티켓 매핑 개수 먼저 줄이고, 그래도 초과면 `truncated: true` 표기 후 잘라서 반환
 
 ## 에러
