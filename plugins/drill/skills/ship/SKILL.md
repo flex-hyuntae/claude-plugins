@@ -1,6 +1,6 @@
 ---
 name: ship
-description: 'Linear 티켓 여러 개를 받아 의존 그래프를 만들고 worktree + /drill:write + 자동 커밋 분할로 draft PR을 batch 생성한다. 사용자가 "/drill:ship", "여러 티켓 PR 한번에", "stacked PR 생성", "batch PR"을 요청할 때 트리거. 독립 티켓은 병렬, 의존 체인은 stacked PR. 의존 분석은 drill-deps agent 활용. 정보가 부족한 티켓은 계획 확인 전에 /drill:prepare 강화 모드로 환류 후 진행.'
+description: 'Linear 티켓 여러 개를 받아 의존 그래프를 만들고 worktree + /drill:write + 자동 커밋 분할로 draft PR을 batch 생성한다. 사용자가 "/drill:ship", "여러 티켓 PR 한번에", "stacked PR 생성", "batch PR"을 요청할 때 트리거. 독립 티켓은 병렬, 의존 체인은 stacked PR. 의존 분석은 drill-deps agent 활용. 정보가 부족한 티켓은 계획 확인 전에 /drill:prepare 강화 모드로 먼저 보강한다.'
 compatibility: 'Linear MCP + gh CLI + git worktree 지원 필수'
 disable-model-invocation: true
 argument-hint: "<ticket-ids>"
@@ -16,61 +16,59 @@ argument-hint: "<ticket-ids>"
 
 `drill-deps` 에이전트 호출. 입력: ticket_ids + base_branch(기본 현재 브랜치). 출력: independent + chain + 브랜치명 리포트.
 
-### 1.5. 티켓 충분성 게이트 (prepare fallback)
+### 2. 티켓 충분성 게이트 (prepare 선행)
 
-각 티켓 본문을 prepare 재현성 게이트(`/drill:prepare` `§4.5`)로 판정해, write 가 모호성을 코드로 흡수하지 않도록 부족한 티켓을 먼저 환류한다. **반드시 §2 확인 직전에 둔다** — prepare 강화는 갭 인터뷰(AskUserQuestion)를 하는데 §2 이후로는 "질문 없음"을 보장하기 때문.
+`/drill:write` 는 부족한 티켓을 만나면 스스로 §Cascade(AskUserQuestion 또는 `/drill:prepare` 강화)한다. 그런데 ship 의 batch write 는 §3 확인 이후 사용자 질문이 없으므로, **write 가 질문해야 할 상황을 여기서 미리 닫아 둔다**. 판정 기준은 write 의 §Cascade 와 동일하다 — 티켓 §구현 설계가 **제품 how·구현 how**(노출 위치·카탈로그·시그니처·변경 파일·기존 패턴·재사용·레이어)를 닫고 있는가.
 
-충분 판정 (티켓마다 자문):
-- [ ] 변경 위치(파일/컴포넌트) 특정 — 신규/수정 표시 또는 Figma·티켓으로 자명
-- [ ] 변경 명세 또는 시그니처·기존 패턴 포인터(`file:line`) 존재
-- [ ] 각 수용 기준이 변경 명세 항목으로 추적됨
-- [ ] 남은 모호함이 §미정 에 명시됨 (숨은 추정 없음)
+**판정은 읽기 전용이다 — 티켓 본문을 바꾸지 않는다.** 결과로 분기만 한다:
 
-분기: **충분** → §4 진행. **부족** → `/drill:prepare {ticket}` 강화 모드 인라인 실행, 갭 인터뷰는 여기서 전부 소진. 강화로 §의존이 바뀌면 §1 재실행, 아니면 §1 유지.
+- **충분** → 그대로 §5 진행 (write 가 추가 질문 없이 작성).
+- **부족** → `/drill:prepare` 강화 모드를 먼저 실행해 티켓을 채운다. 갭 인터뷰(AskUserQuestion)는 여기서 전부 끝낸다. 강화로 §의존(`blockedBy`/`relatedTo`)이 바뀌면 §1 재실행.
 
-**과한 환류 금지** — 카피 한 줄·토큰/패딩 수치·outline↔solid 등 자명한 QA 폴리시는 변경 위치만 특정되면 시그니처/패턴 포인터가 비어도 충분으로 본다. 게이트는 write 가 설계를 떠안을 티켓만 거른다.
+**자명한 QA 는 건너뛴다** — 카피 한 줄·토큰/패딩 수치·variant 교체(ghost↔outline 등)처럼 변경 위치만 티켓·Figma 로 특정되면 충분으로 본다. write 도 이런 건 §Cascade 하지 않으므로 prepare 를 부르지 않는다.
 
-### 2. 계획 확인
+### 3. 계획 확인
 
-리포트 요약(티켓 수, 브랜치, base 매핑, PR 개수, §1.5 강화 티켓) → AskUserQuestion: 진행 / 취소. 확인 후 질문 없음 — 완료까지 자동.
+리포트 요약(티켓 수, 브랜치, base 매핑, PR 개수, §2 에서 보강한 티켓) → AskUserQuestion: 진행 / 취소. 확인 후 질문 없음 — 완료까지 자동.
 
-### 3. 실행 순서
+### 4. 실행 순서
 
 Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
-### 4. 티켓별 처리
+### 5. 티켓별 처리
 
-1. **Linear In Progress 전환** (`save_issue`, 이미면 skip)
-2. **Worktree**: `git worktree add ../<repo>-<branch-slug> -b <branch> <base>` → 진입
-3. **`/drill:write {ticket}`** — batch 모드(커밋 질문 생략, §구현 설계 따라 작성)
-4. **커밋 분할** (§5)
-5. **푸시**: `git push -u origin <branch>`
-6. **Draft PR**: `gh pr create --draft --base <base> --title "<conv-commit>" --body "<요약+티켓 링크>"` (또는 `mcp__github__create_pull_request`)
+각 티켓은 **`/drill:write` 가 정의한 절차**(컨텍스트 로드 → 구현 설계 ↔ 현재 코드 대조 → 작성 → type-check/lint 검증 → SoT 반영)를 그대로 따른다. ship 은 그 바깥만 감싼다:
+
+1. Linear 상태 `In Progress` 전환 (이미면 skip)
+2. worktree: `git worktree add ../<repo>-<branch-slug> -b <branch> <base>` → 진입
+3. **`/drill:write {ticket}`** — batch 모드(커밋·이어서 질문 생략). 작성·검증·SoT 갱신은 write 책임. 충분성은 §2 에서 이미 보강했으므로 write 가 멈추지 않는다.
+4. 커밋 분할 (§6)
+5. push: `git push -u origin <branch>`
+6. draft PR: `gh pr create --draft --base <base> --title "<conv-commit>" --body "<요약+티켓 링크>"` (또는 `mcp__github__create_pull_request`)
 7. PR URL 기록 → 원래 worktree 복귀
 
 실패 시 해당 티켓 중단·기록 후 다음 계속. 단 **chain 내부 중단이면 이후 티켓 skip** (base 미생성).
 
-### 5. 커밋 분할
+### 6. 커밋 분할
 
-**PR 단위 ≠ 커밋 단위.** 한 PR 안에 단일 목적 atomic 커밋 여럿.
+**PR ≠ 커밋.** 한 커밋 = **하나의 맥락**(함께 바뀌어야 의미가 완성되는 변경 묶음). 파일 수·줄 수는 기준이 아니다 — 맥락이 어디까지 묶이는지로 가른다. write 가 "작업 단위" 로 커밋하는 것과 같은 결.
 
-**5.1 카테고리 분할** — 순서대로 그룹핑 후 그룹별 `add` + `type-check`/`lint` + Conventional Commit. 통과 실패 시 다음 그룹과 병합 재시도.
-타입·모델(`models/`,`*.types.ts`) → 유틸(`utils/`,`lib/`) → 서비스·훅·API(`hooks/`,`api/`,`queries/`) → 컴포넌트(`*.tsx`) → 테스트(`*.spec.*`,`__tests__/`) → 잔여(스타일·설정).
+**6.1 1차 그룹핑** — 레이어 순으로 묶어 그룹별 add + type-check/lint + Conventional Commit (통과 실패 시 인접 그룹과 병합). 단 한 맥락이 여러 레이어에 걸쳐 한 덩어리면 굳이 쪼개지 않는다.
+타입·모델 → 유틸 → 서비스·훅·API → 컴포넌트 → 테스트 → 잔여(스타일·설정).
 
-**5.2 논리 재분할** — 아래 중 하나라도 해당하면 5.1 결과를 재분할(모두 미해당이면 skip). 각 단위도 type-check/lint 통과 목표, 개별 통과 불가하면 병합.
+**6.2 맥락 단위 재분할** — 1차 결과에서 **한 커밋이 독립된 맥락 여럿을 담으면** 맥락 단위로 쪼갠다. 각 커밋도 type-check/lint 통과 목표, 의존으로 개별 통과 불가하면 병합.
 
-| 진입 조건 | 재분할 |
-|----------|--------|
-| 커밋당 파일 3개 또는 150줄 초과 | 단일 목적 단위로 |
-| 리네임(`R`) + 신규 로직 공존 | 이름 정리 → 로직 변경 |
+| 신호 | 쪼개는 단위 |
+|------|------------|
+| 리네임/이동(`R`) + 신규 로직 공존 | 이름 정리 → 로직 변경 |
 | 공용 모듈 신규 + 소비처 연결 | 공용 먼저 → 소비처 나중 |
-| 한 PR 에 기능 여러 개 | 단위별 |
-| 메시지에 "and/및" 필요 | 메시지 단위로 |
-| 포맷팅 변경 포함 | 별도 chore 분리 |
+| 한 PR 에 독립 기능 여럿 | 기능(맥락)별 |
+| 메시지에 "and/및" 가 필요 | 의미 단위로 |
+| 포맷팅 변경 포함 | 별도 chore 로 분리 |
 
-**5.3 실패** — 전체 병합도 실패 → 강제 1커밋 + PR 본문 경고 (질문 없음).
+**6.3 실패** — 전체 병합도 실패 → 강제 1커밋 + PR 본문 경고 (질문 없음).
 
-### 6. 최종 리포트
+### 7. 최종 리포트
 
 ````markdown
 # Ship 완료
@@ -82,17 +80,17 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 ## Worktree
 (경로 목록 — 정리용)
 
-## 강화된 티켓 / 실패 / 수집된 [메모] (각각 있을 때만)
+## 보강한 티켓 / 실패 / 수집된 [메모] (각각 있을 때만)
 - ...
 ````
 
 ## 제약
 
 - 모든 PR `--draft`, 티켓당 1 브랜치 + 1 worktree
-- 커밋 분할 완전 자동(질문 없음), atomic 지향(§5)
+- 커밋 분할 완전 자동(질문 없음), 맥락 단위 atomic 지향(§6)
 - stacked 체인은 머지 대기 없이 base 에 바로 쌓음
 - 각 티켓 시작 시 Linear `In Progress` 전환
-- 부족 티켓은 §1.5 에서 prepare 환류 — 모호성 코드 흡수 금지, 단 자명한 QA 폴리시는 환류 안 함
+- 부족한 티켓은 §2 에서 prepare 강화로 먼저 채운다(write 와 같은 §Cascade 기준). 자명한 QA 는 건너뛴다
 - 한국어
 
 ## `[메모]` 태그 발화
@@ -102,7 +100,7 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 ## 에러
 
 - 티켓 조회 실패 → drill-deps Warnings, 제외
-- §1.5 강화 실패·게이트 미달 → 보고 후 제외 (모호성 코드 흡수 금지)
+- §2 충분성 미달인데 prepare 강화로도 못 닫음 → 보고 후 제외 (모호성 코드 흡수 금지)
 - /drill:write 실패 → 티켓 중단, chain 이면 이후 skip
 - type-check/lint 전체 병합도 실패 → 강제 1커밋 + 본문 경고
 - `gh pr create` 실패 → 브랜치는 푸시 유지, 실패 기록
@@ -110,5 +108,6 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
 ## 관련
 
-- `/drill:prepare` 가 만든 티켓을 batch 처리하는 후속 스킬. 부족 티켓은 §1.5 에서 강화 모드로 환류
-- 개별 티켓은 `/drill:write` 단독, PR 피드백 후 Spec 동기화는 `/drill:review`
+- `/drill:prepare` 가 만든 티켓을 batch 처리하는 후속 스킬. 부족한 티켓은 §2 에서 강화 모드로 먼저 채운다
+- 티켓별 코드 작성·검증·§Cascade 는 `/drill:write` 가 정의 — ship 은 그 바깥(worktree·커밋분할·push·PR)을 감싼다
+- PR 피드백 후 Spec 동기화는 `/drill:review`
