@@ -34,15 +34,9 @@ spec 의 "X 가능" 약속을 충족하는 구체 결정. 본질은 **"이 약�
 | 카탈로그 항목 | "Dropdown 항목 = ON / OFF" / "More 메뉴 = AI 게시·그룹 옮기기·삭제" |
 | 시그니처·카피·가드 | "props discriminated union { variant: 'single' \| 'bulk' }" / "[저장] / [저장 안 함] / [취소]" / "권한 없을 때 disabled vs 비노출" |
 
-**② 구현 how** — 코드로 어떻게 만드는가 (write 가 추가 설계 없이 따라 칠 수준):
+**② 구현 how** — 코드로 어떻게 만드는가: write 가 추가 설계 없이 따라 칠 수준으로 **§공통 티켓 출력 형식의 §구현 설계 하위 섹션**(변경 파일 · 시그니처·타입 · 따라야 할 기존 패턴 · 재사용 vs 신규 · 변경 명세 · 의존)을 채운다.
 
-| 카테고리 | 결정 예시 |
-|---------|----------|
-| 변경 파일 (신규/수정) | "`GradeModal.tsx` 신규 / `GradeList.tsx` 수정 — 행 클릭 핸들러 추가" |
-| 함수·타입 시그니처 | "`useGradeForm(initial?: Grade): {...}` 추가" / "`type GradeFormState = {...}` 확장" |
-| 따라야 할 기존 패턴 | "`SalaryModal.tsx:30` open/close 패턴 그대로 — react-hook-form + Dialog" |
-| 재사용 vs 신규 | "목록 조회는 기존 `useGradeListQuery` 재사용 / 폼 스키마는 신규 `gradeSchema`" |
-| 레이어 배치 (데이터/표현 경계) | "데이터 흐름(조회=query·상태·뷰 모델·검증=`schema/grade.ts`)과 표현(마크업·스타일)을 분리 — 표현은 안정 인터페이스(뷰 모델/훅/props)로만 데이터에 의존, 역방향 금지. 표현은 휘발성이라 교체해도 데이터 흐름 불변. `[플로우]`/`[마크업]` 축이 모듈 경계로" |
+> **레이어 배치** — 데이터 흐름(조회=query·상태·뷰 모델·검증=`schema/grade.ts`)과 표현(마크업·스타일)을 분리한다. 표현은 안정 인터페이스(뷰 모델/훅/props)로만 데이터에 의존, 역방향 금지. 표현은 휘발성이라 교체해도 데이터 흐름은 불변 — `[플로우]`/`[마크업]` 축이 그대로 모듈 경계가 된다.
 
 ### Spec 모호성 식별 절차
 
@@ -139,11 +133,11 @@ spec 의 "X 가능" 약속을 충족하는 구체 결정. 본질은 **"이 약�
 
 **Concept ↔ 플로우는 1:1 아님**. 각 플로우 티켓은 관련 Concept 경로를 "참고" 에 나열.
 
-**의존 관계**:
-- [마크업]/[API] → 대응 [플로우] `blockedBy` 또는 `relatedTo`
-- 공유 [마크업]·[API] 는 페어(공통) 표기 + 모든 공유 플로우 relatedTo
+**의존 관계** (Phase 5 에서 이 규칙 그대로 설정):
+- **분해 의존**: [마크업]/[API] → 대응 [플로우] `blockedBy` 또는 `relatedTo`
+- 공유 [마크업]·[API] 는 페어(공통) 표기 + 모든 공유 플로우 `relatedTo`
 - BE 선행 필요 [API] 는 BE 티켓 `blockedBy`
-- **코드 레벨 구현 의존**(산출물 공유·선행)은 Phase 4 (drill-design) 에서 식별 → §의존 + Phase 5 설정
+- **구현 의존**: 산출물 공유·선행 코드 → `blockedBy` / 같은 심볼 수정 → `relatedTo`. Phase 4 (drill-design) 에서 식별 → §의존 에 이유와 함께 기록 (ship 이 이 그래프로 stacked PR 순서 결정)
 
 **마크업 추상화**: 여러 플로우의 유사 UI 패턴(리스트·배지·모달 등) 은 공통 티켓 후보 식별. **AI 독단 금지** — 확정은 Phase 3.5.
 
@@ -166,7 +160,7 @@ spec 의 "X 가능" 약속을 충족하는 구체 결정. 본질은 **"이 약�
 
 **4-a. 후보 좁히기** — `Task` 로 `drill-code-explore` A 모드: `feature_name` · `concepts` · `ticket_titles`(Phase 3.5) · hints → 티켓별 `related_files` (distill)
 
-**4-b. 설계 초안** — `Task` 로 `drill-design`: 4-a 의 `related_files` + `tickets`(제목) + `concepts` + `feature_name` 전달 → 티켓별 §구현 설계 초안(변경 파일·시그니처·기존 패턴·재사용·변경 명세·의존) + **모호함 목록(선택지)** + 재현성 점수 초안. 코드 본문은 메인에 누적되지 않는다
+**4-b. 설계 초안** — `Task` 로 `drill-design`: 4-a 의 `related_files` + `tickets`(제목) + `concepts` + `feature_name` 전달 → 티켓별 §구현 설계 초안 + **모호함 목록(선택지)** + 재현성 점수 초안. 코드 본문은 메인에 누적되지 않는다
 
 **4-c. 모호함 닫기 (추정 금지)** — drill-design 이 반환한 **모호함 목록**을 AskUserQuestion 으로 사용자에게 묻고, 답을 해당 티켓 §구현 설계에 반영. 소크라테스식 파고들기는 `plan` skill `§2` 참고. **질문 차원 = 구현 how 만**. 못 닫은 항목 → §미정.
 
@@ -191,14 +185,11 @@ drill-design 의 재현성 점수 초안을 메인이 검증(그대로 신뢰 X)
 
 Phase 4.5 게이트 통과한 티켓만 생성.
 
-- **[플로우] 먼저** 생성 (작은 완결 단위 UX 1개당 1개)
-- 각 플로우에 [마크업]/[API] (1:1:1 강제 없음, N:N)
+- **[플로우] 먼저** 생성 (작은 완결 단위 UX 1개당 1개) → 각 플로우에 [마크업]/[API] (1:1:1 강제 없음, N:N)
 - 공유 마크업은 Phase 3.5 확정만 `(공통)` 로 머지
-- [마크업]/[API] → [플로우] `blockedBy`/`relatedTo` (분해 의존)
-- **구현 의존** (Phase 4 식별): 산출물 공유·선행 코드 → `blockedBy` / 같은 심볼 수정 → `relatedTo`. §의존에 적은 이유와 함께 설정 (ship 이 이 그래프로 stacked PR 순서 결정)
+- `blockedBy`/`relatedTo` 는 §3 의존 관계 규칙대로 설정
 - parentId 연결 또는 에픽 하위 플랫
-
-**티켓별 description** — §공통 티켓 출력 형식: 관련 Concept · 수용 기준 · **§구현 설계**(변경 파일·시그니처·기존 패턴·재사용·변경 명세) · 참고.
+- description = §공통 티켓 출력 형식
 
 > 수용 기준·구현 설계로 §Layer 경계의 제품 how·구현 how 를 둘 다 닫는다 (spec/concept 약속을 그대로 옮기지 말고). 못 닫은 항목은 §미정 + 사용자 결정만 기록 — write 가 자의 결정을 떠안지 않게.
 
@@ -225,31 +216,20 @@ Spec 파일에 Linear 섹션 추가 안 함. 생성된 티켓 목록+URL만 안�
 
 ### 4. 갭 인터뷰
 
-빠진 항목 한국어 AskUserQuestion. 우선순위: 재현 경로 · 기대 동작 · 영향 범위 · 수용 기준 · **제품 how**(UI 구체화·카탈로그·시그니처·카피·가드) · **구현 how**(변경 파일·시그니처·기존 패턴·재사용·레이어 — §생성 모드 4-c 모호함 트리거와 동일) · 특수 조건 · 원인 추정(선택).
+빠진 항목 한국어 AskUserQuestion. 우선순위: 재현 경로 · 기대 동작 · 영향 범위 · 수용 기준 · **제품 how** · **구현 how** (§Layer 경계 2 층 · §생성 모드 4-c 모호함 트리거와 동일) · 특수 조건 · 원인 추정(선택).
 
-소크라테스식 파고들기는 `plan` skill `§2` 참고 (R.W. Paul 6 유형 — ① 정의 / ② 가정 점검 / ③ 근거 / ④ 다른 관점 / ⑤ 함의 / ⑥ 메타 + Follow-up 강제). **질문 차원 = how 만** (제품·구현 how) — plan 에서 닫힌 what/why 의문 시 plan 으로 cascade.
-
-강화 결과도 §생성 모드 4.5 재현성 게이트로 점검 후 `save_issue`.
+소크라테스식 파고들기는 `plan` skill `§2` 참고. **질문 차원 = how 만** — plan 에서 닫힌 what/why 의문 시 plan 으로 cascade.
 
 ### 5. 티켓 업데이트
 
-기존 description 보존. 하단에 구조화 섹션 추가 (관련 Concept / 수용 기준 / §구현 설계). Phase 4.5 게이트 통과 확인 후 `save_issue({ id, description })`.
+기존 description 보존, 하단에 구조화 섹션 추가 (관련 Concept / 수용 기준 / §구현 설계). §생성 모드 4.5 재현성 게이트 통과 확인 후 `save_issue({ id, description })`.
 
 ---
-
-## 사용 도구
-
-| 도구 | 용도 |
-|------|------|
-| `get_issue` / `list_teams` / `list_projects` / `list_issue_labels` / `list_issue_statuses` / `save_issue` / `list_comments` | Linear |
-| `get_design_context` / `get_screenshot` | Figma |
-| `Task(drill-code-explore)` | 코드 후보 좁히기 (distill, Phase 4-a) |
-| `Task(drill-design)` | 정독 + 구현 설계 초안 + 모호함 (distill, Phase 4-b) |
 
 ## 제약
 
 - 코드 수정 금지 (Linear 티켓만) · 한국어 · 티켓 생성/수정 전 사용자 확인
-- 정독·설계는 drill-design 에 위임 — 메인은 코드 본문을 들고 있지 않고, 모호함은 추정 없이 AskUserQuestion (§4-c)
+- 정독·설계는 `drill-design` 에 위임 (§4) — 메인은 코드 본문을 들고 있지 않는다
 - Concept 경로: `~/Projects/flex/til/spec/{feature}/concepts/{name}.md` · 각 티켓 ≤ 8시간
 
 ## 에러

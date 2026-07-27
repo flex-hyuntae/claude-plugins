@@ -27,14 +27,14 @@
       "name": "code-review",
       "source": "./plugins/code-review",
       "description": "SOLID 원칙 기반 종합 코드 리뷰를 한국어로 수행하고 GitHub에 S1/S2/S3 심각도별 코멘트 작성",
-      "version": "2026.06.29.1",
+      "version": "2026.07.27.1",
       "keywords": ["code-review", "solid", "react", "typescript", "github"]
     },
     {
       "name": "flex-workflow",
       "source": "./plugins/flex-workflow",
       "description": "flex 프로젝트 전용 워크플로우: QA/Prod 배포 PR, 패키지 로컬 테스트, i18n 변환, TIL 기록, dev 환경 부트스트랩",
-      "version": "2026.07.09.1",
+      "version": "2026.07.27.1",
       "keywords": [
         "deploy",
         "test-package",
@@ -50,7 +50,7 @@
       "name": "drill",
       "source": "./plugins/drill",
       "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
-      "version": "2026.06.29.3",
+      "version": "2026.07.27.1",
       "keywords": [
         "spec",
         "concept",

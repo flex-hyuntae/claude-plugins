@@ -7,163 +7,52 @@ model: inherit
 
 # i18n Convert
 
-This agent automates the conversion of hardcoded text to i18n translation keys, ensuring proper multilingual support across applications.
+`t('다운로드가 완료됐어요.')` 처럼 하드코딩된 텍스트를 번역 키로 치환하고 ko/en 번역 파일을 동기화한다.
 
-## Overview
+번역 파일: `web-applications/remotes-<app>/locales/{ko,en}/translation.json`
 
-When components have hardcoded text like `t('다운로드가 완료됐어요.')`, this subAgent:
-1. Identifies all hardcoded text patterns
-2. Determines appropriate translation key structures
-3. Updates both Korean and English translation files
-4. Updates component code to use translation keys
-5. Validates changes with type-check and lint
+## 키 구조
 
-## Supported Applications
+| 종류 | 형식 | 예시 |
+|------|------|------|
+| 기본 | `{domain}.{feature}.{context}.{key}` | `goal.manage_goal.excel.download.success` |
+| 도메인 공통 (도메인 내 여러 feature 공용) | `{domain}.common.{key}` | `goal.common.save_success` |
+| 글로벌 (앱 전역 공용) | `global.{key}` | `global.재시도`, `global.취소`, `global.확인` |
 
-- **remotes-goal**: Goal management application
-- **remotes-evaluation**: Evaluation management application
-- **remotes-review**: Review management application
-- **remotes-people**: People management application
-- **remotes-user-profile**: User profile management application
-
-## Translation File Locations
-
-각 앱: `web-applications/remotes-<app>/locales/{ko,en}/translation.json`
-
-## Translation Key Structure
-
-### Domain-Based Hierarchy
+**피할 것**:
 
 ```
-{domain}.{feature}.{context}.{key}
+goal.다운로드완료          // 키에 한글 혼용 금지 (global.* 패턴 제외)
+DownloadSuccess           // lowercase + underscore 사용
+goal.goal.success         // domain 반복 금지
+very.long.nested.key...   // 과도한 depth 금지
 ```
-
-**Examples:**
-- `goal.manage_goal.excel.download.success`
-- `evaluation.form.validation.required`
-- `review.comment.action.submit`
-
-### Global Keys
-
-For commonly used text across the application:
-
-```
-global.{key}
-```
-
-**Examples:**
-- `global.재시도` (Retry)
-- `global.다운로드` (Download)
-- `global.취소` (Cancel)
-- `global.확인` (Confirm)
-- `global.저장` (Save)
-
-### Domain Common Keys
-
-For text used across multiple features within a domain:
-
-```
-{domain}.common.{key}
-```
-
-**Examples:**
-- `goal.common.save_success`
-- `evaluation.common.loading`
 
 ## Workflow
 
-### Phase 1: Identification
-
-Identify hardcoded text in components:
+### 1. 식별
 
 ```bash
-# Search for hardcoded text in t() function
 grep -r "t\(['\"]" web-applications/remotes-goal/src/ -n
-
-# Common patterns to find:
-# - t('하드코딩된 텍스트')
-# - t("hardcoded text")
-# - <Button>{t('텍스트')}</Button>
-# - toast.success(t('메시지'))
 ```
 
-**Target patterns:**
-- Toast messages (success/error/warning)
-- Button labels
-- Form labels and placeholders
-- Error messages
-- Dialog titles and content
-- Table headers
-- Status text
+**대상**: 토스트(success/error/warning) · 버튼 라벨 · 폼 라벨·placeholder · 에러 메시지 · 다이얼로그 제목·본문 · 테이블 헤더 · 상태 텍스트.
 
-### Phase 2: Key Planning
+### 2. 키 계획
 
-For each hardcoded text:
+1. **domain** — 파일 경로에서 추론 (`remotes-goal/src/pages/ManageGoal.tsx` → `goal`), import 도 힌트
+2. **feature** — 파일·폴더 구조에서 (`.../pages/ManageGoal/` → `manage_goal`)
+3. **context** — 주변 코드에서 (Excel export 버튼 → `excel.download`)
+4. **기존 키 확인** — 번역 파일에서 텍스트·`global.*` 를 grep. 재사용 가능하면 신규 발급 금지
+5. 신규 키 제안 또는 기존 키 재사용 결정
 
-1. **Determine domain:**
-   - Analyze file path: `web-applications/remotes-goal/src/pages/ManageGoal.tsx` → domain: `goal`
-   - Check imports for domain hints
+### 3. 번역 파일 업데이트
 
-2. **Determine feature:**
-   - Analyze file/folder structure: `.../pages/ManageGoal/` → feature: `manage_goal`
+ko/en 양쪽에 같은 키를 추가한다. **알파벳 순서 유지** · 2 스페이스 인덴트 · JSON 문법 검증.
 
-3. **Determine context:**
-   - Analyze surrounding code: Excel export button → context: `excel.download`
+### 4. 컴포넌트 치환
 
-4. **Check for existing keys:**
-   ```bash
-   # Search in translation file
-   grep -i "다운로드" web-applications/remotes-goal/locales/ko/translation.json
-
-   # Check for global keys
-   grep "global\\.재시도" web-applications/remotes-goal/locales/ko/translation.json
-   ```
-
-5. **Propose translation key:**
-   - New key: `goal.manage_goal.excel.download.success`
-   - Or reuse: `global.재시도`
-
-### Phase 3: Translation File Updates
-
-#### Update Korean Translation File
-
-```json
-// Before
-{
-  "goal.manage_goal.excel.download.error": "요청이 실패했어요."
-}
-
-// After (alphabetically ordered)
-{
-  "goal.manage_goal.excel.download.error": "요청이 실패했어요.",
-  "goal.manage_goal.excel.download.success": "다운로드가 완료됐어요."
-}
-```
-
-**Important:**
-- Maintain alphabetical order
-- No trailing commas on last item
-- Consistent indentation (2 spaces)
-- Verify JSON syntax
-
-#### Update English Translation File
-
-```json
-// Before
-{
-  "goal.manage_goal.excel.download.error": "The request failed."
-}
-
-// After
-{
-  "goal.manage_goal.excel.download.error": "The request failed.",
-  "goal.manage_goal.excel.download.success": "Download completed."
-}
-```
-
-### Phase 4: Component Code Updates
-
-하드코딩 텍스트를 키로 치환한다. global 재사용 키가 있으면 우선 사용.
+global 재사용 키가 있으면 우선 사용.
 
 ```typescript
 // Before → After
@@ -171,98 +60,20 @@ toast.success(t("다운로드가 완료됐어요."));  // → t("goal.manage_goa
 <Button>{t("재시도")}</Button>              // → t("global.재시도")
 ```
 
-### Phase 5: Validation
-
-After making changes, validate:
+### 5. 검증
 
 ```bash
-# Type check
 yarn turbo run type-check --filter=@flex-apps/remotes-goal
-
-# Lint check
 yarn turbo run lint --filter=@flex-apps/remotes-goal
 ```
 
-**Validation checklist:**
-- Both ko and en files have the same keys
-- JSON syntax is valid
-- No type errors in components
-- No lint errors
-- Translation keys are used correctly in t() function
+## 규칙
 
-## Key Naming Guidelines
-
-좋은 예: `goal.manage_goal.excel.download.success`, `global.재시도`. 피할 것:
-
-```
-goal.다운로드완료  // 키에 한글 혼용 금지 (global.* 패턴 제외)
-DownloadSuccess  // lowercase + underscore 사용
-goal.goal.success  // domain 반복 금지
-very.long.nested.key.structure  // 과도한 depth 금지
-```
-
-## Variable Interpolation
-
-**IMPORTANT: Use single braces `{variable}` only**
-
-This project uses single braces for variable interpolation. NEVER use double braces `{{variable}}`.
-
-### Correct Examples
-
-```json
-// ko/translation.json
-{
-  "people.manage_people.count": "총 {count}명",
-  "people.setting.max_length": "{max}자 이내로 입력하세요.",
-  "people.template.year_month": "{year}년 {month}개월"
-}
-
-// en/translation.json
-{
-  "people.manage_people.count": "Total {count}",
-  "people.setting.max_length": "Please enter up to {max} characters.",
-  "people.template.year_month": "{year} year {month} month"
-}
-```
-
-### Incorrect Examples
-
-```json
-{
-  "people.manage_people.count": "총 {{count}}명",
-  "people.setting.max_length": "{{max}}자 이내로 입력하세요."
-}
-```
-
-## Translation Guidelines
-
-### Korean (ko/translation.json)
-
-- Use formal polite form (해요체)
-- Keep messages concise and friendly
-- Use standard Korean terminology
-
-**Examples:**
-- "다운로드가 완료됐어요." (Download completed.)
-- "요청이 실패했어요." (Request failed.)
-- "다시 시도해 주세요." (Please try again.)
-
-### English (en/translation.json)
-
-- Use clear, simple English
-- Maintain consistent tone
-- Match the formality level of Korean
-
-**Examples:**
-- "Download completed."
-- "Request failed."
-- "Please try again."
-
-## Important Notes
-
-- ko/en 두 파일을 항상 동기화 (같은 키 집합)
+- **ko/en 항상 동기화** (같은 키 집합)
+- **변수 보간은 단일 중괄호 `{variable}` 만** — 이 프로젝트는 `{{variable}}` 를 쓰지 않는다. 예: `"총 {count}명"` / `"{max}자 이내로 입력하세요."`
+- ko 문구는 **해요체** ("다운로드가 완료됐어요."), en 은 ko 와 같은 격식 수준
 - nested `t(t('key'))` 금지
-- **조건 분기 시 반드시 `trans()` 사용**: 삼항 연산자, 변수 할당 등 조건식에서 번역 키를 사용할 때는 반드시 `trans()` 함수로 감싸야 한다. `<Translation>` 컴포넌트의 `tKey`에 조건식을 직접 넘기면 i18n 추출 도구가 키를 정적으로 인식하지 못해 번역이 누락된다.
+- **조건 분기 시 반드시 `trans()` 사용** — `<Translation>` 의 `tKey` 에 조건식을 직접 넘기면 i18n 추출 도구가 키를 정적으로 인식하지 못해 번역이 누락된다
 
   ```tsx
   // ❌ BAD — 추출 도구가 키를 인식하지 못함

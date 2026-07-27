@@ -1,6 +1,6 @@
 ---
 name: plan
-description: '심층 소크라테스식 인터뷰로 도메인을 Concept 단위로 분해하고 Spec(Index) + Concepts 파일을 작성한다. 사용자가 "/drill:plan", "스펙 작성", "concept 정의", "심층 인터뷰", "스펙 분해"를 요청하거나 Linear/Notion/Figma URL과 함께 "이거 스펙으로 만들어줘"라고 할 때 트리거. drill 워크플로우(plan→prepare→write→review→qa)의 첫 단계. 도메인 어휘만 사용 — 구현 디테일·UI 매체(Modal/Popover/Toast)·진입점/표면 위치 표현 금지. 인터뷰 질문도 "어디에 / 어떤 메뉴에서 / 어느 매체로 / 단일 진입점인지" 같은 위치·표면 형태는 묻지 않는다 (티켓 영역).'
+description: '심층 소크라테스식 인터뷰로 도메인을 Concept 단위로 분해하고 Spec(Index) + Concepts 파일을 작성한다. 사용자가 "/drill:plan", "스펙 작성", "concept 정의", "심층 인터뷰", "스펙 분해"를 요청하거나 Linear/Notion/Figma URL과 함께 "이거 스펙으로 만들어줘"라고 할 때 트리거. drill 워크플로우(plan→prepare→write→review→qa)의 첫 단계. 도메인 어휘(what/why)만 다루고 위치·매체·옵션 등 how 는 ticket 으로 위임 (§Layer 경계).'
 compatibility: 'Linear/Notion/Figma MCP 권장 (URL 입력 시). 텍스트만으로도 동작.'
 disable-model-invocation: true
 argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
@@ -43,21 +43,14 @@ plan 의 인터뷰는 **what · why** 에만 집중한다. "어떻게 / 어디�
 
 ### 자가 점검 — 다음 항목은 spec 이 아니라 ticket 으로 위임한다
 
-- **선택지 열거의 우선순위** : "옵션 A / B / C 중 본 사이클 포함" → ticket
-- **노출 매체·위치 결정** : "Callout vs More 메뉴 / Dropdown vs Popover" → ticket
-- **구체 옵션·항목 카탈로그** : "Dropdown 항목 = ON/OFF" / "Footer paginator 의 size selector·navigator·count 중 본 사이클" → ticket
-- **동일 행위의 중복 노출 처리** : "Callout 의 다운로드와 More 메뉴 의 다운로드 중복" → ticket
-- **컴포넌트 시그니처·prop 분기** : "discriminated union / variant" → ticket
-- **카피·라벨 단어** : "[저장]" / "취소" → ticket
-
-### 예시
-
-| 영역 | ✅ spec/concept (약속까지) | ✗ spec 가 아니라 ticket |
-|------|-----------------------------|--------------------------|
-| 다운로드 | "파일 타입은 사이드픽 안에서 다운로드 가능" | "본문 첨부 Callout 의 다운로드와 More 메뉴 다운로드 중복 처리" |
-| 페이지네이션 | "지식 목록은 페이지네이션을 사용한다" | "Footer paginator 의 size selector / navigator / count 중 본 사이클 포함 옵션" |
-| 더보기 액션 | "목록·상세·벌크에서 동일하게 AI 게시 / 그룹 옮기기 / 다운로드(파일) / 삭제 / 메타 표시 가능" | "DropdownMenu item 으로 구현 / 항목 정렬 / 단축키" |
-| AI 게시 표현 | "AI 게시 ON/OFF 를 제어할 수 있다" | "Dropdown vs Toggle / OFF 시각 표식 위치" |
+| 항목 | ✅ spec 은 여기까지 | ✗ 이건 ticket |
+|------|-------------------|--------------|
+| 선택지 열거의 **우선순위** | "파일 타입은 사이드픽 안에서 다운로드 가능" | "옵션 A / B / C 중 본 사이클 포함" |
+| 노출 **매체·위치** | "지식 목록은 페이지네이션을 사용한다" | "Callout vs More 메뉴 / Dropdown vs Popover / footer 고정" |
+| 구체 **옵션·항목 카탈로그** | "AI 게시 ON/OFF 를 제어할 수 있다" | "Dropdown 항목 = ON/OFF" / "size selector·navigator·count 중 본 사이클" |
+| 동일 행위의 **중복 노출** 처리 | "목록·상세·벌크에서 동일하게 AI 게시 / 그룹 옮기기 / 다운로드 / 삭제 가능" | "Callout 의 다운로드와 More 메뉴 다운로드 중복 처리" |
+| 컴포넌트 **시그니처·prop 분기** | — | "discriminated union / variant" |
+| **카피·라벨** 단어 | — | "[저장]" / "취소" |
 
 > spec/concept 에 위치·매체·옵션 카탈로그가 들어가는 순간 ticket 의 자유도가 줄고, 디자인 변동 시 spec cascade 가 일어난다. **spec 의 모호성은 결함이 아니라 의도된 자유도**다. 모호한 부분은 prepare 단계에서 ticket 본문으로 구체화되고, 그 다음 사이클의 design / write 단계에서 결정된다.
 
@@ -87,7 +80,7 @@ plan 의 인터뷰는 **what · why** 에만 집중한다. "어떻게 / 어디�
 
 **목표**: 왜(**why**) / 누구를 위해(**who**) / 어떤 문제(**what**)를 해결하는가.
 
-> **질문 차원 = what / why 만** — how(어떻게/어디서/어떤 매체로)는 prepare 영역 (§Layer 경계). how 답은 spec 본문으로 새어 layer 를 흐린다.
+> **질문 차원 = what / why 만** — how 는 prepare 영역 (§Layer 경계).
 
 **소크라테스식 질문법**: 답변을 수집하는 게 아니라 사고를 명확하게 만드는 것이 목표. 모든 답변에 **최소 1개의 파고드는 질문**을 붙인다 — 자가 만족 금지.
 
@@ -129,8 +122,6 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 
 **목표**: 각 Concept이 `templates/CONCEPT.md` 섹션(개요·책임·에지 케이스·관련 Concept)을 채울 수준으로 구체화.
 
-> **질문 차원 = what / why 만** (§Layer 경계) — "무엇인가 / 왜 별도 개념인가 / 어떤 책임·정책·관계인가" 에 집중. how(노출·진입·매체·항목)는 prepare 영역.
-
 **카테고리**: 도메인 모델 · 구조·분류 · 프로세스 · 정책·권한 · 에지 케이스.
 
 **각 카테고리에서 잡아야 할 축:**
@@ -143,7 +134,7 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 | 관계·차이   | 관련 Concept | "다른 개념과 구분·의존·영향?"         |
 | 경계 상황   | 에지 케이스  | "예외·빈·삭제·만료?"                  |
 
-**소크라테스식 질문법은 §2 와 동일** (R.W. Paul 6 유형 — ① 정의 / ② 가정 점검 / ③ 근거 / ④ 다른 관점 / ⑤ 함의 / ⑥ 메타 + Follow-up 강제 + 자가 평가 금지). 도메인 차원에서 적용 — "왜?" 를 최소 3 회 연속 파고들 깊이.
+**소크라테스식 질문법·게이트는 §2 와 동일** (6 유형 + Follow-up 강제 + 자가 평가 금지 / 각 차원 ≥ 75점 AND 평균 모호성 ≤ 15%). 도메인 차원에서 적용 — "왜?" 를 최소 3 회 연속 파고들 깊이. Concept 마다 충족 후 다음 Concept 으로.
 
 **Concept당 명확성 차원** — 각 차원에 `0 / 25 / 50 / 75 / 100` 점수 부여:
 
@@ -154,8 +145,6 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 | 도메인 규칙 | 핵심 규칙·불변 조건이 안 나옴 | 규칙·정책·불변 조건 구체화 |
 | 관계 | 다른 Concept과 의존·영향 불명확 | 관련 Concept + 의존 방향 명시 |
 | 에지 케이스 | 빈/예외/만료/삭제 상황 미처리 | 주요 경계 상황 처리 방향 결정 |
-
-**게이트는 §2 와 동일** — 각 차원 ≥ 75점 AND 평균 모호성 ≤ 15%. Concept 마다 충족 후 다음 Concept 으로.
 
 **Concept 인터뷰 종료 직전 — Layer 검수 단계** (필수):
 
@@ -173,14 +162,11 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 
 **가이드라인**:
 
-- **구현 상세 금지** — 자세한 추상 수준은 §6 작성 원칙 + §Layer 경계
 - 두 개념이 붙었다 떨어졌다 하면 결정적 차이 집중 질문 ("폴더와 카테고리 차이?")
-- "왜?"를 최소 3회 연속으로 파고들 깊이
 - 피상적·기술 스택 질문 금지
-- **UI 표현·진입점·표면 형태·how·옵션 우선순위 질문 금지** (티켓·디자인 영역) — 위치·매체·컴포넌트·"단일 vs 복수"·"size·navigator·count 중 본 사이클" 류는 spec/concept 영역이 아니다. 본 단계는 what/why 만, "X 를 할 수 있다/사용한다" 까지만 약속 (§Layer 경계)
+- **질문 자가 점검** — 질문에 "어디 / 어떤 매체 / 어느 컴포넌트 / 단일 vs 복수 / 표면 형태" 가 들어가면 ticket 신호 (§Layer 경계). 도메인 의미·정책으로 다시 던지거나 ticket 위임. 사용자가 how 를 자발적으로 던지면 "prepare 에서 다룸" 안내 후 what/why 로 회귀
   - ✅ 도메인 정책·관계: "그룹 삭제 시 하위 콘텐츠는?" / "AI 게시와 카테고리 매핑은 독립인가?"
   - 🚫 위치·표면: "그룹 변경 진입점이 속성 클릭인지 더보기인지?" / "페이지네이터가 footer 고정인지?"
-  - **자가 점검**: 질문에 "어디 / 어떤 매체 / 어느 컴포넌트 / 단일 vs 복수 / 표면 형태" 가 들어가면 ticket 신호 — 도메인 의미·정책으로 다시 던지거나 ticket 위임. 사용자가 how 를 자발적으로 던지면 "prepare 에서 다룸" 안내 후 what/why 로 회귀
 
 ### 4. Concept 식별
 
@@ -214,10 +200,9 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 **원칙**:
 
 - **단일 책임** — 다른 concept 영향은 `[[concept]]` 표시. 분리/통합이 모호하면 AskUserQuestion 으로 사용자 결정 (추정 금지)
-- **도메인 어휘로 단언** — 구현 어휘(매체·OAuth·polling·BE 등)·선택지·옵션·위치·매체 결정은 본문에 두지 않는다 (Layer 경계 + references 참고). PM·디자이너가 읽어도 알아듣는 ubiquitous language
+- **도메인 어휘로 단언** — 구현 어휘(매체·OAuth·polling·BE 등)·선택지·옵션·위치 결정은 본문에 두지 않는다 (§Layer 경계). PM·디자이너가 읽어도 알아듣는 ubiquitous language
 - **§관련 Decision 표로 모음** — 본문 인라인 `[Decision X](path)` 금지 (책임 영역당 ≤ 1 회). §관련 Decision 표(날짜·요약·영향 부분) 로 추적. SPEC.md Decision Log 와 다름(SPEC = feature 전체, concept §관련 Decision = 본 concept 영향 서브셋)
 - **결정은 항상 decision log** — 임시·잠정 결정도 추적성 위해 발급. 미확정은 concept "미정" 섹션 (decision 과 미정은 병행)
-- **모호성은 의도된 자유도** — Layer 경계 §자가 점검의 항목(위치·매체·옵션·시그니처 등) 은 spec 에 두지 않고 ticket 으로 위임. plan §2/§3 게이트의 정의·책임·관계 차원은 100점에 수렴해야 함
 
 **KEEP/DROP 카탈로그 · 좋은/나쁜 예 · 자가 점검 키워드 · 분리vs통합 기준은 [references/CONCEPT-WRITING.md](references/CONCEPT-WRITING.md) 참고.**
 
@@ -227,14 +212,10 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 
 경로 안내 · Concept별 핵심 요약 · 추가 인터뷰 필요 여부 · 다음 단계(`/drill:prepare`) 안내.
 
-## 완료 판단
-
-핵심 도메인 개념 식별 · 각 Concept 개요·책임·에지 정의 · Concept 간 관계 파악 · 중요한 미결 질문 없음.
-
 ## 제약
 
 - 한국어
-- 개념 중심 ("어떻게 만들 것인가" 아니라 "어떻게 동작해야 하는가")
+- 개념 중심 — "어떻게 만들 것인가" 가 아니라 "어떻게 동작해야 하는가"
 - 답변에 따라 자연스러운 follow-up, 질문 방향 유연 조정
 
 ## 에러

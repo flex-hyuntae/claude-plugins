@@ -63,21 +63,29 @@ Ticketless일 때는 PR 전체 동작을 "티켓 외 신규 동작" 후보로 �
 | 신규 Concept 필요 / 기존 Concept 폐기 / Spec 전체 플로우 변경 | `ticket_concept_spec`                 |
 | Ticketless + Concept 매핑 없음                                | 위 중 하나 + `needs_new_ticket: true` |
 
-**`ticket_only` 강제 항목** (concept/spec 까지 cascade 금지):
+#### `ticket_only` 강제 카테고리 (concept/spec cascade 금지)
 
-- **노출 매체 변경** (Modal → Popover, Modal → Sheet, Toast → Inline 등) — 매체는 디자인·구현 결정으로 spec/concept 가 다루지 않음
-- **컴포넌트 종류·위치 변경** (배지 dot → 아이콘, 헤더 위치 → 푸터 위치)
-- **카피 정렬·교체** — 디자인 영역
-- **API 시그니처·필드명·코드 모듈 구조 변경** — 구현 영역
-- **표기 형식 변경** (절대 시각 → 상대 시각, 시간 buckets) — 라이브러리 함수 영역
-- **노출 단위 분리·생략·매체 전환** (사이트 0건 → 별도 안내 / 변경 없음 → 모달 skip / Modal → Toast / "X가 뜬다" 같은 표현) — 도메인 동작(예: "확정 시점" / "수정 동선") 자체를 바꾸는 게 아니라면 매체 결정으로 ticket_only
-- **서버↔클라 책임 분리 / 마이그레이션 이력 / 필드명 변경** — 구현 영역
-- **추상 메타 차원 도입** (`X 분류 축` / `Y 직교` 같이 분류를 묶는 메타 명사. concept 본문은 구체적 도메인 정책으로 풀어쓴다 — "분류 축" 이 아니라 "필터" / "라이프사이클")
-- **단일 source 클라이언트 필드 명시** (`KnowledgeConnection.status: ProviderConnectionStatus` 같이 BE 와 1:1 매핑되는 클라이언트 필드명 박기) — BE 단일 source 정책 자체가 도메인이면 spec 에 두되, 필드명·매핑 디테일은 구현. ticket_description_patch 에만 흡수
+아래 항목은 `concept_patches` / `spec_patches` 를 `null` 로 두고 **`ticket_description_patch` 에만 흡수**한다. 단 **도메인 분류·책임·관계 자체가 바뀐 경우** 는 concept cascade 로 격상.
 
-이 항목들은 concept_patches / spec_patches 를 `null` 로 두고 ticket_description_patch 에만 흡수한다. 단, **도메인 분류·책임·관계 자체가 바뀐 경우** 는 concept cascade 로 격상.
+| 카테고리 | 예시 · 처리 | 자가 점검 키워드 |
+|---------|------------|----------------|
+| 노출 매체 | Modal → Popover / Sheet, Toast → Inline — 매체는 디자인·구현 결정 | `Popover` `Modal` `Dialog` `Toast` `Sheet` `Tooltip` `AlertDialog` |
+| 매체 동사 | 도메인 동사("연결한다" / "확정된다") 로 풀어쓸 수 있는지 검토 (자동 reject 아님) | `"뜬다"` `"열린다"` `"닫힌다"` `"노출된다"` |
+| 컴포넌트 종류·위치 | 배지 dot → 아이콘, 헤더 위치 → 푸터 위치 | |
+| 카피·정렬 | 문구 교체·항목 정렬 — 디자인 영역 | |
+| 구현 어휘 | API 시그니처·필드명·코드 모듈 구조 | `OAuth`(→외부 서비스 로그인) `토큰`(→인증 만료) `polling`(→주기적 확인) `BE` `endpoint` `필드명` `엔티티` |
+| 표기 형식 | 절대 시각 → 상대 시각, 시간 buckets — 라이브러리 함수 영역 | |
+| 노출 단위 분리·생략·전환 | 사이트 0건 → 별도 안내 / 변경 없음 → 모달 skip / Modal → Toast. 도메인 동작("확정 시점" / "수정 동선") 자체를 바꾸는 게 아니라면 ticket_only | |
+| 서버↔클라 책임 분리·이력 | 마이그레이션 이력 · 필드명 변경 — 구현 영역 | `"서버에서 내려온다"` `"클라이언트가 보유"` `"마이그레이션"` `"BE 와 1:1 매핑"` |
+| 추상 메타 차원 | 분류를 묶는 메타 명사 대신 구체 도메인 정책으로 ("필터" / "라이프사이클" / "사이트 상태") | `"분류 축"` `"직교"` `"두 도메인 축"` |
+| 단일 source 클라이언트 필드 | `KnowledgeConnection.status: ProviderConnectionStatus` 같은 BE 1:1 필드명. 단일 source **정책** 자체가 도메인이면 spec 에 두되, 필드명·매핑 디테일은 구현 | `"단일 source 필드"` |
+| 연혁·이력 서술 | "명칭 연혁 A → B → A" / "구 모델의 X 는 ~로 소멸" 금지. 현재 모델만 단언, 변경 출처는 문서 상단 결론 링크 한 줄 | `"연혁"` `"구 모델"` `"~로 회귀"` |
+| 실현 수단 카탈로그 | 피쳐키·플래그 키 이름, options API 형태, "FE 도 대응 필요" 제외. 계약 진술("접근 가능 여부는 피쳐가, 권한 판단은 권한이 담당")만 남기고 "구현 디테일은 spec 범위 외" 한 줄로 위임 | `"options API"` `"FE 대응"` |
+| UX 상태 어휘 | "잠금(🔒) 표시" / "비활성 처리" → "접근 불가" / "노출되지 않는다". 시각 처리는 ticket 영역 | `"잠금 표시"` `"비활성 처리"` |
 
-### Ticket vs Spec 권위 판단
+**자가 점검** — `cascade_patches` 작성 후 `concept_patches` / `spec_patches` / `decision_log_draft`(§영향 포함) 본문에 위 키워드가 등장하면 도메인 표현으로 치환하거나 `ticket_description_patch` 로 이동한다.
+
+#### Ticket vs Spec 권위 판단
 
 ticket description 이 spec 과 어긋날 때 **기본 가정은 양방향 가능성** — ticket 이 사후 정리 안 됐거나 잘못 적혀 있을 수도 있다. 무조건 "ticket 기준 spec 갱신" cascade 권장하지 말 것.
 
@@ -85,7 +93,9 @@ ticket description 이 spec 과 어긋날 때 **기본 가정은 양방향 가�
 - ticket 이 새 결정·새 요구 였다면 → **spec 갱신** cascade 권장.
 - 어느 쪽인지 spec 만 보고 판단 불가능하면 → `confidence: low` + `needs_user_confirmation: true` 강제. cascade_patches 작성하더라도 사용자가 한 줄 답으로 방향 결정 가능하도록 두 옵션 (`A: spec 갱신` / `B: ticket 정정`) 을 notes 에 명시.
 
-**Patch 초안** — 레벨에 맞춰 `cascade_patches` 생성 (skill이 AskUserQuestion으로 그대로 표시 → 확정 시 파일 쓰기만):
+#### Patch 초안
+
+레벨에 맞춰 `cascade_patches` 생성 (skill이 AskUserQuestion으로 그대로 표시 → 확정 시 파일 쓰기만):
 
 ```yaml
 cascade_patches:
@@ -103,35 +113,17 @@ cascade_patches:
       replace_with: |...                # 해당 섹션의 새 전문
 ```
 
-초안 생성 원칙:
+작성 원칙 (어휘 금지 규칙은 §`ticket_only` 강제 카테고리):
 
 - 기존 파일 구조·어조 유지. 전면 재작성 금지
 - concept `archive` 시 상단 배너(`> 폐기: YYYY-MM-DD — 사유`)만 삽입, 본문은 그대로
 - spec 섹션 교체는 **해당 섹션 전체**를 넘김 (skill이 부분 치환)
 - 초안 작성이 애매하면 해당 패치는 `null`로 두고 `notes`에 사유 기록
-- **concept_patches 작성 시 노출 매체·구현 동사 금지** — "Popover Callout 추가" / "Modal → Popover 전환" / "토스트가 뜬다" 같은 표현은 concept 본문에 박지 않는다. 도메인 동사("연결한다" / "확정된다") 와 단일 source 분류만.
-- **decision_log_draft 의 "영향" 섹션도 같은 기준** — concept 본문 변경 제안 시 매체 명시 X. 매체 변경은 ticket_description_patch 에만 기록
-- **표가 이미 표현하는 정보는 표 외 부연 작성 금지** — 표에 도메인 동작 칼럼이 있으면 그게 본질. 표 아래 "X 는 Y 라는 뜻" 식의 부연 불릿이 누적되면 표 자체를 재설계할 신호. 표 + 도메인 경계 박스 한 줄까지만, 부연 불릿 5개 이상은 자동 reject
-- **추상 메타 차원 작성 금지** — "분류 축 — X 분류 / Y 분류", "두 축은 직교한다" 같은 메타 묶음 표현은 cascade patch 에서 제거. 구체적 도메인 정책으로 풀어쓴다 ("필터" / "라이프사이클" / "사이트 상태")
-- **미정 항목 작성 금지 영역** — 코드/디자인 자원·라이브러리 함수가 보유하는 영역(카피·UI 자원·시간 buckets 등)은 미정으로 등재 X. 도메인 정책·계약·결정만 미정 가능
-- **연혁·이력 서술 금지** — "명칭 연혁: A → B → A" / "구 모델의 X 는 ~로 소멸" 절·노트를 patch 에 넣지 않는다. 현재 모델만 단언, 변경 출처는 문서 상단 결론 링크 한 줄
-- **실현 수단 카탈로그 금지** — 피쳐키·플래그 키 이름, options API 형태, "FE 도 대응 필요" 같은 구현 메커니즘은 spec/concept patch 에서 제외. 계약 진술("접근 가능 여부는 피쳐가, 권한 판단은 권한이 담당")만 남기고 "구현 디테일은 spec 범위 외" 한 줄로 위임
+- **표가 이미 표현하는 정보는 표 외 부연 작성 금지** — 표에 도메인 동작 칼럼이 있으면 그게 본질. 표 + 도메인 경계 박스 한 줄까지만, 부연 불릿 5개 이상은 자동 reject (표 자체를 재설계할 신호)
 - **절 신설 게이트** — 새 절이 새로운 계약(누가 무엇을 할 수 있나)을 말하지 않으면 만들지 않는다. 기존 계약의 자연 귀결 부연 절("자동 포함되는 권한") 금지
 - **문서 내 중복 절 통합** — 같은 자격·규칙 집합을 두 절이 반복하면 patch 에서 한 절로 통합 제안
-- **UX 상태 어휘 → 정책 어휘** — "잠금(🔒) 표시" / "비활성 처리" 가 아니라 "접근 불가" / "노출되지 않는다". 시각 처리는 ticket 영역
+- **미정 항목 작성 금지 영역** — 코드/디자인 자원·라이브러리 함수가 보유하는 영역(카피·UI 자원·시간 buckets 등)은 미정으로 등재 X. 도메인 정책·계약·결정만 미정 가능
 - **위치·자격 분리 표기** — "X 메뉴 (글로벌 전용)" 처럼 접근 자격이 위치처럼 읽히는 괄호 표기 금지. "스튜디오 내 메뉴, 접근은 글로벌 권한 전용" 으로 분리
-
-**자가 점검 키워드** — cascade_patches 작성 후 concept_patches / spec_patches / decision_log_draft 본문에 다음 단어가 등장하면 매체·구현 어휘. 도메인 표현으로 치환하거나 ticket_description_patch 로 이동:
-
-- 매체: `Popover` / `Modal` / `Dialog` / `Toast` / `Sheet` / `Tooltip` / `AlertDialog`
-- 매체 동사: `"뜬다"` / `"열린다"` / `"닫힌다"` / `"노출된다"` (자동 reject 아님 — 도메인 동사로 풀어쓸 수 있는지 검토)
-- 구현 어휘: `OAuth` / `토큰` / `polling` / `BE` / `endpoint` / `필드명` / `엔티티`
-- 책임 분리 이력: `"서버에서 내려온다"` / `"클라이언트가 보유"` / `"마이그레이션"` / `"BE 와 1:1 매핑"`
-- 추상 메타: `"분류 축"` / `"직교"` / `"단일 source 필드"` / `"두 도메인 축"`
-- 연혁·UX 상태: `"연혁"` / `"구 모델"` / `"~로 회귀"` / `"잠금 표시"` / `"비활성 처리"`
-- 실현 수단: 피쳐키·플래그 키 이름 / `"options API"` / `"FE 대응"`
-
-치환 예: "OAuth" → "외부 서비스 로그인", "토큰 만료" → "인증 만료", "polling" → "주기적 확인", "분류 축" → "필터" 또는 "라이프사이클".
 
 ### 7. 리포트
 
