@@ -88,9 +88,20 @@ GitHub repo: `flex-hyuntae/til` (private)
 
 연결 이유를 확신할 수 없으면 **추측해서 쓰지 말고 설명 없이 그대로 둔다.** 틀린 설명은 없는 것보다 나쁘다.
 
+### 출처는 노트가 들고 있는다
+
+읽은 아티클이나 회사에서 한 일을 정리해 노트로 쓴 것이면, `## 연결 노트` 앞에
+`## 출처` 를 두고 원본 링크(Notion·아티클 URL)를 적는다.
+
+`Sources/` 의 `↔` 로도 이어지긴 한다. 하지만 그건 스크립트가 다시 만드는 파일에 붙은
+백링크다. **"이 노트가 무엇을 읽고 쓰였나" 는 노트가 직접 들고 있어야 오래 남는다.**
+
+여러 항목을 하나로 묶어 쓴 노트라면 묶은 것을 전부 적는다. 나중에 "이 주제로 뭘
+읽었더라" 를 되짚는 자리가 된다. 항목이 많으면 `·` 로 이어 한 줄에 여러 개를 담는다.
+
 ## 3. 토픽 노트 생성
 
-`~/Projects/flex/til/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `graph.json`의 `colorGroups`에 새 색상 그룹을 추가한다.
+`~/Projects/flex/til/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `.obsidian/graph.json` 의 `colorGroups` 에 새 색상 그룹을 추가한다 (`query` 는 `path:Topics/<카테고리>`, `color` 는 기존과 안 겹치는 `rgb` 정수).
 
 구조는 `~/Projects/flex/til/Templates/TIL Template.md` 를 읽어서 그대로 따른다 (여기에 복사해 두면 드리프트가 생긴다). frontmatter 만 채워야 할 값이 정해져 있다.
 
@@ -128,10 +139,18 @@ python3 scripts/build-index.py --readability
 
 ```bash
 cd ~/Projects/flex/til
-git add -A
+git status --short
+git add -- "Topics/<카테고리>" Topics/_INDEX.md .obsidian/graph.json
 git commit -m "feat: <토픽 제목> 추가"
 git push
 ```
+
+**`git add -A` 를 쓰지 마라.** 이 레포에는 다른 Claude 세션이 붙어 있을 수 있다. 남이
+작업 중인 파일을 통째로 쓸어담아 내 커밋에 섞이는 사고가 있었다. 커밋 전에
+`git status` 로 내 것이 아닌 변경이 있는지 보고, **경로를 명시해서** 담는다.
+
+백링크를 넣은 기존 노트도 경로에 함께 적는다. push 가 거부되면(원격이 앞서 있음)
+강제하지 말고 `git pull --rebase` 후 다시 push 한다.
 
 ## 6. 완료 보고
 
