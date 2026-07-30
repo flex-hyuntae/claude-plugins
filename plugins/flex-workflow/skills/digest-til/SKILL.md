@@ -113,13 +113,28 @@ cd ~/Projects/flex/til
 git status --porcelain -- Sources/
 git add -- Sources/
 git commit -m "chore: Sources ↔ 연결 채우기" -- Sources/
+git push
 ```
 
 **`git add -A` 를 쓰지 마라.** 이 레포에는 다른 Claude 세션이 붙어 있을 수 있다.
 전에 남이 스테이징해둔 rename 을 통째로 쓸어담아 남의 커밋에 섞인 사고가 있었다.
 경로를 명시하면 인덱스에 뭐가 올라가 있든 그 파일만 커밋된다.
 
-바뀐 게 없으면 커밋하지 않는다. push 는 사용자가 확인하고 한다.
+바뀐 게 없으면 커밋하지 않는다.
+
+**push 까지 한다.** 커밋만 하고 두면 올라가지 않은 커밋이 쌓이고, 다른 기기에서
+vault 를 열었을 때 낡은 인덱스를 본다. 1번의 동기화 스크립트도 push 까지 한다.
+
+push 가 거부되면(원격이 앞서 있음) 자동으로 강제하지 말고 이렇게 처리한다:
+
+```bash
+git -C ~/Projects/flex/til pull --rebase
+git -C ~/Projects/flex/til push
+```
+
+rebase 에서 충돌이 나면 멈추고 사용자에게 알린다. `Sources/` 는 생성물이라
+충돌이 나면 대개 다른 기기에서 동기화가 돈 것이니, 그쪽을 살린 뒤 이 스킬을
+다시 돌리는 게 낫다. 손으로 병합하려 들지 마라.
 
 ## 지켜야 하는 설계 원칙
 
