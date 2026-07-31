@@ -85,6 +85,28 @@ grep -c '↔ (없음)' ~/Projects/flex/til/Sources/*.md
 (`_INDEX.md` 자신의 `↔` 는 대괄호 없이 쓰지만, `Sources/` 는 손으로 관리하는
 파일이라 Obsidian 에서 눌러서 갈 수 있게 대괄호를 쓴다.)
 
+### 노트 쪽에도 같이 심는다
+
+`↔` 를 채웠으면 그 노트를 열어 원본 링크를 본문에 넣는다. 자리는 `## 핵심 포인트` 와
+`## 연결 노트` 사이이고, 어느 `Sources/` 파일에서 왔는지에 따라 섹션이 갈린다.
+
+| 어디서 왔나 | 노트의 섹션 |
+|---|---|
+| `Sources/articles.md` | `## 아티클` |
+| `Sources/worked.md` | `## Worked` |
+| `Sources/books.md` | `## Book` |
+
+```markdown
+## 아티클
+
+- [제목](url)
+```
+
+해당 없는 섹션은 만들지 않는다. 이미 그 URL 이 본문에 있으면 또 넣지 않는다.
+
+건수가 많으면 손으로 하지 말고 스크립트를 쓴다. `Sources/` 를 파싱해서 `note → 항목`
+으로 뒤집고 노트마다 심는 방식이 안전하다 — 사람이 옮겨 적으면 URL 을 빠뜨린다.
+
 ### 확신이 없으면 비워 둔다
 
 **태그가 겹친다고 잇지 마라.** 틀린 연결이 섞이면 인덱스를 못 믿게 되고, 못 믿는
@@ -94,7 +116,7 @@ grep -c '↔ (없음)' ~/Projects/flex/til/Sources/*.md
 이건 `add-til` 의 "연결 이유를 확신할 수 없으면 추측해서 쓰지 말고 그대로 둔다" 와
 같은 규칙이다.
 
-### 본문 줄은 건드리지 않는다
+### `Sources/` 의 본문 줄은 건드리지 않는다
 
 `- 날짜 [제목](url) …` 은 스크립트가 만드는 줄이라 다음 동기화에 덮인다.
 **`↔` 줄만 고친다.** 제목이 어색해도 여기서 고치지 말고 Notion·Raindrop 원본을 고친다.
@@ -115,11 +137,14 @@ grep -A1 '`[^`]*TIL' ~/Projects/flex/til/Sources/worked.md | grep -B1 '↔ (없�
 
 ## 5. 커밋
 
+노트 본문을 건드렸으면 TOC 가 어긋나므로 **먼저 생성물을 다시 만든다.**
+
 ```bash
 cd ~/Projects/flex/til
-git status --porcelain -- Sources/
-git add -- Sources/
-git commit -m "chore: Sources ↔ 연결 채우기" -- Sources/
+python3 scripts/build-index.py
+git status --porcelain -- Sources/ Topics/
+git add -- Sources/ Topics/
+git commit -m "chore: Sources ↔ 연결 채우기" -- Sources/ Topics/
 git push
 ```
 
@@ -155,15 +180,15 @@ rebase 에서 충돌이 나면 멈추고 사용자에게 알린다. `Sources/` �
 
 ### 연결의 본체는 노트 쪽이다
 
-`Sources/` 의 `↔` 는 **백링크**다. 본체는 반대 방향이다 — Topics 노트가 자기 `## 출처`
-에 원본 링크(Notion·아티클 URL)를 직접 거는 것이 본체다.
+`Sources/` 의 `↔` 는 **백링크**다. 본체는 반대 방향이다 — Topics 노트가 원본 링크를
+자기 본문에 직접 들고 있는 것이 본체다.
 
 이유는 소유권이다. `Sources/` 는 스크립트가 다시 만드는 파일이고, 노트는 사람이 쓰는
 파일이다. "이 노트가 무엇을 읽고 쓰였나" 는 노트가 들고 있어야 오래 남는다.
 
-Obsidian 에서는 `Sources/` 에 적은 `[[노트명]]` 이 그 노트의 backlink 창에 저절로 뜬다.
-그래서 `↔` 만 채워도 양쪽에서 오갈 수 있다. **이 스킬에서는 노트 본문을 고치지 않는다.**
-노트에 출처를 적는 것은 노트를 쓸 때 `add-til` 이 한다.
+**`↔` 만 채우고 끝내지 마라.** Obsidian 의 backlink 창에 뜨긴 하지만, 노트를 열었을 때
+본문에는 아무것도 없다. 실제로 이 상태가 나서 "노트 가보면 아티클 링크가 없는데?" 라는
+지적을 받았다. 3번에서 양쪽을 같이 채운다.
 
 ### `Sources/` 를 미리 읽지 마라
 
