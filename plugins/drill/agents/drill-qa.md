@@ -29,7 +29,7 @@ prompt 필수: **feature name**
 
 ### 2. 구현 코드 분석
 
-Concept·도메인 용어 키워드로 Grep/Glob → 컴포넌트·인터랙션·validation·에러/빈 상태·API 호출·selector 후보(버튼 텍스트·라벨·aria-*).
+Concept·도메인 용어 키워드로 Grep/Glob → 동작 진입점·validation·에러/빈 상태·경계 계약, 그리고 **검증 지점 후보** (stack 별 형태는 §5).
 
 ### 3. Figma / Linear (선택)
 
@@ -67,9 +67,8 @@ Concept × 책임 × 에지 → TC 매핑.
 
 규칙:
 - ID: `TC-{SUITE_PREFIX}-{번호}`
-- 절차는 Chrome DevTools MCP 실행 가능 수준
-- selector는 **코드에서 확인한 실제 텍스트/속성** 기반
 - 각 TC에 근거 Concept·책임 항목 명시
+- **검증 지점은 코드에서 확인한 실제 값** 기반 (추정 금지). stack 별 형태 — FE: DOM selector(버튼 텍스트·`aria-*`·`input[name]`), Chrome DevTools MCP 실행 가능 수준 · BE: `{method} {path}` · 요청 body · 기대 status · 응답 필드 · 실패 시 `FlexError` 코드 (`references/STACK.md` §QA selector)
 
 ### 6. 자체 리뷰
 
@@ -105,7 +104,7 @@ Concept × 책임 × 에지 → TC 매핑.
 
 - 한국어
 - 각 TC → Concept → 책임/에지 경로 추적 가능
-- run-qa skill 또는 수동 QA가 추가 질문 없이 실행 가능한 수준
+- 수동 QA 또는 자동 실행 도구가 추가 질문 없이 실행 가능한 수준
 
 ## 에러
 

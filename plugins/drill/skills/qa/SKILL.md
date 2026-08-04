@@ -45,7 +45,7 @@ AskUserQuestion으로 방식 선택:
 
 ### 6. 완료
 
-저장 경로/Notion URL · 커버리지 매트릭스 요약 · 누락 항목 재안내 · `/flex-workflow:run-qa` 안내.
+저장 경로/Notion URL · 커버리지 매트릭스 요약 · 누락 항목 재안내.
 
 ## 제약
 

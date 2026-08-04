@@ -7,7 +7,7 @@ Spec/Concept 기반 개발 워크플로우 오케스트레이션 플러그인.
 ## 워크플로우
 
 ```
-plan → prepare → write → review → qa
+plan → prepare → write | ship → review → qa
 ```
 
 ## 커맨드
@@ -18,7 +18,8 @@ plan → prepare → write → review → qa
 | `plan` | 심층 인터뷰 → SPEC.md + Concepts 작성 |
 | `add-concept` | 기존 Spec에 새로운 Concept 추가 (독립 실행) |
 | `prepare` | Spec/Concepts → Linear 티켓 생성 또는 기존 티켓 강화 |
-| `write` | Linear 티켓 기반 Spec/Concept 참조 코드 작성 |
+| `write` | Linear 티켓 1개 기반 코드 작성 |
+| `ship` | 티켓 N개 → 의존 그래프 → worktree + batch draft PR (write 를 감쌈) |
 | `review` | PR vs Spec/Concept 차이 감지 → Decision Log 작성 |
 | `qa` | Spec + Concepts + Decision Log → TC 작성 |
 
@@ -38,31 +39,24 @@ plan → prepare → write → review → qa
 └── .drill-state.json       # 워크플로우 상태
 ```
 
-## FE 티켓 분해 규칙
+## 공용 참조
 
-FE 작업은 **[플로우]를 기준**으로 세 방향 — [플로우] / [마크업] / [API] — 로 쪼개는 것을 기본 패턴으로 합니다:
+스킬·에이전트가 공유하는 단일 출처. 규칙을 고칠 때는 여기만 고칩니다.
 
-- **[플로우]** — UX 플로우, 상태 전이, 권한 분기, 뷰 모델(화면 상태 / derived / enum), 미정 항목 명시
-- **[마크업]** — 레이아웃, 컴포넌트 구성, variant
-- **[API]** — 엔드포인트 호출, 요청/응답, 로딩/에러
+| 파일 | 역할 |
+|------|------|
+| `references/CONCEPT-WRITING.md` | spec/concept 어휘의 단일 출처 — KEEP/DROP 카탈로그, 좋은/나쁜 예, 분리vs통합 |
+| `references/STACK.md` | FE / BE 가 갈리는 지점만 — stack 감지, 검증 커맨드, 의존 방향, QA 검증 지점, BE 컨벤션 위임 |
 
-**핵심 원칙**:
+## 티켓 분해 · Archive
 
-- 플로우는 작은 완결 단위로 **먼저** 정의. 작업량과 무관하게 시나리오가 섞이면 쪼갠다
-- 마크업/API 티켓은 **N:N** — 작업량에 따라 한 플로우에 마크업/API가 여러 개 나올 수 있고, 여러 플로우가 같은 마크업/API를 공유하면 "공통" 티켓으로 머지
-- Concept ↔ 플로우는 1:1이 아니다. 한 Concept이 여러 플로우에 걸치거나, 하나의 Concept 하위에 여러 플로우가 나올 수 있음
-- 뷰 모델은 별도 티켓으로 쪼개지 않음 — 플로우 안에 흡수, 연관 플로우끼리 `relatedTo`로 공유 관계 표시
+- 티켓 3방향 분해([플로우]/[마크업]/[API])와 의존 규칙 → `skills/prepare/SKILL.md` §3
+- BE 는 3축에 억지로 맞추지 않습니다 — `[플로우]` 만 공용, 그 외는 prefix 없이 (`references/STACK.md`)
+- Concept 폐기 시 삭제하지 않고 `concepts/_archive/` 로 archive + decision log 기록 → `skills/review/SKILL.md` §6
 
-자세한 규칙은 `skills/prepare/SKILL.md` → "FE 3방향 분해" 참고.
+## BE 지원
 
-## Archive 정책
-
-Concept이 폐기되거나 다른 Concept으로 대체되면 **삭제하지 않고 archive**합니다:
-
-- 위치: `concepts/_archive/{name}.md`
-- 파일 상단에 `⚠️ Archived (YYYY-MM-DD)` 배너 + 대체 concept 링크 + decision log 링크
-- SPEC.md concepts 테이블에서는 제거하고 테이블 아래 `archived:` 한 줄로 표기
-- 폐기 결정은 `decisions/`에 반드시 기록 (`/drill:review`의 "Concept 폐기/대체" 선택지)
+drill 은 BE 컨벤션을 직접 갖지 않습니다. 절차·게이트·문서 형식은 stack 공용이고, BE 규칙 본문은 `backend-guidelines` 플러그인의 `doc-loader` 에이전트에 위임합니다 (미설치면 생략하고 진행).
 
 ## 사용 예시
 
@@ -77,19 +71,12 @@ Concept이 폐기되거나 다른 Concept으로 대체되면 **삭제하지 않�
 /drill:add-concept job-grade-modal 에러 패널
 /drill:prepare job-grade-modal
 /drill:write CORE-1234
+/drill:ship CORE-1234 CORE-1235 CORE-1236
 /drill:review https://github.com/org/repo/pull/123
 /drill:qa job-grade-modal
-```
-
-### 이어하기
-```
 /drill:drill resume
 ```
 
 ## 템플릿
 
-`templates/` 디렉토리에 각 문서의 템플릿이 있습니다:
-- `SPEC.md` — Index spec 템플릿
-- `concept.md` — Concept 템플릿 (책임 / 에지 케이스)
-- `decision.md` — Decision Log 템플릿
-- `TC.md` — TC 템플릿 (커버리지 매트릭스 포함)
+`templates/` — `SPEC.md` (Index) · `CONCEPT.md` (책임/에지) · `DECISION.md` · `TC.md` (커버리지 매트릭스 포함)

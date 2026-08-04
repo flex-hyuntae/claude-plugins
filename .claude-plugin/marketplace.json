@@ -13,7 +13,7 @@
       "name": "git",
       "source": "./plugins/git",
       "description": "Conventional commit 형식의 커밋 메시지 생성, GitHub PR 자동 생성, stacked PR rebase 정리",
-      "version": "2026.06.29.1",
+      "version": "2026.08.04.1",
       "keywords": [
         "git",
         "commit",
@@ -51,7 +51,7 @@
       "name": "drill",
       "source": "./plugins/drill",
       "description": "Spec/Concept 생성 → 티켓 준비 → Spec 동기화 → TC 생성까지의 개발 워크플로우 오케스트레이션",
-      "version": "2026.07.27.1",
+      "version": "2026.08.04.1",
       "keywords": [
         "spec",
         "concept",

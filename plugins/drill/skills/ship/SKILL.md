@@ -1,7 +1,7 @@
 ---
 name: ship
 description: 'Linear 티켓 여러 개를 받아 의존 그래프를 만들고 worktree + /drill:write + 자동 커밋 분할로 draft PR을 batch 생성한다. 사용자가 "/drill:ship", "여러 티켓 PR 한번에", "stacked PR 생성", "batch PR"을 요청할 때 트리거. 독립 티켓은 병렬, 의존 체인은 stacked PR. 의존 분석은 drill-deps agent 활용. 정보가 부족한 티켓은 계획 확인 전에 /drill:prepare 강화 모드로 먼저 보강한다.'
-compatibility: 'Linear MCP + gh CLI + git worktree 지원 필수'
+compatibility: 'Linear MCP + gh CLI + git worktree 지원 필수. gh stack extension 권장 (chain 을 GitHub 네이티브 stack 으로 등록 → 자동 restack)'
 disable-model-invocation: true
 argument-hint: "<ticket-ids>"
 ---
@@ -15,6 +15,8 @@ argument-hint: "<ticket-ids>"
 ### 1. 의존 분석
 
 `drill-deps` 에이전트 호출. 입력: ticket_ids + base_branch(기본 현재 브랜치). 출력: independent + chain + 브랜치명 리포트.
+
+**BE 레포면** 커밋·PR·브랜치 컨벤션을 `backend-guidelines-doc-loader` 로 로드해 따른다 (`references/STACK.md` §BE 컨벤션 위임). drill 기본값(Conventional Commit·`feat/<id>-<slug>`)과 다르면 그쪽이 우선.
 
 ### 2. 티켓 충분성 게이트 (prepare 선행)
 
@@ -49,12 +51,30 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
 실패 시 해당 티켓 중단·기록 후 다음 계속. 단 **chain 내부 중단이면 이후 티켓 skip** (base 미생성).
 
+### 5.5 GitHub stack 등록 (chain 만)
+
+chain 의 PR 이 다 생성되면 GitHub 네이티브 stack 으로 등록한다. base 체이닝만으로는 GitHub 이 stack 으로 인식하지 않는다 — 등록해야 **앞 PR 이 머지될 때 뒤 PR 들이 자동 restack** 되고 리뷰 UI 에 stack 구조가 뜬다.
+
+```bash
+gh extension list | grep -q gh-stack   # 없으면 gh extension install github/gh-stack
+gh stack link <pr-or-branch> <pr-or-branch> ...   # trunk 에 가까운 순서로
+gh stack view                                      # 등록 결과 확인
+```
+
+- `link` 는 로컬 stack tracking 없이 **이미 만들어진 브랜치·PR** 을 묶는다 — ship 의 worktree 방식과 그대로 맞는다
+- extension 없고 설치도 거절하면 등록을 건너뛰고 최종 리포트에 "stack 미등록 — GitHub PR 화면에서 stack 전환 필요" 로 남긴다 (PR 자체는 정상)
+- independent 티켓은 등록 대상 아님
+- `gh stack` 은 public preview — 실패해도 ship 을 중단하지 않고 기록만 한다
+
+머지 후 정리는 `/git:rebase-stack` (등록돼 있으면 `gh stack sync` 로 위임).
+
 ### 6. 커밋 분할
 
 **PR ≠ 커밋.** 한 커밋 = **하나의 맥락**(함께 바뀌어야 의미가 완성되는 묶음) — 파일·줄 수가 아니라 맥락으로 가른다.
 
-**6.1 1차 그룹핑** — 레이어 순으로 묶어 그룹별 add + type-check/lint + Conventional Commit (통과 실패 시 인접 그룹과 병합). 단 한 맥락이 여러 레이어에 걸쳐 한 덩어리면 굳이 쪼개지 않는다.
-타입·모델 → 유틸 → 서비스·훅·API → 컴포넌트 → 테스트 → 잔여(스타일·설정).
+**6.1 1차 그룹핑** — **안쪽(안정) → 바깥쪽(휘발)** 순으로 묶어 그룹별 add + 검증(`write` §4) + Conventional Commit (통과 실패 시 인접 그룹과 병합). 단 한 맥락이 여러 레이어에 걸쳐 한 덩어리면 굳이 쪼개지 않는다.
+
+타입·모델 → 로직(유틸·서비스·use-case) → 경계(포트·어댑터·API) → 표현·어댑터 구현 → 테스트 → 잔여(설정).
 
 **6.2 맥락 단위 재분할** — 1차 결과에서 **한 커밋이 독립된 맥락 여럿을 담으면** 맥락 단위로 쪼갠다. 각 커밋도 type-check/lint 통과 목표, 의존으로 개별 통과 불가하면 병합.
 
@@ -74,13 +94,13 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 # Ship 완료
 
 ## PR 목록
-| # | Ticket | Branch | Base | PR |
-|---|--------|--------|------|-----|
+| # | Ticket | Branch | Base | PR | Stack |
+|---|--------|--------|------|-----|-------|
 
 ## Worktree
 (경로 목록 — 정리용)
 
-## 보강한 티켓 / 실패 / 수집된 [메모] (각각 있을 때만)
+## 보강한 티켓 / 실패 / stack 미등록 / 수집된 [메모] (각각 있을 때만)
 - ...
 ````
 
@@ -88,7 +108,7 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
 - 모든 PR `--draft`, 티켓당 1 브랜치 + 1 worktree
 - 커밋 분할 완전 자동(질문 없음), 맥락 단위 atomic 지향(§6)
-- stacked 체인은 머지 대기 없이 base 에 바로 쌓음
+- stacked 체인은 머지 대기 없이 base 에 바로 쌓고, GitHub stack 으로 등록(§5.5)
 - 각 티켓 시작 시 Linear `In Progress` 전환
 - 부족한 티켓은 §2 에서 먼저 채움 · 자명한 QA 는 건너뜀
 - 한국어
@@ -104,6 +124,7 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 - /drill:write 실패 → 티켓 중단, chain 이면 이후 skip
 - type-check/lint 전체 병합도 실패 → 강제 1커밋 + 본문 경고
 - `gh pr create` 실패 → 브랜치는 푸시 유지, 실패 기록
+- `gh stack link` 실패/미설치 → PR 은 유지, stack 미등록으로 리포트 (ship 중단 X)
 - worktree 생성 실패(브랜치명 중복 등) → 티켓 중단
 
 ## 관련

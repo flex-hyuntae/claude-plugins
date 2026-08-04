@@ -39,17 +39,9 @@ plan `§3 도메인 심층 인터뷰` 그대로. add-concept 만의 차이:
 
 `concepts/{name}.md` 생성 (`templates/CONCEPT.md` 기반). 인터뷰 답변을 섹션에 매핑.
 
-**작성 원칙은 `plan` skill `§6 문서 작성` + `references/CONCEPT-WRITING.md` 와 동일.** 문서 구조:
+**문서 구조·작성 원칙은 `plan` skill `§6 문서 작성` + `references/CONCEPT-WRITING.md` 와 동일** — ToC 블록, 섹션 순서, §관련 Decision 표, 단일 책임, decision log 발급까지 그대로. 작성 후 DROP 표로 매체·구현·how 어휘 누출을 점검한다.
 
-- **목차**: H1 (`# Concept: {Name}`) 다음에 ToC 블록 (`minLevel: 2 / maxLevel: 4 / exclude: /^목차$/`, language `toc`)
-- **개요·책임·관련 Concept·관련 Decision·미정** 섹션 순
-- **§관련 Decision**: 본 concept 영향 decision 들을 표(날짜·요약·영향 부분) 로 모음. 본문 인라인 `[Decision X](path)` 금지
-
-작성 후 `references/CONCEPT-WRITING.md` 자가 점검 키워드로 매체·구현·how 어휘 누출 점검.
-
-**책임 단위 분리 모호 시 AskUserQuestion** — 어떤 동작을 본 concept 안에 두는가, 별도 concept 으로 빼는가가 애매하면 추정으로 진행하지 말고 사용자 결정을 받는다.
-
-**결정은 항상 decision log 로 남긴다** — 임시·잠정 결정도 추적성을 위해 decision log 발급. 미확정 부분은 concept "미정" 섹션에 표기 (둘은 병행).
+**책임 단위 분리가 모호하면 AskUserQuestion** — 어떤 동작을 본 concept 에 두고 무엇을 빼는가가 애매하면 추정 금지.
 
 작성 후 핵심 책임·에지 케이스 요약 제시 + 사용자 확인.
 

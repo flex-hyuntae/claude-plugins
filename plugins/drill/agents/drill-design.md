@@ -37,9 +37,9 @@ hints: ["GradeModal"]                                          # optional
 ### 3. 모호함 식별 (질문 X, 목록화)
 정독으로 못 닫는 "결정 갈리는 지점" 을 **선택지와 함께** 추출:
 - 같은 일 하는 기존 패턴 둘 이상 — 어느 것
-- 재사용 가능 util/hook 불확실, 재사용 vs 신규
-- 타입 신규 vs 기존 확장
-- 로직 레이어 (hook / util / component / query / store)
+- 재사용 가능한 기존 자산 불확실, 재사용 vs 신규
+- 타입·모델 신규 vs 기존 확장
+- 로직을 둘 레이어 — FE: hook / util / component / query / store · BE: model / service / infrastructure / adapter
 - 네이밍 컨벤션 충돌
 
 각 항목: 티켓 / 무엇이 갈리나 / 선택지 A·B(·C) / 정독상 단서.

@@ -1,7 +1,7 @@
 ---
 name: drill-review
 description: PR 변경 내역을 연결된 Linear 티켓과 대조하고, 차이가 Concept/Spec까지 영향을 주는지 cascade 추천까지 포함한 리포트를 작성합니다. 읽기·분석 전용 격리 에이전트.
-tools: Read, Grep, Glob, Bash, mcp__dd141b4a-9ada-454d-abdb-3363b0a289fc__get_issue, mcp__dd141b4a-9ada-454d-abdb-3363b0a289fc__list_comments, mcp__dd141b4a-9ada-454d-abdb-3363b0a289fc__get_project
+tools: Read, Grep, Glob, Bash, mcp__linear-server__get_issue, mcp__linear-server__list_comments, mcp__linear-server__get_project
 model: inherit
 ---
 
@@ -65,25 +65,11 @@ Ticketless일 때는 PR 전체 동작을 "티켓 외 신규 동작" 후보로 �
 
 #### `ticket_only` 강제 카테고리 (concept/spec cascade 금지)
 
-아래 항목은 `concept_patches` / `spec_patches` 를 `null` 로 두고 **`ticket_description_patch` 에만 흡수**한다. 단 **도메인 분류·책임·관계 자체가 바뀐 경우** 는 concept cascade 로 격상.
+**판정 기준은 `references/CONCEPT-WRITING.md` §DROP 표** (플러그인 루트, spec 어휘의 단일 출처). 그 표의 카테고리에 해당하는 변경 — 노출 매체·매체 동사·컴포넌트 종류·위치·카피·구현 어휘·표기 형식·연혁 서술·실현 수단·UX 상태 어휘 — 은 `concept_patches` / `spec_patches` 를 `null` 로 두고 **`ticket_description_patch` 에만 흡수**한다.
 
-| 카테고리 | 예시 · 처리 | 자가 점검 키워드 |
-|---------|------------|----------------|
-| 노출 매체 | Modal → Popover / Sheet, Toast → Inline — 매체는 디자인·구현 결정 | `Popover` `Modal` `Dialog` `Toast` `Sheet` `Tooltip` `AlertDialog` |
-| 매체 동사 | 도메인 동사("연결한다" / "확정된다") 로 풀어쓸 수 있는지 검토 (자동 reject 아님) | `"뜬다"` `"열린다"` `"닫힌다"` `"노출된다"` |
-| 컴포넌트 종류·위치 | 배지 dot → 아이콘, 헤더 위치 → 푸터 위치 | |
-| 카피·정렬 | 문구 교체·항목 정렬 — 디자인 영역 | |
-| 구현 어휘 | API 시그니처·필드명·코드 모듈 구조 | `OAuth`(→외부 서비스 로그인) `토큰`(→인증 만료) `polling`(→주기적 확인) `BE` `endpoint` `필드명` `엔티티` |
-| 표기 형식 | 절대 시각 → 상대 시각, 시간 buckets — 라이브러리 함수 영역 | |
-| 노출 단위 분리·생략·전환 | 사이트 0건 → 별도 안내 / 변경 없음 → 모달 skip / Modal → Toast. 도메인 동작("확정 시점" / "수정 동선") 자체를 바꾸는 게 아니라면 ticket_only | |
-| 서버↔클라 책임 분리·이력 | 마이그레이션 이력 · 필드명 변경 — 구현 영역 | `"서버에서 내려온다"` `"클라이언트가 보유"` `"마이그레이션"` `"BE 와 1:1 매핑"` |
-| 추상 메타 차원 | 분류를 묶는 메타 명사 대신 구체 도메인 정책으로 ("필터" / "라이프사이클" / "사이트 상태") | `"분류 축"` `"직교"` `"두 도메인 축"` |
-| 단일 source 클라이언트 필드 | `KnowledgeConnection.status: ProviderConnectionStatus` 같은 BE 1:1 필드명. 단일 source **정책** 자체가 도메인이면 spec 에 두되, 필드명·매핑 디테일은 구현 | `"단일 source 필드"` |
-| 연혁·이력 서술 | "명칭 연혁 A → B → A" / "구 모델의 X 는 ~로 소멸" 금지. 현재 모델만 단언, 변경 출처는 문서 상단 결론 링크 한 줄 | `"연혁"` `"구 모델"` `"~로 회귀"` |
-| 실현 수단 카탈로그 | 피쳐키·플래그 키 이름, options API 형태, "FE 도 대응 필요" 제외. 계약 진술("접근 가능 여부는 피쳐가, 권한 판단은 권한이 담당")만 남기고 "구현 디테일은 spec 범위 외" 한 줄로 위임 | `"options API"` `"FE 대응"` |
-| UX 상태 어휘 | "잠금(🔒) 표시" / "비활성 처리" → "접근 불가" / "노출되지 않는다". 시각 처리는 ticket 영역 | `"잠금 표시"` `"비활성 처리"` |
+**격상 예외** — 변경이 **도메인 분류·책임·관계 자체**를 바꾸면 매체 변경처럼 보여도 concept cascade 로 올린다. 판단선: "확정 시점" / "수정 동선" 같은 도메인 동작이 달라졌는가, 아니면 같은 동작의 표면만 달라졌는가.
 
-**자가 점검** — `cascade_patches` 작성 후 `concept_patches` / `spec_patches` / `decision_log_draft`(§영향 포함) 본문에 위 키워드가 등장하면 도메인 표현으로 치환하거나 `ticket_description_patch` 로 이동한다.
+**자가 점검** — `cascade_patches` 작성 후 `concept_patches` / `spec_patches` / `decision_log_draft` 본문에 DROP 표 키워드가 등장하면 도메인 표현으로 치환하거나 `ticket_description_patch` 로 이동한다.
 
 #### Ticket vs Spec 권위 판단
 
@@ -113,17 +99,15 @@ cascade_patches:
       replace_with: |...                # 해당 섹션의 새 전문
 ```
 
-작성 원칙 (어휘 금지 규칙은 §`ticket_only` 강제 카테고리):
+**patch 기계적 규칙**:
 
 - 기존 파일 구조·어조 유지. 전면 재작성 금지
 - concept `archive` 시 상단 배너(`> 폐기: YYYY-MM-DD — 사유`)만 삽입, 본문은 그대로
 - spec 섹션 교체는 **해당 섹션 전체**를 넘김 (skill이 부분 치환)
 - 초안 작성이 애매하면 해당 패치는 `null`로 두고 `notes`에 사유 기록
-- **표가 이미 표현하는 정보는 표 외 부연 작성 금지** — 표에 도메인 동작 칼럼이 있으면 그게 본질. 표 + 도메인 경계 박스 한 줄까지만, 부연 불릿 5개 이상은 자동 reject (표 자체를 재설계할 신호)
-- **절 신설 게이트** — 새 절이 새로운 계약(누가 무엇을 할 수 있나)을 말하지 않으면 만들지 않는다. 기존 계약의 자연 귀결 부연 절("자동 포함되는 권한") 금지
-- **문서 내 중복 절 통합** — 같은 자격·규칙 집합을 두 절이 반복하면 patch 에서 한 절로 통합 제안
-- **미정 항목 작성 금지 영역** — 코드/디자인 자원·라이브러리 함수가 보유하는 영역(카피·UI 자원·시간 buckets 등)은 미정으로 등재 X. 도메인 정책·계약·결정만 미정 가능
-- **위치·자격 분리 표기** — "X 메뉴 (글로벌 전용)" 처럼 접근 자격이 위치처럼 읽히는 괄호 표기 금지. "스튜디오 내 메뉴, 접근은 글로벌 권한 전용" 으로 분리
+- **미정 항목 작성 금지 영역** — 코드/디자인 자원·라이브러리 함수가 보유하는 영역(카피·UI 자원·시간 buckets)은 미정으로 등재 X. 도메인 정책·계약·결정만 미정 가능
+
+**본문 작성 규칙은 `references/CONCEPT-WRITING.md`** — 어휘(§DROP), 중복 절 통합·절 신설 게이트·표 부연 금지(§보조 원칙), 위치·자격 분리(§표현 정확성 함정). patch 는 concept/spec 파일이므로 그 문서의 작성 기준을 그대로 따른다.
 
 ### 7. 리포트
 
