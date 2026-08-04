@@ -50,7 +50,7 @@ plan 의 인터뷰는 **what · why** 에만 집중한다. "어떻게 / 어디�
 ## 출력
 
 ```
-~/Projects/flex/til/spec/{feature-name}/
+~/Projects/flex/wiki/Spec/{feature-name}/
 ├── {FEATURE-NAME}.md    # Index (대문자)
 └── concepts/
     └── {name}.md
@@ -63,7 +63,8 @@ plan 의 인터뷰는 **what · why** 에만 집중한다. "어떻게 / 어디�
 - 사용자 입력: 텍스트 / Linear URL / Notion URL / Figma URL
 - **URL 하나라도 있으면** `drill-plan-source` agent에 위임 (원본이 메인 컨텍스트 오염 방지)
 - 텍스트만 있으면 skill에서 직접 처리
-- `~/Projects/flex/til/spec/` 에서 관련 기존 스펙 Glob으로 확인
+- `~/Projects/flex/wiki/Spec/` 에서 관련 기존 스펙 Glob으로 확인
+- `~/Projects/flex/wiki/Work/_INDEX.md` 에서 **같은 도메인 Work Topic** 확인. 지금 시스템이 실제로 어떻게 동작하는지가 적혀 있으면 인터뷰 출발점이 달라진다. 있으면 spec 본문에서 `[[노트명]]` 으로 링크한다. 없는데 인터뷰 중 코드를 읽어 알아낸 현재 동작이 쌓이면 `/add-work` 후보로 짚어 준다 (spec 에 현재 동작을 적어 두지 않는다 — 그건 Work Topic 의 몫이다)
 
 **Agent 호출 (URL 있을 때)**: `Task` 로 `drill-plan-source` 호출. prompt에 `linear_url / notion_url / figma_url / raw_text` 전달. agent의 `# Drill Plan Source Report` 를 **Phase 2 이후 인터뷰 배경 자료**로 사용. 원본 URL은 기록만, re-fetch는 꼭 필요할 때만.
 
@@ -194,7 +195,7 @@ R.W. Paul 의 6 유형을 기본 도구로 사용한다:
 
 **KEEP/DROP 카탈로그 · 좋은/나쁜 예 · 분리vs통합 기준은 `references/CONCEPT-WRITING.md` 참고** (플러그인 루트 기준. spec 어휘의 단일 출처).
 
-저장: `~/Projects/flex/til/spec/{feature-name}/` (프로젝트 루트 기준).
+저장: `~/Projects/flex/wiki/Spec/{feature-name}/` (프로젝트 루트 기준).
 
 ### 7. 최종 확인
 
