@@ -18,7 +18,7 @@ prompt 필수: **feature name**
 
 ### 1. Spec/Concept/Decision 로드
 
-`~/Projects/flex/til/spec/{feature}/`:
+`~/Projects/flex/wiki/Spec/{feature}/`:
 - `{FEATURE}.md` (대문자)
 - `concepts/*.md`
 - `decisions/*.md` **최신순** (파일명 `YYYY-MM-DD-*`)

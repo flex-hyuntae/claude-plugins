@@ -14,7 +14,7 @@ TC 초안·커버리지 매트릭스 작성은 `drill-qa` agent에 위임. 이 s
 
 ### 1. 입력 수집
 
-**필수**: feature name — 인자 없으면 `ls ~/Projects/flex/til/spec/` + AskUserQuestion.
+**필수**: feature name — 인자 없으면 `ls ~/Projects/flex/wiki/Spec/` + AskUserQuestion.
 
 **선택 (AskUserQuestion 일괄)**: Figma URL / Linear project ID / feature flag. "없음" 기본.
 
@@ -41,7 +41,7 @@ TC 초안·커버리지 매트릭스 작성은 `drill-qa` agent에 위임. 이 s
 AskUserQuestion으로 방식 선택:
 
 - **Notion**: `mcp__notion__notion-create-pages({ parentPageUrl, pages: [{ title: "[{feature}] QA TC", content: 리포트 전체 }] })`. parent URL은 사용자 입력 또는 기본값.
-- **로컬**: `~/Projects/flex/til/spec/{feature}/TC.md` (`templates/TC.md` 형식). 필요 시 재구성.
+- **로컬**: `~/Projects/flex/wiki/Spec/{feature}/TC.md` (`templates/TC.md` 형식). 필요 시 재구성.
 
 ### 6. 완료
 

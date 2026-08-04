@@ -57,7 +57,7 @@ spec 의 "X 가능" 약속을 충족하는 구체 결정. 본질은 **"이 약�
 [Concept에서 도출]
 
 ## 관련 Concept
-- [~/Projects/flex/til/spec/{feature}/concepts/{name}.md] — [설명]
+- [~/Projects/flex/wiki/Spec/{feature}/concepts/{name}.md] — [설명]
 
 ## 수용 기준
 - [ ] [검증 가능한 완료 조건]
@@ -104,7 +104,7 @@ spec 의 "X 가능" 약속을 충족하는 구체 결정. 본질은 **"이 약�
 
 ### 1. 스펙 로드
 
-`~/Projects/flex/til/spec/{feature}/{FEATURE}.md` + `concepts/*.md`. 없으면 `/drill:plan` 안내.
+`~/Projects/flex/wiki/Spec/{feature}/{FEATURE}.md` + `concepts/*.md`. 없으면 `/drill:plan` 안내.
 
 ### 2. Linear 프로젝트 설정
 
@@ -210,7 +210,7 @@ Spec 파일에 Linear 섹션 추가 안 함. 생성된 티켓 목록+URL만 안�
 
 ### 2. Spec/Concept 연결
 
-티켓에서 feature name 추출 → `~/Projects/flex/til/spec/` Glob → 있으면 로드, 없으면 Phase 3.
+티켓에서 feature name 추출 → `~/Projects/flex/wiki/Spec/` Glob → 있으면 로드, 없으면 Phase 3.
 
 ### 3. 자동 컨텍스트 수집
 
@@ -233,7 +233,7 @@ Spec 파일에 Linear 섹션 추가 안 함. 생성된 티켓 목록+URL만 안�
 
 - 코드 수정 금지 (Linear 티켓만) · 한국어 · 티켓 생성/수정 전 사용자 확인
 - 정독·설계는 `drill-design` 에 위임 (§4) — 메인은 코드 본문을 들고 있지 않는다
-- Concept 경로: `~/Projects/flex/til/spec/{feature}/concepts/{name}.md` · 각 티켓 ≤ 8시간
+- Concept 경로: `~/Projects/flex/wiki/Spec/{feature}/concepts/{name}.md` · 각 티켓 ≤ 8시간
 
 ## 에러
 

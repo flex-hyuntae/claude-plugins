@@ -16,7 +16,7 @@ argument-hint: "[feature-name] [concept-name|주제-텍스트|linear-url|notion-
 
 ### 1. Feature 식별
 
-- 인자 1에서 feature name 파싱 → `~/Projects/flex/til/spec/{feature}/` 존재 확인
+- 인자 1에서 feature name 파싱 → `~/Projects/flex/wiki/Spec/{feature}/` 존재 확인
 - Spec index + 기존 `concepts/*.md` 로드 (관계 파악용)
 - 없으면 AskUserQuestion 또는 `/drill:plan` 안내
 

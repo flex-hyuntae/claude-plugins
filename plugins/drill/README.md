@@ -26,7 +26,7 @@ plan → prepare → write | ship → review → qa
 ## 출력 구조
 
 ```
-~/Projects/flex/til/spec/{feature-name}/
+~/Projects/flex/wiki/Spec/{feature-name}/
 ├── {FEATURE-NAME}.md       # Index — 문제 정의, 전체 동작, concept 링크, archived 표기
 ├── concepts/
 │   ├── table.md            # 개별 동작 명세 (책임 / 에지 케이스)

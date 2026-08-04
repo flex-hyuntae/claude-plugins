@@ -25,7 +25,7 @@ plan → prepare → write → review → qa 워크플로우 오케스트레이�
 
 ## 상태 추적
 
-`~/Projects/flex/til/spec/{feature}/.drill-state.json`:
+`~/Projects/flex/wiki/Spec/{feature}/.drill-state.json`:
 
 ```json
 {

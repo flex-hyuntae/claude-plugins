@@ -18,7 +18,7 @@ PR ↔ Ticket 차이 감지는 `drill-review` agent에 위임. 이 skill은 **�
 
 ### 1. 인자 파싱
 
-- feature name 없으면 `ls ~/Projects/flex/til/spec/` + AskUserQuestion
+- feature name 없으면 `ls ~/Projects/flex/wiki/Spec/` + AskUserQuestion
 - PR 식별자 없으면 "현재 브랜치 최신 PR"
 
 ### 2. Agent 호출
@@ -64,7 +64,7 @@ PR ↔ Ticket 차이 감지는 `drill-review` agent에 위임. 이 skill은 **�
 
 - **공통 (모든 레벨)**:
   - `ticket_description_patch` → `save_issue({ id, description })` — patch에 이미 `## Decision Log` 섹션 누적 포함됨
-  - `decision_log_draft` → `~/Projects/flex/til/spec/{feature}/decisions/YYYY-MM-DD-NNN.md` 로 저장 (NNN은 같은 날짜 내 01부터, 충돌 시 증가)
+  - `decision_log_draft` → `~/Projects/flex/wiki/Spec/{feature}/decisions/YYYY-MM-DD-NNN.md` 로 저장 (NNN은 같은 날짜 내 01부터, 충돌 시 증가)
 - **`ticket_concept` 이상**:
   - `concept_patches[]` 각 항목:
     - `action: create` → `concepts/{name}.md` 신규 생성

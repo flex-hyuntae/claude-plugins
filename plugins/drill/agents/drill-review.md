@@ -35,7 +35,7 @@ PR 제목/본문/브랜치에서 `[A-Z]+-\d+` 와 `linear.app/.../issue/<ID>` �
 
 ### 4. Spec 로드
 
-`~/Projects/flex/til/spec/{feature}/` 하위의 `{FEATURE}.md`, `concepts/*.md`, `decisions/*.md`, `concepts/_archive/` 존재 여부.
+`~/Projects/flex/wiki/Spec/{feature}/` 하위의 `{FEATURE}.md`, `concepts/*.md`, `decisions/*.md`, `concepts/_archive/` 존재 여부.
 없으면 `spec_missing: true` — 티켓 비교만 수행, Concept/Spec cascade 추천 생략.
 
 ### 5. 차이 감지

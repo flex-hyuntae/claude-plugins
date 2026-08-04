@@ -17,7 +17,7 @@ prompt에 다음 중 하나의 형태로 제공:
 
 ```
 feature_name: job-grade-modal
-spec_path: ~/Projects/flex/til/spec/job-grade-modal/   (optional)
+spec_path: ~/Projects/flex/wiki/Spec/job-grade-modal/   (optional)
 concepts: ["job-grade", "modal-transition"]
 ticket_titles:
   - "[플로우] 직군 모달 진입/종료"
@@ -42,7 +42,7 @@ scope: ["web-applications/remotes-*"]                   (optional)
 
 ### 1. Spec/Concept 로드 (A 모드 한정)
 
-- `spec_path`가 있으면 `{FEATURE}.md` + `concepts/*.md` Read. 없으면 `~/Projects/flex/til/spec/{feature_name}/` Glob 시도
+- `spec_path`가 있으면 `{FEATURE}.md` + `concepts/*.md` Read. 없으면 `~/Projects/flex/wiki/Spec/{feature_name}/` Glob 시도
 - concept 파일에서 등장하는 **도메인 명사**·**컴포넌트 이름 후보**를 추출해 hints에 병합
 - 실패하면 `access_errors`에 기록 후 hints만으로 진행
 
