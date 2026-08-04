@@ -1,27 +1,27 @@
 ---
-name: digest-til
-description: '하루를 마치며 til vault 를 갱신한다 — Raindrop·Notion 을 Sources 인덱스로 동기화하고, 새로 들어온 것을 Topics 노트와 ↔ 로 잇고, TIL 후보를 짚는다. 사용자가 "하루 마감", "일 끝났어", "위키 업데이트", "til 정리", "소화하자", "/digest-til" 로 호출할 때 트리거. add-til 은 노트를 쓰는 것이고 이쪽은 바깥에서 들어온 것을 소화하는 것이다.'
-compatibility: '~/Projects/flex/til clone + ~/Projects/flex/til/.env (RAINDROP_TOKEN, NOTION_TOKEN)'
+name: digest-wiki
+description: '하루를 마치며 위키를 갱신한다 — Raindrop·Notion 을 Sources 인덱스로 동기화하고, 새로 들어온 것을 Topic·Work Topic 노트와 ↔ 로 잇고, 새 노트 후보를 층까지 짚어 준다. 사용자가 "하루 마감", "일 끝났어", "위키 업데이트", "위키 정리", "소화하자", "/digest-wiki" 로 호출할 때 트리거. add-topic·add-work 는 노트를 쓰는 것이고 이쪽은 바깥에서 들어온 것을 소화하는 것이다.'
+compatibility: '~/Projects/flex/wiki clone + ~/Projects/flex/wiki/.env (RAINDROP_TOKEN, NOTION_TOKEN)'
 ---
 
-# TIL 소화 (하루 마감)
+# 위키 소화 (하루 마감)
 
-`add-til` 은 배운 것을 **노트로 쓰는** 스킬이다. 이 스킬은 그 반대편 — 바깥에서
-들어온 것(읽은 아티클·한 일·읽은 책)을 **이미 아는 것과 잇는다.**
+`add-topic` · `add-work` 는 아는 것을 **노트로 쓰는** 스킬이다. 이 스킬은 그 반대편 —
+바깥에서 들어온 것(읽은 아티클·한 일·읽은 책)을 **이미 아는 것과 잇는다.**
 
 `Sources/` 는 읽었지만 아직 소화하지 않은 입력이다. `↔ (없음)` 인 줄이 곧 미소화
 큐다. 이 스킬의 본체는 그 큐를 줄이는 것이다.
 
 ## 0. Vault 확인
 
-경로: `~/Projects/flex/til`. 없으면 중단하고 알린다:
+경로: `~/Projects/flex/wiki`. 없으면 중단하고 알린다:
 
-> TIL vault 가 없습니다. `gh repo clone flex-hyuntae/til ~/Projects/flex/til` 로 클론해주세요.
+> 위키 vault 가 없습니다. `gh repo clone flex-hyuntae/wiki ~/Projects/flex/wiki` 로 클론해주세요.
 
 ## 1. 동기화
 
 ```bash
-cd ~/Projects/flex/til
+cd ~/Projects/flex/wiki
 bash scripts/sync-sources.sh
 ```
 
@@ -32,7 +32,7 @@ bash scripts/sync-sources.sh
 **네트워크 오류(DNS 실패)가 나면 샌드박스 안이다.** Cowork 의 bash 는 바깥으로
 못 나간다. 그때는 대신 돌려주겠다고 하지 말고 사용자에게 넘긴다:
 
-> 이 환경에서는 네트워크가 막혀 있습니다. `~/Projects/flex/til/scripts/sync-now.command`
+> 이 환경에서는 네트워크가 막혀 있습니다. `~/Projects/flex/wiki/scripts/sync-now.command`
 > 를 Finder 에서 더블클릭해서 동기화한 뒤 다시 불러주세요.
 
 `404` 가 나면 Notion 접근 문제다. 진단은 이것으로 한다:
@@ -49,8 +49,8 @@ Notion 의 `기능`(콘텐츠 읽기)과 `콘텐츠 사용 권한`(어느 페이
 ## 2. 새로 들어온 것 보고
 
 ```bash
-git -C ~/Projects/flex/til log --oneline -3
-git -C ~/Projects/flex/til diff HEAD~1 -- Sources/ | grep '^+- '
+git -C ~/Projects/flex/wiki log --oneline -3
+git -C ~/Projects/flex/wiki diff HEAD~1 -- Sources/ | grep '^+- '
 ```
 
 종류별로 몇 건인지와 눈에 띄는 것 두세 개를 짧게 말한다. 전부 나열하지 않는다 —
@@ -58,10 +58,15 @@ git -C ~/Projects/flex/til diff HEAD~1 -- Sources/ | grep '^+- '
 
 ## 3. `↔` 잇기 — 본체
 
-`~/Projects/flex/til/Topics/_INDEX.md` 를 **한 번** 읽는다. 노트별 한 줄 요약·태그·
-연결 관계가 다 있어서 개별 노트를 열지 않고도 후보를 판단할 수 있다.
+`~/Projects/flex/wiki/Topics/_INDEX.md` 와 `Work/_INDEX.md` 를 **각각 한 번** 읽는다.
+노트별 한 줄 요약·태그·연결 관계가 다 있어서 개별 노트를 열지 않고도 후보를 판단할
+수 있다.
 
 `Sources/` 에서 `↔ (없음)` 인 줄을 고른다. 방금 들어온 것을 먼저, 그다음 오래된 것.
+
+어느 층으로 잇는지는 파일마다 기울기가 다르다. `articles.md` · `books.md` 는 대개
+Topic 이고, `worked.md` 는 회사에서 한 일이라 대개 Work Topic 이다. 다만 기울기일
+뿐이니 실제 내용을 보고 판단한다 — 회사 일을 하다 배운 일반 기술은 Topic 이 맞다.
 
 **확신 있는 것은 바로 채우고 나서 보고한다.** 승인을 먼저 받으려 들지 마라. 첫
 라운드에는 미소화가 수백 건이라, 목록을 늘어놓고 기다리는 것 자체가 마찰이 된다.
@@ -72,7 +77,7 @@ git -C ~/Projects/flex/til diff HEAD~1 -- Sources/ | grep '^+- '
 건수를 15~25개로 줄이는 것보다 **확신 없는 것을 섞지 않는 게** 중요하다.
 
 ```bash
-grep -c '↔ (없음)' ~/Projects/flex/til/Sources/*.md
+grep -c '↔ (없음)' ~/Projects/flex/wiki/Sources/*.md
 ```
 
 ### 형식
@@ -104,6 +109,9 @@ grep -c '↔ (없음)' ~/Projects/flex/til/Sources/*.md
 
 해당 없는 섹션은 만들지 않는다. 이미 그 URL 이 본문에 있으면 또 넣지 않는다.
 
+Work Topic 노트에는 `## 아티클` · `## Book` 자리가 템플릿에 없다. 필요하면
+`## 근거` 와 `## Worked` 사이에 만들어 넣는다.
+
 건수가 많으면 손으로 하지 말고 스크립트를 쓴다. `Sources/` 를 파싱해서 `note → 항목`
 으로 뒤집고 노트마다 심는 방식이 안전하다 — 사람이 옮겨 적으면 URL 을 빠뜨린다.
 
@@ -113,7 +121,7 @@ grep -c '↔ (없음)' ~/Projects/flex/til/Sources/*.md
 인덱스는 결국 아무도 안 읽는다. 비어 있는 게 틀린 것보다 낫다. `↔ (없음)` 은
 결함이 아니라 "아직 소화 안 됨" 표시다.
 
-이건 `add-til` 의 "연결 이유를 확신할 수 없으면 추측해서 쓰지 말고 그대로 둔다" 와
+이건 `add-topic` 의 "연결 이유를 확신할 수 없으면 추측해서 쓰지 말고 그대로 둔다" 와
 같은 규칙이다.
 
 ### `Sources/` 의 본문 줄은 건드리지 않는다
@@ -123,28 +131,31 @@ grep -c '↔ (없음)' ~/Projects/flex/til/Sources/*.md
 
 연결은 URL 을 키로 보존되므로 재동기화해도 살아남는다.
 
-## 4. TIL 후보 짚기
+## 4. 새 노트 후보 짚기
 
-반복해서 걸리는데 Topics 노트가 없는 주제를 2~4개 고른다. 가장 좋은 후보는
-`worked.md` 에서 `TIL` 태그가 붙었는데 `↔ (없음)` 인 항목이다 — 이미 배웠는데
-소화가 안 된 것이라서.
+반복해서 걸리는데 노트가 없는 주제를 2~4개 고른다. 가장 좋은 후보는 `worked.md` 에서
+`TIL` 태그가 붙었는데 `↔ (없음)` 인 항목이다 — 이미 배웠는데 소화가 안 된 것이라서.
 
 ```bash
-grep -A1 '`[^`]*TIL' ~/Projects/flex/til/Sources/worked.md | grep -B1 '↔ (없음)'
+grep -A1 '`[^`]*TIL' ~/Projects/flex/wiki/Sources/worked.md | grep -B1 '↔ (없음)'
 ```
 
-노트를 대신 쓰지 마라. 후보만 제시하고, 쓰겠다고 하면 `add-til` 로 넘긴다.
+**후보마다 어느 층인지 같이 말한다.** 회사와 무관한 기술이면 Topic, flex 시스템의
+동작이면 Work Topic 이다. 층을 안 정해 주면 다음 대화에서 그걸 다시 정해야 한다.
+
+노트를 대신 쓰지 마라. 후보만 제시하고, 쓰겠다고 하면 층에 맞는 스킬로 넘긴다 —
+Topic 은 `add-topic`, Work Topic 은 `add-work`.
 
 ## 5. 커밋
 
 노트 본문을 건드렸으면 TOC 가 어긋나므로 **먼저 생성물을 다시 만든다.**
 
 ```bash
-cd ~/Projects/flex/til
+cd ~/Projects/flex/wiki
 python3 scripts/build-index.py
-git status --porcelain -- Sources/ Topics/
-git add -- Sources/ Topics/
-git commit -m "chore: Sources ↔ 연결 채우기" -- Sources/ Topics/
+git status --porcelain -- Sources/ Topics/ Work/
+git add -- Sources/ Topics/ Work/
+git commit -m "chore: Sources ↔ 연결 채우기" -- Sources/ Topics/ Work/
 git push
 ```
 
@@ -160,8 +171,8 @@ vault 를 열었을 때 낡은 인덱스를 본다. 1번의 동기화 스크립�
 push 가 거부되면(원격이 앞서 있음) 자동으로 강제하지 말고 이렇게 처리한다:
 
 ```bash
-git -C ~/Projects/flex/til pull --rebase
-git -C ~/Projects/flex/til push
+git -C ~/Projects/flex/wiki pull --rebase
+git -C ~/Projects/flex/wiki push
 ```
 
 rebase 에서 충돌이 나면 멈추고 사용자에게 알린다. `Sources/` 는 생성물이라
@@ -180,7 +191,7 @@ rebase 에서 충돌이 나면 멈추고 사용자에게 알린다. `Sources/` �
 
 ### 연결의 본체는 노트 쪽이다
 
-`Sources/` 의 `↔` 는 **백링크**다. 본체는 반대 방향이다 — Topics 노트가 원본 링크를
+`Sources/` 의 `↔` 는 **백링크**다. 본체는 반대 방향이다 — 노트가 원본 링크를
 자기 본문에 직접 들고 있는 것이 본체다.
 
 이유는 소유권이다. `Sources/` 는 스크립트가 다시 만드는 파일이고, 노트는 사람이 쓰는
@@ -194,7 +205,10 @@ rebase 에서 충돌이 나면 멈추고 사용자에게 알린다. `Sources/` �
 
 다른 대화에서 이 파일들을 선제 로드하거나 `BRAIN.md` 에 인라인하지 마라. 질문이
 생겼을 때 grep 하는 물건이라서, 파일이 커져도 대화 비용이 0 이어야 한다.
-`Topics/_INDEX.md` 만 예외로 미리 읽는다 — 그가 뭘 아는지가 설명 방식을 바꾸기 때문이다.
+
+인덱스만 예외다 — 그가 뭘 아는지가 설명 방식을 바꾸기 때문이다. `Topics/_INDEX.md`
+는 늘 미리 읽고, `Work/_INDEX.md` 는 flex 코드·도메인 이야기일 때만 읽는다
+(개인 기술 대화에서 회사 지식 색인을 끌고 다닐 이유가 없다).
 
 ### 경계가 곧 의미다
 
@@ -229,4 +243,4 @@ Notion 에 일별 일지 DB(689건)가 있지만 일부러 제외했다. 제목�
 
 - 동기화 결과 (새로 들어온 건수, 또는 변경 없음)
 - 채운 `↔` 개수와 남은 미소화 개수
-- TIL 후보 (있으면)
+- 새 노트 후보 (있으면, 층까지)

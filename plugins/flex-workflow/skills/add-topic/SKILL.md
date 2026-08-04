@@ -1,22 +1,37 @@
 ---
-name: add-til
-description: '오늘 배운 내용(TIL)을 Obsidian vault(GitHub repo)에 토픽 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "오늘 배운거야", "TIL", "TIL 추가", "지식 기반에 추가", "배운점 추가", "/add-til"로 호출할 때 트리거. 기존 노트와 자동 양방향 연결([[노트명]] 링크). 기술 용어는 영어 원문 유지, 설명은 한국어.'
-compatibility: '~/Projects/flex/til vault clone + git push 권한 필요'
+name: add-topic
+description: '개인 기술 지식을 위키의 Topic 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "오늘 배운거야", "TIL", "토픽 추가", "위키에 추가", "지식 기반에 추가", "배운점 추가", "/add-topic" 로 호출할 때 트리거. 회사와 무관한 개인 지식 전용 — flex 시스템이 실제로 어떻게 동작하는지는 add-work 가 담당한다. 기존 노트와 자동 양방향 연결([[노트명]] 링크). 기술 용어는 영어 원문 유지, 설명은 한국어.'
+compatibility: '~/Projects/flex/wiki vault clone + git push 권한 필요'
 argument-hint: "<배운 내용>"
 ---
 
-# TIL 추가
+# Topic 추가
 
-사용자가 "오늘 배운거야", "TIL", "지식 기반에 추가해줘", "배운점 추가" 등으로 호출하면 다음 흐름을 따른다.
+사용자가 "오늘 배운거야", "TIL", "위키에 추가해줘", "배운점 추가" 등으로 호출하면 다음 흐름을 따른다.
+
+## 어느 층인지 먼저 가른다
+
+위키는 세 층이고 이 스킬은 그중 **Topic** 만 담당한다.
+
+| 내용 | 층 | 스킬 |
+|---|---|---|
+| 회사와 무관한 기술 지식 (`B-Tree 인덱스`, `React reconciliation`) | Topic | 이 스킬 |
+| flex 시스템이 실제로 어떻게 동작하나 (`데스크가 지식을 참고하는 경로`) | Work Topic | `/add-work` |
+| 회사 프로젝트 단위 요구·결정 문서 | Spec | `/drill:plan` |
+
+기준은 **회사를 떠나도 남는 지식인가**다. 사내 서비스 이름·레포 이름·테이블
+이름이 노트 주제 자리에 오면 Topic 이 아니다 — `/add-work` 로 넘긴다.
+
+애매하면 물어본다. 잘못된 층에 들어간 노트는 나중에 옮기기 번거롭다.
 
 ## 0. Vault 경로 확인
 
-TIL vault 경로: `~/Projects/flex/til`
-GitHub repo: `flex-hyuntae/til` (private)
+vault 경로: `~/Projects/flex/wiki`
+GitHub repo: `flex-hyuntae/wiki` (private)
 
 해당 디렉토리가 존재하는지 확인한다. 없으면 다음 메시지를 출력하고 중단한다:
 
-> TIL vault가 없습니다. 먼저 `gh repo clone flex-hyuntae/til ~/Projects/flex/til` 로 클론해주세요.
+> 위키 vault 가 없습니다. 먼저 `gh repo clone flex-hyuntae/wiki ~/Projects/flex/wiki` 로 클론해주세요.
 
 ## 1. 내용 정리
 
@@ -30,7 +45,7 @@ GitHub repo: `flex-hyuntae/til` (private)
 
 ## 2. 기존 노트 확인
 
-`~/Projects/flex/til/Topics/_INDEX.md` 를 읽는다. 노트별 한 줄 요약 · 태그 · 연결 관계가 모두 들어 있어서 개별 노트를 열지 않고도 겹침·연결 후보를 판단할 수 있다.
+`~/Projects/flex/wiki/Topics/_INDEX.md` 를 읽는다. 노트별 한 줄 요약 · 태그 · 연결 관계가 모두 들어 있어서 개별 노트를 열지 않고도 겹침·연결 후보를 판단할 수 있다.
 
 - 내용이 기존 토픽과 겹치면 기존 노트를 업데이트할지 새로 만들지 사용자에게 확인한다.
 - 관련 있는 기존 노트가 있으면 `[[노트명]]` 으로 양방향 연결한다 (새 노트에서 기존 노트 링크 + 기존 노트에도 새 노트 링크 추가).
@@ -99,6 +114,10 @@ GitHub repo: `flex-hyuntae/til` (private)
 | `## Worked` | `Sources/worked.md` | 회사에서 한 일 (Notion URL) |
 | `## Book` | `Sources/books.md` | 읽은 책 |
 
+`## Worked` 는 Topic 노트에서는 드물게 쓰인다. 회사 일을 하다 배운 것이라도 노트의
+주제가 일반 기술이면 Topic 이 맞다 — 그 경우에만 이 섹션을 채운다. 주제 자체가 flex
+시스템이면 애초에 `/add-work` 로 가야 한다.
+
 **`Sources/` 에 이 노트로 이어지는 항목이 있을 때만 채운다.** 해당하는 게 없는
 섹션은 지운다 — 대화에서 바로 나온 내용이면 세 개를 다 지우게 된다. 빈 섹션을
 남기지 않는다.
@@ -112,11 +131,11 @@ GitHub repo: `flex-hyuntae/til` (private)
 새 노트를 만든 뒤에는 반대쪽도 채운다. `Sources/` 에서 그 항목을 찾아 `↔ (없음)` 을
 `↔ [[노트명]]` 으로 바꾼다.
 
-## 3. 토픽 노트 생성
+## 3. Topic 노트 생성
 
-`~/Projects/flex/til/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `.obsidian/graph.json` 의 `colorGroups` 에 새 색상 그룹을 추가한다 (`query` 는 `path:Topics/<카테고리>`, `color` 는 기존과 안 겹치는 `rgb` 정수).
+`~/Projects/flex/wiki/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `.obsidian/graph.json` 의 `colorGroups` 에 새 색상 그룹을 추가한다 (`query` 는 `path:Topics/<카테고리>`, `color` 는 기존과 안 겹치는 `rgb` 정수).
 
-구조는 `~/Projects/flex/til/Templates/TIL Template.md` 를 읽어서 그대로 따른다 (여기에 복사해 두면 드리프트가 생긴다). frontmatter 만 채워야 할 값이 정해져 있다.
+구조는 `~/Projects/flex/wiki/Templates/Topic Template.md` 를 읽어서 그대로 따른다 (여기에 복사해 두면 드리프트가 생긴다). frontmatter 만 채워야 할 값이 정해져 있다.
 
 - `date` — 오늘 날짜 `YYYY-MM-DD`
 - `tags` — 관련 기술 키워드
@@ -128,7 +147,7 @@ GitHub repo: `flex-hyuntae/til` (private)
 노트를 추가·수정한 뒤에는 **반드시** 이 스크립트를 돌린다. 빠뜨리면 `_INDEX.md` 가 낡아서 다음 대화에서 새 노트가 안 보이고, TOC 도 본문과 어긋난다.
 
 ```bash
-cd ~/Projects/flex/til
+cd ~/Projects/flex/wiki
 python3 scripts/build-index.py
 ```
 
@@ -151,10 +170,10 @@ python3 scripts/build-index.py --readability
 ## 5. Git 커밋 & 푸시
 
 ```bash
-cd ~/Projects/flex/til
+cd ~/Projects/flex/wiki
 git status --short
 git add -- "Topics/<카테고리>" Topics/_INDEX.md .obsidian/graph.json
-git commit -m "feat: <토픽 제목> 추가"
+git commit -m "feat: <토픽 제목> Topic 추가"
 git push
 ```
 
