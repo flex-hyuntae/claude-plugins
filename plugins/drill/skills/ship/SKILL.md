@@ -66,7 +66,7 @@ gh stack view                                      # 등록 결과 확인
 - independent 티켓은 등록 대상 아님
 - `gh stack` 은 public preview — 실패해도 ship 을 중단하지 않고 기록만 한다
 
-머지 후 정리는 `/git:rebase-stack` (등록돼 있으면 `gh stack sync` 로 위임).
+머지 후 정리는 `gh stack sync`. 등록이 안 됐으면 남은 브랜치를 새 base 위로 순차 rebase 한다.
 
 ### 6. 커밋 분할
 
