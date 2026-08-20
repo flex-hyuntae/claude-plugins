@@ -16,7 +16,7 @@ disable-model-invocation: false
 |-----------|-------------------|---------|
 | React 컴포넌트, 훅, 이벤트 핸들러 | `react/` | 24 |
 | TypeScript 타입 정의, 제네릭 | `typescript/` | 3 |
-| 디렉토리 구조, 도메인 설계 | `structure/` | 3 |
+| 디렉토리 구조, 도메인 설계, 파일 배치 | `structure/` | 5 |
 | vanilla-extract, 디자인 토큰 | `styling/` | 2 |
 | 시맨틱 HTML, ARIA, 키보드 | `accessibility/` | 1 |
 | 테스트 코드 | `testing/` | 1 |
