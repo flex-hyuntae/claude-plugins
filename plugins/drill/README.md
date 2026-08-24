@@ -43,7 +43,9 @@ plan → prepare → write | ship → review → qa
 
 코드를 쓴 컨텍스트가 자기 결과를 승인하지 않습니다. `write` 는 작성·검증까지만 하고, 수용 기준 충족과 규칙 준수 판정은 `drill-critic` 이 별도 컨텍스트에서 합니다.
 
-- 판정 기준은 티켓 §수용 기준 + `rules:write` 가 로드한 규칙 파일 + 레포 `.claude/rules/`·`CLAUDE.md`
+- 잣대 셋 — 티켓 §수용 기준 / `write` 스킬 자신의 규율(§Cascade·§Layer 경계·§의존 방향·§SoT) / `rules`·`CLAUDE.md` 코딩 규칙
+- 절차 규율은 type-check 로 안 잡힌다. 미정을 자의로 정해 코드에 흡수한 것은 기본 `BLOCK`
+- 수용 기준 항목 하나를 닫을 때마다 돌린다. 마지막에 몰아 보면 되돌리는 비용이 크다
 - 지적은 severity(`BLOCK`/`MAJOR`/`MINOR`) × confidence(`확실`/`추정`). 되돌리는 건 `BLOCK × 확실` 뿐
 - 상한 2라운드. 남은 지적은 PR 본문·티켓 코멘트로 넘기고 진행 — `ship` 은 사람이 없으므로 멈추지 않습니다
 - 자세한 절차는 `skills/write/SKILL.md` §5
