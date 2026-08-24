@@ -39,6 +39,15 @@ plan → prepare → write | ship → review → qa
 └── .drill-state.json       # 워크플로우 상태
 ```
 
+## 비판 라운드 — 자기 승인 금지
+
+코드를 쓴 컨텍스트가 자기 결과를 승인하지 않습니다. `write` 는 작성·검증까지만 하고, 수용 기준 충족과 규칙 준수 판정은 `drill-critic` 이 별도 컨텍스트에서 합니다.
+
+- 판정 기준은 티켓 §수용 기준 + `rules:write` 가 로드한 규칙 파일 + 레포 `.claude/rules/`·`CLAUDE.md`
+- 지적은 severity(`BLOCK`/`MAJOR`/`MINOR`) × confidence(`확실`/`추정`). 되돌리는 건 `BLOCK × 확실` 뿐
+- 상한 2라운드. 남은 지적은 PR 본문·티켓 코멘트로 넘기고 진행 — `ship` 은 사람이 없으므로 멈추지 않습니다
+- 자세한 절차는 `skills/write/SKILL.md` §5
+
 ## 공용 참조
 
 스킬·에이전트가 공유하는 단일 출처. 규칙을 고칠 때는 여기만 고칩니다.

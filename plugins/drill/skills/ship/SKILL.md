@@ -1,6 +1,6 @@
 ---
 name: ship
-description: 'Linear 티켓 여러 개를 받아 의존 그래프를 만들고 worktree + /drill:write + 자동 커밋 분할로 draft PR을 batch 생성한다. 사용자가 "/drill:ship", "여러 티켓 PR 한번에", "stacked PR 생성", "batch PR"을 요청할 때 트리거. 독립 티켓은 병렬, 의존 체인은 stacked PR. 의존 분석은 drill-deps agent 활용. 정보가 부족한 티켓은 계획 확인 전에 /drill:prepare 강화 모드로 먼저 보강한다.'
+description: 'Linear 티켓 여러 개를 받아 의존 그래프를 만들고 worktree + /drill:write + 자동 커밋 분할로 draft PR을 batch 생성한다. 사용자가 "/drill:ship", "여러 티켓 PR 한번에", "stacked PR 생성", "batch PR"을 요청할 때 트리거. 독립 티켓은 병렬, 의존 체인은 stacked PR. 의존 분석은 drill-deps agent, 작성 결과 판정은 drill-critic agent 활용. 정보가 부족한 티켓은 계획 확인 전에 /drill:prepare 강화 모드로 먼저 보강한다.'
 compatibility: 'Linear MCP + gh CLI + git worktree 지원 필수. gh stack extension 권장 (chain 을 GitHub 네이티브 stack 으로 등록 → 자동 restack)'
 disable-model-invocation: true
 argument-hint: "<ticket-ids>"
@@ -39,14 +39,15 @@ Independent 먼저(순차) → 각 Chain(위상정렬 순).
 
 ### 5. 티켓별 처리
 
-각 티켓은 **`/drill:write` 가 정의한 절차**(컨텍스트 로드 → 구현 설계 ↔ 현재 코드 대조 → 작성 → type-check/lint 검증 → SoT 반영)를 그대로 따른다. ship 은 그 바깥만 감싼다:
+각 티켓은 **`/drill:write` 가 정의한 절차**(컨텍스트 로드 → 구현 설계 ↔ 현재 코드 대조 → 작성 → type-check/lint 검증 → drill-critic 비판 라운드 → SoT 반영)를 그대로 따른다. ship 은 그 바깥만 감싼다:
 
 1. Linear 상태 `In Progress` 전환 (이미면 skip)
 2. worktree: `git worktree add ../<repo>-<branch-slug> -b <branch> <base>` → 진입
-3. **`/drill:write {ticket}`** — batch 모드(커밋·이어서 질문 생략). 작성·검증·SoT 갱신은 write 책임. 충분성은 §2 에서 이미 보강했으므로 write 가 멈추지 않는다.
+3. **`/drill:write {ticket}`** — batch 모드(커밋·이어서 질문 생략). 작성·검증·비판 라운드·SoT 갱신은 write 책임. 충분성은 §2 에서 이미 보강했으므로 write 가 멈추지 않는다.
+   - **비판 라운드는 생략하지 않는다** — 여기부터 사람이 없으니 `drill-critic` 이 유일한 제동이다. batch 모드에서는 `BLOCK × 확실` 만 자동 수정하고 `MAJOR` 이하는 보류해 §7 로 넘긴다 (write §5)
 4. 커밋 분할 (§6)
 5. push: `git push -u origin <branch>`
-6. draft PR: `gh pr create --draft --base <base> --title "<conv-commit>" --body "<요약+티켓 링크>"` (또는 `mcp__github__create_pull_request`)
+6. draft PR: `gh pr create --draft --base <base> --title "<conv-commit>" --body "<요약+티켓 링크>"` (또는 `mcp__github__create_pull_request`). **critic 잔여 지적이 있으면 PR 본문 맨 아래 `## 리뷰 전 확인` 으로 붙인다** — 미해결 `BLOCK` 은 맨 위에
 7. PR URL 기록 → 원래 worktree 복귀
 
 실패 시 해당 티켓 중단·기록 후 다음 계속. 단 **chain 내부 중단이면 이후 티켓 skip** (base 미생성).
@@ -94,8 +95,13 @@ gh stack view                                      # 등록 결과 확인
 # Ship 완료
 
 ## PR 목록
-| # | Ticket | Branch | Base | PR | Stack |
-|---|--------|--------|------|-----|-------|
+| # | Ticket | Branch | Base | PR | Stack | Critic |
+|---|--------|--------|------|-----|-------|--------|
+
+`Critic` 열 = `PASS` / `FAIL(BLOCK N)` / `미실행`.
+
+## Critic 잔여 지적
+티켓별로 미해결 `BLOCK` 을 먼저, 보류한 `MAJOR` 이하를 그 다음. 각 항목 `PR# · file:line · 한 줄`.
 
 ## Worktree
 (경로 목록 — 정리용)
@@ -111,6 +117,7 @@ gh stack view                                      # 등록 결과 확인
 - stacked 체인은 머지 대기 없이 base 에 바로 쌓고, GitHub stack 으로 등록(§5.5)
 - 각 티켓 시작 시 Linear `In Progress` 전환
 - 부족한 티켓은 §2 에서 먼저 채움 · 자명한 QA 는 건너뜀
+- 비판 라운드 생략 금지 — batch 라도 `drill-critic` 을 돌린다. 미해결 지적은 PR 을 막지 않고 본문·리포트로 넘긴다
 - 한국어
 
 ## `[메모]` 태그 발화
@@ -122,6 +129,8 @@ gh stack view                                      # 등록 결과 확인
 - 티켓 조회 실패 → drill-deps Warnings, 제외
 - §2 충분성 미달인데 prepare 강화로도 못 닫음 → 보고 후 제외 (모호성 코드 흡수 금지)
 - /drill:write 실패 → 티켓 중단, chain 이면 이후 skip
+- critic `FAIL` 잔존 → PR 은 그대로 만들고 본문·§7 에 기록 (draft 라 머지되지 않는다)
+- critic 호출 실패 → 해당 티켓 `미실행` 으로 기록하고 계속
 - type-check/lint 전체 병합도 실패 → 강제 1커밋 + 본문 경고
 - `gh pr create` 실패 → 브랜치는 푸시 유지, 실패 기록
 - `gh stack link` 실패/미설치 → PR 은 유지, stack 미등록으로 리포트 (ship 중단 X)
@@ -129,5 +138,5 @@ gh stack view                                      # 등록 결과 확인
 
 ## 관련
 
-- `/drill:prepare` 가 만든 티켓을 batch 처리하는 후속 스킬 — 코드 작성·검증·§Cascade 는 `/drill:write`, ship 은 그 바깥(worktree·커밋분할·push·PR)
+- `/drill:prepare` 가 만든 티켓을 batch 처리하는 후속 스킬 — 코드 작성·검증·비판 라운드·§Cascade 는 `/drill:write`, ship 은 그 바깥(worktree·커밋분할·push·PR)
 - PR 피드백 후 Spec 동기화는 `/drill:review`

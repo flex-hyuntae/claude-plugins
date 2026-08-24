@@ -1,6 +1,6 @@
 ---
 name: write
-description: 'Linear 티켓을 받아 연결된 Spec/Concept와 §구현 설계를 로드하고 rules 따라 코드를 작성한다. 사용자가 "/drill:write", "이 티켓 구현해줘", "티켓 작성", Linear URL과 함께 "코드 짜줘"를 요청할 때 트리거. 한 번에 티켓 1개만 처리. rules 플러그인이 설치되어 있으면 rules:write가 자동 적용된다. drill 워크플로우 세 번째 단계.'
+description: 'Linear 티켓을 받아 연결된 Spec/Concept와 §구현 설계를 로드하고 rules 따라 코드를 작성한다. 사용자가 "/drill:write", "이 티켓 구현해줘", "티켓 작성", Linear URL과 함께 "코드 짜줘"를 요청할 때 트리거. 한 번에 티켓 1개만 처리. rules 플러그인이 설치되어 있으면 rules:write가 자동 적용되고, 작성 후에는 drill-critic 이 별도 컨텍스트에서 수용 기준·규칙 준수를 판정한다. drill 워크플로우 세 번째 단계.'
 compatibility: 'Linear MCP 필수. rules 플러그인 권장.'
 disable-model-invocation: true
 argument-hint: "[linear-issue-url|issue-id]"
@@ -8,7 +8,7 @@ argument-hint: "[linear-issue-url|issue-id]"
 
 # Write
 
-Linear 티켓 하나를 받아 Spec/Concept + §구현 설계로 코드 작성. rules 규칙은 `rules:write` 스킬이 자동 적용 (rules 플러그인 필요).
+Linear 티켓 하나를 받아 Spec/Concept + §구현 설계로 코드 작성. rules 규칙은 `rules:write` 스킬이 자동 적용 (rules 플러그인 필요). 작성 결과 판정은 `drill-critic` 에이전트가 별도 컨텍스트에서 한다 (§5).
 
 ## Layer 경계 — Ticket = Single Source
 
@@ -47,15 +47,32 @@ prepare 시점과 write 시점 사이 코드가 바뀌었을 수 있다. §구�
 
 수용 기준을 하나씩 충족 — **티켓 §수용 기준·§구현 설계가 single source**(Concept 으로 거슬러 재해석 금지), §의존 방향 유지, `rules:write` 자동 적용. 설계가 빠진 게 드러나면 즉시 멈추고 §Cascade.
 
-**작업 단위 완료 후 AskUserQuestion**: "커밋 / 이어서 진행".
+**작업 단위 완료 후**: 증분 diff 로 `drill-critic` 1회(게이트는 §5 와 동일) → AskUserQuestion "커밋 / 이어서 진행". batch 모드는 critic 만 돌리고 질문은 생략.
 
 ### 4. 검증
 
 stack 별 커맨드는 `references/STACK.md` §검증. 에러 수정 후 재검증.
 
-### 5. 완료
+### 5. 비판 라운드
 
-- 변경 파일 목록 + 수용 기준 충족 체크리스트
+**코드를 쓴 컨텍스트가 자기 결과를 승인하지 않는다.** §4 는 컴파일되는지만 보고, 규칙을 지켰는지·수용 기준을 채웠는지는 보지 않는다. 그 판정은 `drill-critic` 에이전트가 따로 한다.
+
+입력: 티켓 §수용 기준·§구현 설계 원문, diff 범위, **`rules:write` 가 이번에 로드한 규칙 파일 경로 목록**, mode, round. 규칙 목록을 넘겨야 critic 이 작성 때와 같은 잣대로 본다.
+
+| 등급 | 처리 |
+|------|------|
+| `BLOCK × 확실` | 즉시 수정 → §4 재검증 → critic 재호출 |
+| `MAJOR × 확실` | AskUserQuestion "지금 수정 / 보류". batch 모드는 묻지 않고 보류 |
+| `MINOR` · `추정` | 수정하지 않고 §6 리포트에만 |
+
+**2라운드 상한.** 2라운드 뒤에도 `BLOCK × 확실` 이 남으면 더 돌리지 말고 남은 지적을 §6 리포트와 티켓 코멘트에 남기고 넘어간다. 같은 자리를 세 번째로 고치는 건 critic 이 아니라 설계가 틀렸다는 신호다.
+
+critic 리포트의 **설계 문제** 섹션은 코드로 흡수하지 않는다 → §Cascade.
+
+### 6. 완료
+
+- 변경 파일 목록 + 수용 기준 충족 체크리스트 (critic 판정 기준)
+- **critic 잔여 지적**: 보류한 `MAJOR` · `MINOR` · `추정` 항목과 미해결 `BLOCK` 을 목록으로. 미해결 `BLOCK` 은 티켓 코멘트에도 남긴다
 - **SoT 점검**: 티켓에 없던 결정이 생겼으면 `save_issue` 로 §구현 설계에 반영 — 티켓이 늘 single source 여야 다음 사람도 같은 결과
 - drill state 업데이트 (오케스트레이션 시)
 
@@ -63,6 +80,7 @@ stack 별 커맨드는 `references/STACK.md` §검증. 에러 수정 후 재검�
 
 - 한 번에 티켓 1개만 · 한국어 · 커밋 지속 확인
 - 티켓 §구현 설계가 single source, 모호성을 코드로 흡수 금지 → 미결은 §Cascade
+- 자기 승인 금지 — §5 critic 없이 완료 선언하지 않는다. 비판 라운드는 최대 2회
 
 ## 에러
 
@@ -70,3 +88,5 @@ stack 별 커맨드는 `references/STACK.md` §검증. 에러 수정 후 재검�
 - Spec/Concept 없음 → 티켓 정보만으로 진행 또는 `/drill:plan` 안내
 - type-check/lint 실패 → 수정 후 재검증
 - §구현 설계 빠짐/미정 → §Cascade
+- critic 호출 실패 → 검증만으로 완료하되 "critic 미실행" 을 §6 리포트에 명시
+- 2라운드 뒤에도 `BLOCK × 확실` 잔존 → 중단하지 말고 잔여 지적 기록 후 진행
