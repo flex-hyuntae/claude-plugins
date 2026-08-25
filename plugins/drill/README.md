@@ -15,8 +15,7 @@ plan → prepare → write | ship → review → qa
 | 커맨드 | 설명 |
 |--------|------|
 | `drill` | 전체 워크플로우 오케스트레이션 (상태 추적, 이어하기) |
-| `plan` | 심층 인터뷰 → SPEC.md + Concepts 작성 |
-| `add-concept` | 기존 Spec에 새로운 Concept 추가 (독립 실행) |
+| `plan` | 심층 인터뷰 → SPEC.md + Concepts 작성. 인자가 `{feature} {주제}` 면 Concept 하나만 추가 |
 | `prepare` | Spec/Concepts → Linear 티켓 생성 또는 기존 티켓 강화 |
 | `write` | Linear 티켓 1개 기반 코드 작성 |
 | `ship` | 티켓 N개 → 의존 그래프 → worktree + batch draft PR (write 를 감쌈) |
@@ -41,15 +40,9 @@ plan → prepare → write | ship → review → qa
 
 ## 비판 라운드 — 자기 승인 금지
 
-코드를 쓴 컨텍스트가 자기 결과를 승인하지 않습니다. `write` 는 작성·검증까지만 하고, 판정은 `drill-critic` 이 별도 컨텍스트에서 합니다. 보는 것은 둘뿐입니다.
+코드를 쓴 컨텍스트가 자기 결과를 승인하지 않습니다. `write` 는 작성·검증까지만 하고, 판정은 `drill-critic` 이 별도 컨텍스트에서 합니다. 수용 기준 항목 하나를 닫을 때마다 돌리고, 되돌리는 건 `BLOCK × 확실` 뿐입니다. 남은 지적은 PR 본문·티켓 코멘트로 넘기고 진행하므로 `ship` 이 사람 없이도 멈추지 않습니다.
 
-- **축 A — `write` 가 선언한 규칙대로 쓰고 있나.** 절차 규율(§Cascade·§Layer 경계·§의존 방향·§SoT) + `write` 가 로드하라고 선언한 코딩 규칙(FE `rules` / BE `backend-guidelines` / 레포 `.claude/rules`)
-- **축 B — `prepare` 가 만든 명세대로 올바른 방향인가.** 티켓 §수용 기준 · §구현 설계 일치 · Concept §책임 경계 · 지금 코드가 남은 기준을 막지 않나
-- 일반 코드 리뷰가 아닙니다. 명세·규칙에 인용할 문장이 없으면 지적하지 않습니다
-- 수용 기준 항목 하나를 닫을 때마다 돌립니다. 방향이 틀어진 건 지금 되돌려야 쌉니다
-- 지적은 severity(`BLOCK`/`MAJOR`/`MINOR`) × confidence(`확실`/`추정`). 되돌리는 건 `BLOCK × 확실` 뿐
-- 상한 2라운드. 남은 지적은 PR 본문·티켓 코멘트로 넘기고 진행 — `ship` 은 사람이 없으므로 멈추지 않습니다
-- 자세한 절차는 `skills/write/SKILL.md` §5
+판정 기준·등급·라운드 정의는 `agents/drill-critic.md` 가 단일 출처, 호출과 결과 처리는 `skills/write/SKILL.md` §5 입니다.
 
 ## 공용 참조
 
@@ -80,7 +73,7 @@ drill 은 BE 컨벤션을 직접 갖지 않습니다. 절차·게이트·문서 
 ### 개별 스킬
 ```
 /drill:plan 직급 생성 모달
-/drill:add-concept job-grade-modal 에러 패널
+/drill:plan job-grade-modal 에러 패널      # concept 추가 모드
 /drill:prepare job-grade-modal
 /drill:write CORE-1234
 /drill:ship CORE-1234 CORE-1235 CORE-1236

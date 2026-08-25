@@ -48,7 +48,7 @@ spec 의 "X 가능" 약속을 충족하는 구체 결정. 본질은 **"이 약�
 ### 자가 점검 — layer 흐려짐 신호
 
 - ticket 이 spec 약속을 그대로 옮겨 적기만 함 / 구현 how 가 비어 있음 → 구체화 부족, Phase 4 로 채운다
-- spec/concept 본문에 how 결정(위치·카탈로그·시그니처) 이 들어가 있음 → plan / add-concept 으로 돌려 모호화 후 ticket 으로 이관
+- spec/concept 본문에 how 결정(위치·카탈로그·시그니처) 이 들어가 있음 → plan 으로 돌려 모호화 후 ticket 으로 이관
 
 ## 공통 티켓 출력 형식
 

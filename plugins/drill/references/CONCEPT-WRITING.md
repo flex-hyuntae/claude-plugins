@@ -1,6 +1,6 @@
 # Concept 작성 가이드 — KEEP/DROP, 좋은/나쁜 예
 
-> **spec/concept 어휘의 단일 출처.** `plan` · `add-concept` 이 작성 시, `drill-review` 가 cascade 레벨 판정과 patch 초안 작성 시 이 문서를 기준으로 삼는다. 규칙을 고칠 때는 여기만 고친다.
+> **spec/concept 어휘의 단일 출처.** `plan` 이 작성 시, `drill-review` 가 cascade 레벨 판정과 patch 초안 작성 시 이 문서를 기준으로 삼는다. 규칙을 고칠 때는 여기만 고친다.
 >
 > **단계별 질문 차원** — plan(spec/concept) = **what / why** / prepare(ticket) = **how** / write(코드) = how 따라 구현. **how 어휘가 본문에 등장하면 ticket 영역으로 위임**한다.
 

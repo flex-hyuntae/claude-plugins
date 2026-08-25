@@ -25,6 +25,8 @@ PR ↔ Ticket 차이 감지는 `drill-review` agent에 위임. 이 skill은 **�
 
 `Task` 로 `drill-review` 호출. prompt: `feature name: {...}\nPR 식별자: {...}`.
 
+agent 가 PR 본문의 `## 리뷰 전 확인` 에서 `drill-critic` 잔여 지적을 직접 읽는다. 스킬이 따로 넘기지 않는다.
+
 ### 3. 리포트 분기
 
 | 조건 | 처리 |
@@ -39,7 +41,7 @@ PR ↔ Ticket 차이 감지는 `drill-review` agent에 위임. 이 skill은 **�
 
 각 Diff마다 순서대로 AskUserQuestion:
 
-1. **차이 확인** (`needs_user_confirmation: true` 만): ticket_says ↔ pr_observation 보여주고 "맞음 / 아님(agent 오판) / 부분적으로 맞음"
+1. **차이 확인** (`needs_user_confirmation: true` 만): ticket_says ↔ pr_observation 보여주고 "맞음 / 아님(agent 오판) / 부분적으로 맞음". `from_critic: true` 인 항목은 작성 시점에 이미 판정됐다가 안 고쳐진 것이라고 함께 표시한다
 2. **Cascade 레벨 (= 업데이트를 어디까지 반영할지)**: 반드시 사용자에게 묻는다 — `ticket_only`(티켓만) / `ticket_concept`(concept 까지) / `ticket_concept_spec`(spec 까지) / "구현 누락(PR을 티켓에 맞춰 수정)" / "다른 티켓으로 이관" / "건너뛰기". agent 추천을 기본값으로 제시하되 자동 적용하지 않는다.
 3. **변경 이유**: 자유 입력 → Decision Log `## 변경 이유` 에 그대로
 
