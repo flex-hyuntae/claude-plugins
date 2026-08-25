@@ -39,6 +39,8 @@ drill 의 절차·게이트·문서 형식은 stack 과 무관하다. stack 이 
 
 drill 은 BE 컨벤션을 갖지 않는다. `backend-guidelines-doc-loader` agent 에 `use_when` 태그를 넘겨 필요한 문서만 로드한다 (플러그인 미설치면 생략하고 진행).
 
+`write` 는 받은 본문을 `$TMPDIR/drill-be-guidelines-{ticket}.md` 로 저장하고 그 경로를 `drill-critic` 에 넘긴다. critic 은 doc-loader 를 다시 부르지 않는다 — BE 에서 코딩 규칙 축이 비지 않게 하는 유일한 통로다.
+
 | 단계 | 넘길 태그 |
 |------|----------|
 | `prepare` 구현 설계 | `module-structure` · `api-design` · `error-handling` · `data-modeling` · DDL 있으면 `liquibase` |

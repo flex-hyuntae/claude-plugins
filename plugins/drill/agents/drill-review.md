@@ -23,6 +23,8 @@ PR ↔ Linear 티켓을 1차 기준으로 비교하고 cascade 영향도를 추�
 `gh pr view ... --json title,body,headRefName,url,number,files` + `gh pr diff ...`.
 "현재 브랜치"는 `gh pr list --head $(git branch --show-current) --limit 1` 먼저.
 
+**PR 본문의 `## 리뷰 전 확인` 섹션을 먼저 읽는다.** `ship` 이 남긴 `drill-critic` 잔여 지적이다 (`skills/ship/SKILL.md` §5). 작성 시점에 이미 티켓과 어긋난다고 판정된 자리라 §5 차이 감지의 출발점이 된다. 없으면 그냥 넘어간다.
+
 ### 2. 티켓 추출
 
 PR 제목/본문/브랜치에서 `[A-Z]+-\d+` 와 `linear.app/.../issue/<ID>` 패턴 수집, 중복 제거.
@@ -48,6 +50,8 @@ PR 제목/본문/브랜치에서 `[A-Z]+-\d+` 와 `linear.app/.../issue/<ID>` �
 | 티켓 동작 변경        | diff 동작이 기준과 의미적으로 다름 |
 | 티켓 외 신규 동작     | 어떤 티켓에도 없는 동작            |
 | 수용 기준 불일치      | 기준이 다른 티켓에 구현됨          |
+
+**critic 잔여 지적을 먼저 확인한다** — §1 에서 읽은 항목마다 지금 PR 에서 해소됐는지 보고, 남아 있으면 Diff 로 올리며 `from_critic: true` 를 붙인다. 해소됐으면 리포트 `## Notes` 에 한 줄로만 남긴다. critic 은 코드↔티켓만 보므로 cascade 레벨은 여기서 새로 판정한다 — critic 지적이라고 `ticket_only` 로 고정하지 않는다.
 
 원칙: 변수·함수명 차이 무시 · Decision Log 최신 우선 · 애매하면 `needs_user_confirmation: true` · 억지로 만들지 않음.
 Ticketless일 때는 PR 전체 동작을 "티켓 외 신규 동작" 후보로 수집.
@@ -144,7 +148,7 @@ cascade_patches:
 
 - type, ticket (null 허용), ticket_says, pr_observation, pr_evidence
 - suggested_cascade_level
-- needs_new_ticket, needs_user_confirmation, confidence
+- needs_new_ticket, needs_user_confirmation, confidence, from_critic
 - cascade_patches: { ticket_description_patch, decision_log_draft, concept_patches[], spec_patches[] }
   (레벨에 해당하지 않는 필드는 null. 작성 애매하면 해당 패치만 null + notes)
 

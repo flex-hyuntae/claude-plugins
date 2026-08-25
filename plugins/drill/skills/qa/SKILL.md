@@ -27,7 +27,7 @@ TC 초안·커버리지 매트릭스 작성은 `drill-qa` agent에 위임. 이 s
 | 조건 | 처리 |
 |------|------|
 | `spec_missing: true` | `/drill:plan` 선행 안내 후 종료 |
-| `## Coverage Gaps` 누락 있음 | "보강 후 재실행(`/drill:add-concept` 또는 `/drill:plan`) / 일단 진행 / 취소" |
+| `## Coverage Gaps` 누락 있음 | "보강 후 재실행(`/drill:plan`) / 일단 진행 / 취소" |
 | 정상 | Phase 4 |
 
 ### 4. 사용자 리뷰

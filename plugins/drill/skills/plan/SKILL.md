@@ -1,14 +1,30 @@
 ---
 name: plan
-description: '심층 소크라테스식 인터뷰로 도메인을 Concept 단위로 분해하고 Spec(Index) + Concepts 파일을 작성한다. 사용자가 "/drill:plan", "스펙 작성", "concept 정의", "심층 인터뷰", "스펙 분해"를 요청하거나 Linear/Notion/Figma URL과 함께 "이거 스펙으로 만들어줘"라고 할 때 트리거. drill 워크플로우(plan→prepare→write→review→qa)의 첫 단계. 도메인 어휘(what/why)만 다루고 위치·매체·옵션 등 how 는 ticket 으로 위임 (§Layer 경계).'
+description: '심층 소크라테스식 인터뷰로 도메인을 Concept 단위로 분해하고 Spec(Index) + Concepts 파일을 작성한다. 사용자가 "/drill:plan", "스펙 작성", "concept 정의", "심층 인터뷰", "스펙 분해"를 요청하거나 Linear/Notion/Figma URL과 함께 "이거 스펙으로 만들어줘"라고 할 때 트리거. 인자가 `{feature} {주제}` 형태면 기존 Spec 에 Concept 하나만 더하는 concept 추가 모드 — "concept 추가", "새 개념 정의", "스펙에 도메인 추가" 가 여기 해당한다 (§모드). drill 워크플로우(plan→prepare→write→review→qa)의 첫 단계. 도메인 어휘(what/why)만 다루고 위치·매체·옵션 등 how 는 ticket 으로 위임 (§Layer 경계).'
 compatibility: 'Linear/Notion/Figma MCP 권장 (URL 입력 시). 텍스트만으로도 동작.'
 disable-model-invocation: true
-argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
+argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url] 또는 [feature-name] [concept 주제|url]"
 ---
 
 # Plan
 
 심층 인터뷰로 문제를 파악하고 기능을 Concept 단위로 분해. Spec + Concept 문서 작성.
+
+## 모드
+
+인자로 갈린다. 본질·작성 원칙·인터뷰 방법은 두 모드가 같고, 도는 단계만 다르다.
+
+| 인자 | 모드 | 도는 단계 |
+|------|------|-----------|
+| 주제 텍스트 · Linear/Notion/Figma URL | **신규 spec** | §1 ~ §7 전부 |
+| `{feature-name} {concept 주제\|url}` | **concept 추가** | §1 · §3 · §6 · §7 (§2 문제 정의 · §4 식별 · §5 확인 생략) |
+
+**concept 추가 모드** — 기존 Spec 에 동작 단위 하나만 늘린다. 개발 중 새 개념이 나왔을 때 전체 인터뷰를 다시 하지 않기 위한 것이고, 신규 spec 모드와 다른 점은 넷뿐이다.
+
+1. **대상 식별** — `~/Projects/flex/wiki/Spec/{feature}/` 존재 확인 후 Spec index + 기존 `concepts/*.md` 를 관계 파악용으로 로드한다. 디렉토리가 없으면 신규 spec 모드로 안내
+2. **중복 검사** — 기존 concept 과 겹쳐 보이면 새로 만들지 말고 **기존 concept 수정을 먼저 제안**한다
+3. **관계 질문 추가** — §3 에 "기존 [[A]] 와 어떻게 구분되는가", "[[B]] 가 이 concept 을 어떻게 참조해야 하는가" 를 더한다. Concept 은 1개만 인터뷰하므로 §4 분해·§5 확인은 돌지 않는다
+4. **쓰는 파일** — `concepts/{name}.md` 신규 + `{FEATURE-NAME}.md` Concepts 테이블 행 추가 + 관련 기존 concept 의 §관련 Concept 링크. `.drill-state.json` 은 건드리지 않는다
 
 ## Concept 의 본질
 
@@ -19,7 +35,7 @@ argument-hint: "[주제 텍스트|linear-url|notion-url|figma-url]"
 - 도메인 어휘(ubiquitous language)로 작성한다 — 같은 사실을 PM·디자이너·개발자가 같은 단어로 부를 수 있어야 한다
 - 구현은 **다른 레이어**의 관심사 — concept 본문에 구현 디테일이 새어 들어오면 도메인 경계가 흐려진다
 
-이 본질이 plan / add-concept / review 의 모든 가이드의 출발점이다.
+이 본질이 plan 두 모드와 review 의 모든 가이드의 출발점이다.
 
 ## Layer 경계 — Spec/Concept vs Ticket
 
