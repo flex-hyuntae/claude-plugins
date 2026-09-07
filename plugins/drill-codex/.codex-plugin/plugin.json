@@ -1,0 +1,18 @@
+{
+  "name": "drill-codex",
+  "version": "0.1.0",
+  "description": "Spec·Concept 생성부터 티켓 준비, 구현, 동기화, QA TC까지 이어지는 Codex 개발 워크플로우",
+  "author": {
+    "name": "Hyuntae"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Drill Codex",
+    "shortDescription": "Spec부터 QA까지 Codex 개발 워크플로우",
+    "longDescription": "Concept·Spec을 만들고 Linear 티켓을 준비해 구현·PR 동기화·QA TC까지 연결합니다.",
+    "developerName": "Hyuntae",
+    "category": "Development",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": "$drill-codex:drill로 새 feature 작업을 시작해줘."
+  }
+}

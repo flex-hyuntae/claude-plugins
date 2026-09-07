@@ -1,0 +1,67 @@
+---
+name: drill
+description: 'plan → prepare → write → review → qa 워크플로우 전체를 오케스트레이션한다. 사용자가 "/drill", "/drill:drill", "drill 시작", "전체 워크플로우 돌려줘", "feature 작업 시작"을 요청할 때 트리거. 각 단계 진행 상태를 추적하고 중간 이탈 시 resume 인자로 이어하기 가능. 각 하위 skill은 단독 실행도 지원.'
+compatibility: 'Linear MCP + gh CLI 필수. drill 플러그인 전체 스킬 의존.'
+disable-model-invocation: true
+argument-hint: "[feature-name|resume]"
+---
+
+# Drill
+
+plan → prepare → write → review → qa 워크플로우 오케스트레이션. 각 단계 완료 상태 추적 + 이어하기(resume) 지원. 각 하위 스킬은 `/drill:plan`, `/drill:prepare {feature}` 처럼 단독 실행도 가능 (state 파일 있으면 자동 업데이트).
+
+## 워크플로우
+
+```
+/drill:drill {feature}
+  → /drill:plan                  → {FEATURE-NAME}.md + concepts/
+  → /drill:prepare               → Linear 티켓 생성
+  → /drill:write {ticket}        → 단일 티켓 구현
+    또는
+    /drill:ship {ticket-ids}     → 의존 분석 + worktree + batch draft PR
+  → /drill:review {feat} {pr}    → Spec 동기화 + Decision Log
+  → /drill:qa                    → TC 작성
+```
+
+## 상태 추적
+
+`~/Projects/flex/wiki/Spec/{feature}/.drill-state.json`:
+
+```json
+{
+  "feature": "...",
+  "currentPhase": "plan",
+  "phases": {
+    "plan":    { "status": "complete", "completedAt": "..." },
+    "prepare": { "status": "in-progress" },
+    "write":   { "status": "pending" },
+    "review":  { "status": "pending" },
+    "qa":      { "status": "pending" }
+  }
+}
+```
+
+상태값: `pending` / `in-progress` / `complete` / `skipped`.
+
+## 실행
+
+| 인자 | 동작 |
+|------|------|
+| 없음 | `til/spec/*/.drill-state.json` 스캔 → 진행 중 목록 AskUserQuestion |
+| `{feature}` (신규) | 디렉토리·state 확인 후 Phase 1부터 |
+| `{feature}` (기존) 또는 `resume` | state 기준 이어할 단계 AskUserQuestion |
+
+### 단계 전환
+
+각 단계 완료 후 state 업데이트 + 다음 단계 안내 (진행/건너뛰기 AskUserQuestion). 건너뛴 단계는 `skipped`.
+
+**write 단계**: prepare 완료 후 두 가지 경로 안내:
+- 단일 티켓: `/drill:write {ticket-id}`
+- 여러 티켓 batch (의존 순서대로 draft PR 일괄 생성): `/drill:ship {ticket-ids}`
+
+drill이 티켓 루프를 직접 돌리지 않음. ship 완료는 write phase `complete` 로 기록 (write/ship은 alternative — 둘 중 하나만 실행).
+
+## 제약
+
+- 한국어
+- state로 진행 추적, 순서·반복 실행 유연 (각 단계 건너뛰기 비강제)
