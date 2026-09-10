@@ -2,7 +2,7 @@
 
 flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성, 패키지 로컬 테스트 환경 설정, dev 환경 부트스트랩, i18n 변환, 위키 기록·소화를 지원합니다.
 
-> **Note:** 티켓 생성/강화, TC 작성, QA 테스트 관련 스킬은 [drill](../drill/) 플러그인으로 이전되었습니다.
+> **Note:** 티켓 생성/강화, TC 작성, QA 테스트 관련 스킬은 [Drill](https://github.com/eomttt/agent-plugins) 플러그인으로 이전되었습니다.
 
 ## 커맨드
 
@@ -17,13 +17,13 @@ flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성,
 
 ### 위키 세 층
 
-`add-topic` · `add-work` 가 담당하는 경계는 이렇다. 나머지 한 층(Spec)은 [drill](../drill/) 플러그인이 쓴다.
+`add-topic` · `add-work` 가 담당하는 경계는 이렇다. 나머지 한 층(Spec)은 [Drill](https://github.com/eomttt/agent-plugins) 플러그인이 쓴다.
 
 | 층 | 무엇 | 스킬 |
 |---|---|---|
 | Topic | 회사와 무관한 개인 기술 지식 | `add-topic` |
 | Work Topic | flex 시스템이 실제로 어떻게 동작하나 | `add-work` |
-| Spec | 프로젝트 단위 요구·결정 문서 | `/drill:plan` |
+| Spec | 프로젝트 단위 요구·결정 문서 | `drill-claude:plan` 또는 `drill-codex:plan` |
 
 vault: `~/Projects/flex/wiki` (`flex-hyuntae/wiki`, private)
 

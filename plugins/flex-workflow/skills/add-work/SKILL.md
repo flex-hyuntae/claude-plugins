@@ -1,6 +1,6 @@
 ---
 name: add-work
-description: 'flex 회사 내부 지식을 위키의 Work Topic 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "회사 지식 정리", "Work Topic 추가", "이거 위키 Work 에 넣어줘", "사내 지식 기록", "/add-work" 로 호출할 때 트리거. flex 시스템이 실제로 어떻게 동작하는지를 담는 층이며, 근거로 본 파일 경로와 확인 날짜를 반드시 남긴다. 회사와 무관한 개인 기술 지식은 add-topic, 프로젝트 단위 요구·결정 문서는 drill:plan 이 담당한다.'
+description: 'flex 회사 내부 지식을 위키의 Work Topic 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "회사 지식 정리", "Work Topic 추가", "이거 위키 Work 에 넣어줘", "사내 지식 기록", "/add-work" 로 호출할 때 트리거. flex 시스템이 실제로 어떻게 동작하는지를 담는 층이며, 근거로 본 파일 경로와 확인 날짜를 반드시 남긴다. 회사와 무관한 개인 기술 지식은 add-topic, 프로젝트 단위 요구·결정 문서는 설치된 Drill의 plan 스킬이 담당한다.'
 compatibility: '~/Projects/flex/wiki vault clone + git push 권한 필요'
 argument-hint: "<정리할 회사 지식>"
 ---
@@ -16,7 +16,7 @@ flex 시스템이 **실제로 어떻게 동작하는지** 를 노트로 남긴�
 |---|---|---|
 | 회사와 무관한 기술 지식 (`B-Tree 인덱스`, `React reconciliation`) | Topic | `/add-topic` |
 | flex 시스템의 실제 동작 (`데스크가 지식을 참고하는 경로`) | Work Topic | 이 스킬 |
-| 프로젝트 단위 요구·결정 문서 (무엇을 만들 것인가) | Spec | `/drill:plan` |
+| 프로젝트 단위 요구·결정 문서 (무엇을 만들 것인가) | Spec | `drill-claude:plan` 또는 `drill-codex:plan` |
 
 Work Topic 과 Spec 을 가르는 기준은 **시점**이다. Spec 은 만들기 전에 정하는
 것(의도)이고 Work Topic 은 만들어진 것을 읽어 적는 것(현실)이다. 같은 도메인에

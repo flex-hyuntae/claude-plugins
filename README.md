@@ -1,43 +1,28 @@
-# flex-hyuntae claude plugins
+# flex-hyuntae Claude Plugins
 
-Personal Claude Code plugin marketplace.
+flex 프로젝트와 위키 작업을 위한 `flex-workflow` 마켓이다.
 
-## Usage
-
-### Add marketplace
-
-```shell
-/plugin marketplace add flex-hyuntae/claude-plugins
+```sh
+claude plugin marketplace add flex-hyuntae/claude-plugins
+claude plugin install flex-workflow@flex-hyuntae-plugins
 ```
 
-### Install a plugin
+[flex-workflow 사용법](plugins/flex-workflow/README.md)을 참고한다.
 
-```shell
-/plugin install drill@flex-hyuntae-plugins
-/plugin install flex-workflow@flex-hyuntae-plugins
-/plugin install rules@flex-hyuntae-plugins
-```
+## Drill·Rules 이전
 
-### Update marketplace
+Drill과 Rules는 [eomttt/agent-plugins](https://github.com/eomttt/agent-plugins)로 옮겼다.
+이 레포에서는 두 플러그인을 더 이상 배포하지 않는다.
+새 마켓 `eomttt-plugins`에는 다음 패키지가 있다.
 
-```shell
-/plugin marketplace update
-```
+| 기능 | Claude Code | Codex |
+| --- | --- | --- |
+| Drill | `drill-claude` | `drill-codex` |
+| Rules | `rules-claude` | `rules-codex` |
 
-## Plugins
+새 패키지를 설치한 뒤 기존 `drill@flex-hyuntae-plugins`, `rules@flex-hyuntae-plugins`를 제거한다.
+비공개 새 레포의 접근 권한과 설치 방법은 새 레포에서 확인한다.
 
-| Plugin | Description | Commands | Agents |
-|--------|-------------|----------|--------|
-| [drill](plugins/drill/README.md) | Spec/Concept 기반 개발 워크플로우 | `drill`, `plan`, `prepare`, `review`, `qa` | — |
-| [flex-workflow](plugins/flex-workflow/README.md) | flex project workflows + 위키 기록 | `deploy`, `test-package`, `setup-dev`, `add-topic`, `add-work`, `digest-wiki` | `i18n-convert` |
-| [rules](plugins/rules/README.md) | 코딩 컨벤션과 성능 최적화 규칙 (35개) | `add` | — |
+## 수정
 
-## Adding a Plugin
-
-1. Create `plugins/<plugin-name>/` directory
-2. Add `.claude-plugin/plugin.json` manifest
-3. Add files in `skills/` and/or `agents/`
-4. Add entry to `.claude-plugin/marketplace.json` `plugins` array
-5. Bump `version` in both `plugin.json` and `marketplace.json`
-6. Validate with `claude plugin validate .` or `/plugin validate .`
-7. Commit and push
+`plugins/flex-workflow/`에서 수정하고 [AGENTS.md](AGENTS.md)의 버전·검증 절차를 따른다.

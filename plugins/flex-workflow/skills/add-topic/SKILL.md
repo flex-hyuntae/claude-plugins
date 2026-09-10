@@ -17,7 +17,7 @@ argument-hint: "<배운 내용>"
 |---|---|---|
 | 회사와 무관한 기술 지식 (`B-Tree 인덱스`, `React reconciliation`) | Topic | 이 스킬 |
 | flex 시스템이 실제로 어떻게 동작하나 (`데스크가 지식을 참고하는 경로`) | Work Topic | `/add-work` |
-| 회사 프로젝트 단위 요구·결정 문서 | Spec | `/drill:plan` |
+| 회사 프로젝트 단위 요구·결정 문서 | Spec | `drill-claude:plan` 또는 `drill-codex:plan` |
 
 기준은 **회사를 떠나도 남는 지식인가**다. 사내 서비스 이름·레포 이름·테이블
 이름이 노트 주제 자리에 오면 Topic 이 아니다 — `/add-work` 로 넘긴다.

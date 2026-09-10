@@ -35,9 +35,10 @@
 - [ ] marketplace.json의 해당 플러그인 version을 동일하게 올렸는가?
 - [ ] 두 version 값이 일치하는가?
 
-## Drill 소스 분리
+## Drill·Rules 소스 분리
 
-`rules`와 `flex-workflow`는 이 레포의 `plugins/`에서 관리한다.
-Drill의 새 소스는 `~/Projects/eomttt/agent-plugins/shared/drill`이다. 해당 레포의 `AGENTS.md`를 따른다.
-이 레포에 남아 있는 Drill 사본은 새 변경의 원본으로 쓰지 않는다.
+이 레포는 `flex-workflow`만 관리한다.
+Drill과 Rules의 소스는 `~/Projects/eomttt/agent-plugins/shared/`로 이전했다.
+새 마켓은 `eomttt-plugins`이며 Claude용 `drill-claude`, `rules-claude`와 Codex용 `drill-codex`, `rules-codex`를 제공한다.
+그 플러그인을 수정할 때는 새 소스 레포의 `AGENTS.md`를 따른다.
 공통 지침은 `AGENTS.md`에 작성하고 `CLAUDE.md`는 이 파일의 참조만 유지한다.
