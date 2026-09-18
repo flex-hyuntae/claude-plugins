@@ -1,7 +1,7 @@
 ---
 name: add-work
 description: 'flex 회사 내부 지식을 위키의 Work Topic 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "회사 지식 정리", "Work Topic 추가", "이거 위키 Work 에 넣어줘", "사내 지식 기록", "/add-work" 로 호출할 때 트리거. flex 시스템이 실제로 어떻게 동작하는지를 담는 층이며, 근거로 본 파일 경로와 확인 날짜를 반드시 남긴다. 회사와 무관한 개인 기술 지식은 add-topic, 프로젝트 단위 요구·결정 문서는 설치된 Drill의 plan 스킬이 담당한다.'
-compatibility: '~/Projects/flex/wiki vault clone + git push 권한 필요'
+compatibility: '~/Projects/eomttt/wiki vault clone + git push 권한 필요'
 argument-hint: "<정리할 회사 지식>"
 ---
 
@@ -24,12 +24,12 @@ Work Topic 과 Spec 을 가르는 기준은 **시점**이다. Spec 은 만들기
 
 ## 0. Vault 경로 확인
 
-vault 경로: `~/Projects/flex/wiki`
-GitHub repo: `flex-hyuntae/wiki` (private)
+vault 경로: `~/Projects/eomttt/wiki`
+GitHub repo: `eomttt/wiki` (private)
 
 없으면 다음 메시지를 출력하고 중단한다:
 
-> 위키 vault 가 없습니다. 먼저 `gh repo clone flex-hyuntae/wiki ~/Projects/flex/wiki` 로 클론해주세요.
+> 위키 vault 가 없습니다. 먼저 `gh repo clone eomttt/wiki ~/Projects/eomttt/wiki` 로 클론해주세요.
 
 ## 1. 내용 정리
 
@@ -48,7 +48,7 @@ GitHub repo: `flex-hyuntae/wiki` (private)
 
 1. `Work/_INDEX.md` — 같은 주제 노트가 이미 있나. 있으면 **새로 만들지 말고 갱신**한다 (아래 "이미 있는 노트를 갱신할 때").
 2. `Topics/_INDEX.md` — 이 동작을 설명해 주는 개인 지식 노트가 있나. 있으면 링크한다.
-3. `ls ~/Projects/flex/wiki/Spec/` — 같은 도메인 Spec 이 있나. 있으면 링크한다.
+3. `ls ~/Projects/eomttt/wiki/Spec/` — 같은 도메인 Spec 이 있나. 있으면 링크한다.
 
 층을 넘는 연결이 이 위키의 값이다. "왜 이렇게 만들었나" 가 Spec 에 있고 "일반적으로
 이런 방식을 무엇이라 부르나" 가 Topic 에 있으면, Work Topic 이 그 둘을 잇는 자리가 된다.
@@ -119,13 +119,13 @@ private 레포지만 위키는 지식을 담는 곳이고 데이터를 담는 �
 
 ## 3. Work 노트 생성
 
-`~/Projects/flex/wiki/Work/<도메인>/<제목>.md` 를 만든다. 새 도메인이면 서브폴더를
+`~/Projects/eomttt/wiki/Work/<도메인>/<제목>.md` 를 만든다. 새 도메인이면 서브폴더를
 먼저 만든다.
 
 `.obsidian/graph.json` 은 **손대지 않는다.** `path:Work` 색상 그룹 하나가 이미 층
 전체를 칠하고 있다 (Topics 는 카테고리별로 칠하지만 Work 는 층 단위다).
 
-구조는 `~/Projects/flex/wiki/Templates/Work Template.md` 를 읽어서 그대로 따른다
+구조는 `~/Projects/eomttt/wiki/Templates/Work Template.md` 를 읽어서 그대로 따른다
 (여기에 복사해 두면 드리프트가 생긴다). 섹션은 이렇게 채운다.
 
 | 섹션 | 넣는 것 |
@@ -165,7 +165,7 @@ Work Topic 은 코드가 바뀌면 낡는다. 그래서 새로 쓰는 것보다 
 ## 4. 생성물 갱신 (인덱스 + TOC)
 
 ```bash
-cd ~/Projects/flex/wiki
+cd ~/Projects/eomttt/wiki
 python3 scripts/build-index.py
 ```
 
@@ -182,7 +182,7 @@ python3 scripts/build-index.py
 ## 5. Git 커밋 & 푸시
 
 ```bash
-cd ~/Projects/flex/wiki
+cd ~/Projects/eomttt/wiki
 git status --short
 git add -- "Work/<도메인>" Work/_INDEX.md
 git commit -m "feat: <제목> Work Topic 추가"

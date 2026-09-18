@@ -1,7 +1,7 @@
 ---
 name: add-topic
 description: '개인 기술 지식을 위키의 Topic 노트로 기록하고 자동 커밋·푸시한다. 사용자가 "오늘 배운거야", "TIL", "토픽 추가", "위키에 추가", "지식 기반에 추가", "배운점 추가", "/add-topic" 로 호출할 때 트리거. 회사와 무관한 개인 지식 전용 — flex 시스템이 실제로 어떻게 동작하는지는 add-work 가 담당한다. 기존 노트와 자동 양방향 연결([[노트명]] 링크). 기술 용어는 영어 원문 유지, 설명은 한국어.'
-compatibility: '~/Projects/flex/wiki vault clone + git push 권한 필요'
+compatibility: '~/Projects/eomttt/wiki vault clone + git push 권한 필요'
 argument-hint: "<배운 내용>"
 ---
 
@@ -26,12 +26,12 @@ argument-hint: "<배운 내용>"
 
 ## 0. Vault 경로 확인
 
-vault 경로: `~/Projects/flex/wiki`
-GitHub repo: `flex-hyuntae/wiki` (private)
+vault 경로: `~/Projects/eomttt/wiki`
+GitHub repo: `eomttt/wiki` (private)
 
 해당 디렉토리가 존재하는지 확인한다. 없으면 다음 메시지를 출력하고 중단한다:
 
-> 위키 vault 가 없습니다. 먼저 `gh repo clone flex-hyuntae/wiki ~/Projects/flex/wiki` 로 클론해주세요.
+> 위키 vault 가 없습니다. 먼저 `gh repo clone eomttt/wiki ~/Projects/eomttt/wiki` 로 클론해주세요.
 
 ## 1. 내용 정리
 
@@ -45,7 +45,7 @@ GitHub repo: `flex-hyuntae/wiki` (private)
 
 ## 2. 기존 노트 확인
 
-`~/Projects/flex/wiki/Topics/_INDEX.md` 를 읽는다. 노트별 한 줄 요약 · 태그 · 연결 관계가 모두 들어 있어서 개별 노트를 열지 않고도 겹침·연결 후보를 판단할 수 있다.
+`~/Projects/eomttt/wiki/Topics/_INDEX.md` 를 읽는다. 노트별 한 줄 요약 · 태그 · 연결 관계가 모두 들어 있어서 개별 노트를 열지 않고도 겹침·연결 후보를 판단할 수 있다.
 
 - 내용이 기존 토픽과 겹치면 기존 노트를 업데이트할지 새로 만들지 사용자에게 확인한다.
 - 관련 있는 기존 노트가 있으면 `[[노트명]]` 으로 양방향 연결한다 (새 노트에서 기존 노트 링크 + 기존 노트에도 새 노트 링크 추가).
@@ -133,9 +133,9 @@ GitHub repo: `flex-hyuntae/wiki` (private)
 
 ## 3. Topic 노트 생성
 
-`~/Projects/flex/wiki/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `.obsidian/graph.json` 의 `colorGroups` 에 새 색상 그룹을 추가한다 (`query` 는 `path:Topics/<카테고리>`, `color` 는 기존과 안 겹치는 `rgb` 정수).
+`~/Projects/eomttt/wiki/Topics/<카테고리>/<토픽 제목>.md` 파일을 생성한다. 새 카테고리인 경우 서브폴더를 먼저 생성하고, `.obsidian/graph.json` 의 `colorGroups` 에 새 색상 그룹을 추가한다 (`query` 는 `path:Topics/<카테고리>`, `color` 는 기존과 안 겹치는 `rgb` 정수).
 
-구조는 `~/Projects/flex/wiki/Templates/Topic Template.md` 를 읽어서 그대로 따른다 (여기에 복사해 두면 드리프트가 생긴다). frontmatter 만 채워야 할 값이 정해져 있다.
+구조는 `~/Projects/eomttt/wiki/Templates/Topic Template.md` 를 읽어서 그대로 따른다 (여기에 복사해 두면 드리프트가 생긴다). frontmatter 만 채워야 할 값이 정해져 있다.
 
 - `date` — 오늘 날짜 `YYYY-MM-DD`
 - `tags` — 관련 기술 키워드
@@ -151,7 +151,7 @@ GitHub repo: `flex-hyuntae/wiki` (private)
 노트를 추가·수정한 뒤에는 **반드시** 이 스크립트를 돌린다. 빠뜨리면 `_INDEX.md` 가 낡아서 다음 대화에서 새 노트가 안 보이고, TOC 도 본문과 어긋난다.
 
 ```bash
-cd ~/Projects/flex/wiki
+cd ~/Projects/eomttt/wiki
 python3 scripts/build-index.py
 ```
 
@@ -174,7 +174,7 @@ python3 scripts/build-index.py --readability
 ## 5. Git 커밋 & 푸시
 
 ```bash
-cd ~/Projects/flex/wiki
+cd ~/Projects/eomttt/wiki
 git status --short
 git add -- "Topics/<카테고리>" Topics/_INDEX.md .obsidian/graph.json
 git commit -m "feat: <토픽 제목> Topic 추가"

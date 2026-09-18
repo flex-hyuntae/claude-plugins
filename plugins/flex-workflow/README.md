@@ -25,7 +25,7 @@ flex 프로젝트 전용 워크플로우 플러그인. QA/Prod 배포 PR 생성,
 | Work Topic | flex 시스템이 실제로 어떻게 동작하나 | `add-work` |
 | Spec | 프로젝트 단위 요구·결정 문서 | `drill-claude:plan` 또는 `drill-codex:plan` |
 
-vault: `~/Projects/flex/wiki` (`flex-hyuntae/wiki`, private)
+vault: `~/Projects/eomttt/wiki` (`eomttt/wiki`, private)
 
 ## 에이전트
 

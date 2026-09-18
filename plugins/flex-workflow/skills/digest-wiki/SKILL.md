@@ -1,7 +1,7 @@
 ---
 name: digest-wiki
 description: '하루를 마치며 위키를 갱신한다 — Raindrop·Notion 을 Sources 인덱스로 동기화하고, 새로 들어온 것을 Topic·Work Topic 노트와 ↔ 로 잇고, 새 노트 후보를 층까지 짚어 준다. 사용자가 "하루 마감", "일 끝났어", "위키 업데이트", "위키 정리", "소화하자", "/digest-wiki" 로 호출할 때 트리거. add-topic·add-work 는 노트를 쓰는 것이고 이쪽은 바깥에서 들어온 것을 소화하는 것이다.'
-compatibility: '~/Projects/flex/wiki clone + ~/Projects/flex/wiki/.env (RAINDROP_TOKEN, NOTION_TOKEN)'
+compatibility: '~/Projects/eomttt/wiki clone + ~/Projects/eomttt/wiki/.env (RAINDROP_TOKEN, NOTION_TOKEN)'
 ---
 
 # 위키 소화 (하루 마감)
@@ -14,14 +14,14 @@ compatibility: '~/Projects/flex/wiki clone + ~/Projects/flex/wiki/.env (RAINDROP
 
 ## 0. Vault 확인
 
-경로: `~/Projects/flex/wiki`. 없으면 중단하고 알린다:
+경로: `~/Projects/eomttt/wiki`. 없으면 중단하고 알린다:
 
-> 위키 vault 가 없습니다. `gh repo clone flex-hyuntae/wiki ~/Projects/flex/wiki` 로 클론해주세요.
+> 위키 vault 가 없습니다. `gh repo clone eomttt/wiki ~/Projects/eomttt/wiki` 로 클론해주세요.
 
 ## 1. 동기화
 
 ```bash
-cd ~/Projects/flex/wiki
+cd ~/Projects/eomttt/wiki
 bash scripts/sync-sources.sh
 ```
 
@@ -32,7 +32,7 @@ bash scripts/sync-sources.sh
 **네트워크 오류(DNS 실패)가 나면 샌드박스 안이다.** Cowork 의 bash 는 바깥으로
 못 나간다. 그때는 대신 돌려주겠다고 하지 말고 사용자에게 넘긴다:
 
-> 이 환경에서는 네트워크가 막혀 있습니다. `~/Projects/flex/wiki/scripts/sync-now.command`
+> 이 환경에서는 네트워크가 막혀 있습니다. `~/Projects/eomttt/wiki/scripts/sync-now.command`
 > 를 Finder 에서 더블클릭해서 동기화한 뒤 다시 불러주세요.
 
 `404` 가 나면 Notion 접근 문제다. 진단은 이것으로 한다:
@@ -49,8 +49,8 @@ Notion 의 `기능`(콘텐츠 읽기)과 `콘텐츠 사용 권한`(어느 페이
 ## 2. 새로 들어온 것 보고
 
 ```bash
-git -C ~/Projects/flex/wiki log --oneline -3
-git -C ~/Projects/flex/wiki diff HEAD~1 -- Sources/ | grep '^+- '
+git -C ~/Projects/eomttt/wiki log --oneline -3
+git -C ~/Projects/eomttt/wiki diff HEAD~1 -- Sources/ | grep '^+- '
 ```
 
 종류별로 몇 건인지와 눈에 띄는 것 두세 개를 짧게 말한다. 전부 나열하지 않는다 —
@@ -58,7 +58,7 @@ git -C ~/Projects/flex/wiki diff HEAD~1 -- Sources/ | grep '^+- '
 
 ## 3. `↔` 잇기 — 본체
 
-`~/Projects/flex/wiki/Topics/_INDEX.md` 와 `Work/_INDEX.md` 를 **각각 한 번** 읽는다.
+`~/Projects/eomttt/wiki/Topics/_INDEX.md` 와 `Work/_INDEX.md` 를 **각각 한 번** 읽는다.
 노트별 한 줄 요약·태그·연결 관계가 다 있어서 개별 노트를 열지 않고도 후보를 판단할
 수 있다.
 
@@ -77,7 +77,7 @@ Topic 이고, `worked.md` 는 회사에서 한 일이라 대개 Work Topic 이�
 건수를 15~25개로 줄이는 것보다 **확신 없는 것을 섞지 않는 게** 중요하다.
 
 ```bash
-grep -c '↔ (없음)' ~/Projects/flex/wiki/Sources/*.md
+grep -c '↔ (없음)' ~/Projects/eomttt/wiki/Sources/*.md
 ```
 
 ### 형식
@@ -137,7 +137,7 @@ Work Topic 노트에는 `## 아티클` · `## Book` 자리가 템플릿에 없�
 `TIL` 태그가 붙었는데 `↔ (없음)` 인 항목이다 — 이미 배웠는데 소화가 안 된 것이라서.
 
 ```bash
-grep -A1 '`[^`]*TIL' ~/Projects/flex/wiki/Sources/worked.md | grep -B1 '↔ (없음)'
+grep -A1 '`[^`]*TIL' ~/Projects/eomttt/wiki/Sources/worked.md | grep -B1 '↔ (없음)'
 ```
 
 **후보마다 어느 층인지 같이 말한다.** 회사와 무관한 기술이면 Topic, flex 시스템의
@@ -151,7 +151,7 @@ Topic 은 `add-topic`, Work Topic 은 `add-work`.
 노트 본문을 건드렸으면 TOC 가 어긋나므로 **먼저 생성물을 다시 만든다.**
 
 ```bash
-cd ~/Projects/flex/wiki
+cd ~/Projects/eomttt/wiki
 python3 scripts/build-index.py
 git status --porcelain -- Sources/ Topics/ Work/
 git add -- Sources/ Topics/ Work/
@@ -171,8 +171,8 @@ vault 를 열었을 때 낡은 인덱스를 본다. 1번의 동기화 스크립�
 push 가 거부되면(원격이 앞서 있음) 자동으로 강제하지 말고 이렇게 처리한다:
 
 ```bash
-git -C ~/Projects/flex/wiki pull --rebase
-git -C ~/Projects/flex/wiki push
+git -C ~/Projects/eomttt/wiki pull --rebase
+git -C ~/Projects/eomttt/wiki push
 ```
 
 rebase 에서 충돌이 나면 멈추고 사용자에게 알린다. `Sources/` 는 생성물이라
